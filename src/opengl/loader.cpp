@@ -197,29 +197,6 @@ GLuint createVAO(
   glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-  //glGenBuffers(1, &ibo);
-  //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-  //glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size(), indices.data(), GL_STATIC_DRAW);
-  //glEnableVertexAttribArray(0);
-
-  //glGenBuffers(1, &vbo);
-  //glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  //glBufferData(GL_ARRAY_BUFFER, vertices.size(), vertices.data(), GL_STATIC_DRAW);
-  //glEnableVertexAttribArray(1);
-  //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-  //glGenBuffers(1, &vbo);
-  //glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  //glBufferData(GL_ARRAY_BUFFER, uvs.size(), uvs.data(), GL_STATIC_DRAW);
-  //glEnableVertexAttribArray(2);
-  //glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
-
-  //glGenBuffers(1, &vbo);
-  //glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  //glBufferData(GL_ARRAY_BUFFER, normals.size(), normals.data(), GL_STATIC_DRAW);
-  //glEnableVertexAttribArray(3);
-  //glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
   glBindVertexArray(0);
 
   return vao;
