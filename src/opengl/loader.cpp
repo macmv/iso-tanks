@@ -20,13 +20,14 @@ unsigned long getFileLength(ifstream& file) {
   return len;
 }
 
-int readFile(string filename, string file) {
+int readFile(string filename, string* file) {
   cout << "Reading file " << filename << endl;
   string line;
   ifstream stream(filename);
   if (stream.is_open()) {
     while (getline(stream, line)) {
-      file.append(line);
+      file->append(line);
+      file->append("\n");
     }
     stream.close();
   } else {
@@ -40,7 +41,7 @@ bool loadShader(GLuint shader, string filename) {
   bool success = true;
 
   string data;
-  readFile(filename, data);
+  readFile(filename, &data);
   const char *source[] = {data.c_str()};
   glShaderSource(shader, 1, source, NULL);
 
@@ -49,9 +50,19 @@ bool loadShader(GLuint shader, string filename) {
   GLint vShaderCompiled = GL_FALSE;
   glGetShaderiv(shader, GL_COMPILE_STATUS, &vShaderCompiled );
   if (vShaderCompiled != GL_TRUE) {
-    printf("Unable to compile shader %d!\n", shader);
+    GLint maxLength = 0;
+    glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
+
+    // The maxLength includes the NULL character
+    std::vector<GLchar> errorLog(maxLength);
+    glGetShaderInfoLog(shader, maxLength, &maxLength, &errorLog[0]);
+
+    cout << "Unable to compile shader!" << endl;
+    cout << "At " << filename << ":" << endl;
+    cout << errorLog.data();
     return false;
   }
+  return true;
 }
 
 GLuint loadShaderProgram(string vertexFilename, string fragmentFilename) {
