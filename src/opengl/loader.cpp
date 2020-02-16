@@ -70,8 +70,14 @@ GLuint loadShaderProgram(string vertexFilename, string fragmentFilename) {
   GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
   GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-  loadShader(vertexShader, vertexFilename);
-  loadShader(fragmentShader, fragmentFilename);
+  bool res = loadShader(vertexShader, vertexFilename);
+  if (!res) {
+    exit(1);
+  }
+  res = loadShader(fragmentShader, fragmentFilename);
+  if (!res) {
+    exit(1);
+  }
 
   GLuint programID = glCreateProgram();
 
