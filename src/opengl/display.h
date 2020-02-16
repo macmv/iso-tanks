@@ -11,6 +11,7 @@ class Display {
     Display();
     void init();
     void createWindow();
+    bool update();
     void render();
 };
 

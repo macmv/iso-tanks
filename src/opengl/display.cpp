@@ -7,8 +7,8 @@ using namespace sf;
 using namespace std;
 
 Display::Display() {
-  init();
   createWindow();
+  init();
 }
 
 void Display::init() {
@@ -34,4 +34,24 @@ void Display::createWindow() {
   window->setVerticalSyncEnabled(true);
 
   window->setActive(true);
+
+  window->setFramerateLimit(60);
+}
+
+bool Display::update() {
+  sf::Event event;
+  while (window->pollEvent(event)) {
+    if (event.type == sf::Event::Closed) {
+      // end the program
+      return false;
+    } else if (event.type == sf::Event::Resized) {
+      // adjust the viewport when the window is resized
+      glViewport(0, 0, event.size.width, event.size.height);
+    }
+  }
+  return true;
+}
+
+void Display::render() {
+  window->display();
 }

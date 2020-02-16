@@ -18,11 +18,11 @@ void Render::createPrograms() {
 }
 
 void Render::update() {
-  cout << "Calling update" << endl;
-
   glClear(GL_COLOR_BUFFER_BIT);
+  display->update();
 
   glUseProgram(programID);
-
   glUseProgram(NULL);
+
+  display->render();
 }
