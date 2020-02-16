@@ -27,8 +27,8 @@ void Display::createWindow() {
   settings.depthBits = 24;
   settings.stencilBits = 8;
   settings.antialiasingLevel = 2;
-  settings.majorVersion = 3;
-  settings.minorVersion = 2;
+  settings.majorVersion = 4;
+  settings.minorVersion = 6;
 
   window = new Window(sf::VideoMode(800, 600), "Iso Tanks", sf::Style::Default, settings);
   window->setVerticalSyncEnabled(true);
