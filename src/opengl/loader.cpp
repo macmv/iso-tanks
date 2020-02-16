@@ -129,4 +129,87 @@ bool loadOBJ (
       normalIndices.push_back(normalIndex[2]);
     }
   }
-};
+  out_indices  = vector<uint>(vertexIndices.size());
+  out_vertices = vector<glm::vec3>(vertices.size());
+  out_uvs      = vector<glm::vec2>(vertices.size());
+  out_normals  = vector<glm::vec3>(vertices.size());
+  for (uint i = 0; i < vertexIndices.size(); i++) {
+    uint vertexIndex = vertexIndices[i] - 1;
+    uint uvIndex     = uvIndices[i] - 1;
+    uint normalIndex = normalIndices[i] - 1;
+
+    out_indices[i] = vertexIndex;
+    out_vertices[vertexIndex] = vertices[vertexIndex];
+    out_uvs[vertexIndex]      = uvs[uvIndex];
+    out_normals[vertexIndex]  = normals[normalIndex];
+  }
+}
+
+GLuint createVAO(
+  std::vector <unsigned int>& indices,
+  std::vector <glm::vec3>& vertices,
+  std::vector <glm::vec2>& uvs,
+  std::vector <glm::vec3>& normals
+) {
+  GLuint vao;
+  GLuint vbo;
+  GLuint ibo;
+
+  glGenVertexArrays(1, &vao);
+  glBindVertexArray(vao);
+
+  float i[] = {0, 1, 2, 1, 2, 3};
+  float v[] = {0, 0, 0,  0, 1, 1,  1, 0, 0,  1, 1, 1};
+  float u[] = {0, 0,     0, 1,     1, 0,     1, 1};
+  float n[] = {0, 0, 0,  0, 0, 0,  0, 0, 0,  0, 0, 0};
+
+  glGenBuffers(1, &ibo);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(float), i, GL_STATIC_DRAW);
+
+  glGenBuffers(1, &vbo);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), v, GL_STATIC_DRAW);
+  //glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+  glGenBuffers(1, &vbo);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(float), u, GL_STATIC_DRAW);
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+  glGenBuffers(1, &vbo);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), n, GL_STATIC_DRAW);
+  glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+  //glGenBuffers(1, &ibo);
+  //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+  //glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size(), indices.data(), GL_STATIC_DRAW);
+  //glEnableVertexAttribArray(0);
+
+  //glGenBuffers(1, &vbo);
+  //glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  //glBufferData(GL_ARRAY_BUFFER, vertices.size(), vertices.data(), GL_STATIC_DRAW);
+  //glEnableVertexAttribArray(1);
+  //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+  //glGenBuffers(1, &vbo);
+  //glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  //glBufferData(GL_ARRAY_BUFFER, uvs.size(), uvs.data(), GL_STATIC_DRAW);
+  //glEnableVertexAttribArray(2);
+  //glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+  //glGenBuffers(1, &vbo);
+  //glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  //glBufferData(GL_ARRAY_BUFFER, normals.size(), normals.data(), GL_STATIC_DRAW);
+  //glEnableVertexAttribArray(3);
+  //glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+  glBindVertexArray(0);
+
+  return vao;
+}
