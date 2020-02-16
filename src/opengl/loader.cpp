@@ -32,6 +32,7 @@ int readFile(string filename, string* file) {
     stream.close();
   } else {
     cout << "Unable to open file" << endl;
+    return 1;
   }
 
   return 0;
