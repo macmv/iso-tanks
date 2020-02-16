@@ -55,3 +55,7 @@ bool Display::update() {
 void Display::render() {
   window->display();
 }
+
+void Display::close() {
+  window->close();
+}

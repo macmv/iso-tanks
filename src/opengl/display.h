@@ -13,6 +13,7 @@ class Display {
     void createWindow();
     bool update();
     void render();
+    void close();
 };
 
 #endif

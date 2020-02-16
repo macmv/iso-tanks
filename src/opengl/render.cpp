@@ -23,7 +23,10 @@ void Render::createPrograms() {
 
 void Render::update(uint vao) {
   glClear(GL_COLOR_BUFFER_BIT);
-  display->update();
+  if (!display->update()) {
+    display->close();
+    exit(0);
+  }
 
   glUseProgram(programID);
 
