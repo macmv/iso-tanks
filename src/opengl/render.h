@@ -14,7 +14,7 @@ class Render {
 
   public:
     Render(World* world);
-    void update();
+    void update(uint vbo);
 
   private:
     void createPrograms();
