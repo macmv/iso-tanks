@@ -6,12 +6,15 @@
 #include "display.h"
 #include "loader.h"
 #include <iostream>
+#include "camera.h"
 
 Render::Render(World* world) {
   this->world = world;
   display = new Display();
 
   createPrograms();
+
+  camera = new Camera(programID);
 }
 
 void Render::createPrograms() {
