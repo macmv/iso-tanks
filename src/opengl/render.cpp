@@ -26,7 +26,7 @@ void Render::update(uint vao) {
 
   glBindVertexArray(vao);
   glEnableVertexAttribArray(0);
-  glDrawArrays(GL_TRIANGLES, 0, 3);
+  glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
   glDisableVertexAttribArray(0);
   glBindVertexArray(0);
 
