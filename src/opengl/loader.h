@@ -25,5 +25,4 @@ GLuint createVAO(
   std::vector<glm::vec3>& normals
 );
 
-
 #endif

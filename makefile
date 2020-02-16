@@ -11,7 +11,7 @@ OBJS = $(patsubst %.cpp,$(OBJ_DIR)/%.o,$(CPP_FILES))
 OBJS := $(subst /src/,/,$(OBJS))
 
 CXX = gcc
-CXXFLAGS = -lsfml-system -lsfml-window -lGLEW -lGL -lstdc++
+CXXFLAGS = -lsfml-system -lsfml-window -lm -lGLEW -lGL -lstdc++
 INCLUDES = -Ilib/qu3e/src
 
 $(TARGET): $(OBJS)
