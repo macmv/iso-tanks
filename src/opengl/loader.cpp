@@ -158,9 +158,9 @@ bool loadOBJ (
     uint normalIndex = normalIndices[i] - 1;
 
     out_indices[i] = vertexIndex;
-    out_vertices[vertexIndex] = vertices[vertexIndex];
-    out_uvs[vertexIndex]      = uvs[uvIndex];
-    out_normals[vertexIndex]  = normals[normalIndex];
+    out_vertices[vertexIndex] = vertices.at(vertexIndex);
+    out_uvs[vertexIndex]      = uvs.at(uvIndex);
+    out_normals[vertexIndex]  = normals.at(normalIndex);
   }
 }
 
