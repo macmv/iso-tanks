@@ -21,7 +21,7 @@ void Render::createPrograms() {
   programID = loadShaderProgram("src/shader/vertex.glsl", "src/shader/fragment.glsl");
 }
 
-void Render::update(uint vao) {
+void Render::update(uint vao, uint length) {
   glClear(GL_COLOR_BUFFER_BIT);
   if (!display->update()) {
     display->close();
@@ -34,7 +34,7 @@ void Render::update(uint vao) {
 
   glBindVertexArray(vao);
   glEnableVertexAttribArray(0);
-  glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
+  glDrawElements(GL_TRIANGLES, length, GL_UNSIGNED_INT, 0);
   glDisableVertexAttribArray(0);
   glBindVertexArray(0);
 

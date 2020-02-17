@@ -14,8 +14,9 @@ int main() {
   std::vector<glm::vec3> normals;
   loadOBJ("assets/test.obj", indices, vertices, uvs, normals);
   GLuint vao = createVAO(indices, vertices, uvs, normals);
+  uint length = indices.size();
 
   while (true) {
-    render->update(vao);
+    render->update(vao, length);
   }
 }
