@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/string_cast.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 #include <SFML/Window.hpp>
 
 using namespace std;
@@ -14,35 +15,42 @@ Camera::Camera(GLuint programID) {
     0.1f,               // Near clipping plane
     100.0f              // Far clipping plane
   );
-  view = glm::lookAt(
-    glm::vec3(0,4,10), // pos
-    glm::vec3(0,0,0), // target
-    glm::vec3(0,1,0)  // up
-  );
+  pos = glm::vec3(0, 0, 10);
+  dir = glm::vec3(0, 0, -1);
   projectionID = glGetUniformLocation(programID, "projection");
   viewID = glGetUniformLocation(programID, "view");
 }
 
 void Camera::update() {
   float speed = 0.1;
+  glm::vec3 left = glm::rotate(dir, glm::radians(90.f), glm::vec3(0, 1, 0));
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-    view = glm::translate(view, glm::vec3(0, 0, speed));
+    pos += glm::vec3(dir.x * speed, 0, dir.z * speed);
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-    view = glm::translate(view, glm::vec3(speed, 0, 0));
+    pos += glm::vec3(left.x * speed, 0, left.z * speed);
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-    view = glm::translate(view, glm::vec3(0, 0, -speed));
+    pos += glm::vec3(-dir.x * speed, 0, -dir.z * speed);
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-    view = glm::translate(view, glm::vec3(-speed, 0, 0));
+    pos += glm::vec3(-left.x * speed, 0, -left.z * speed);
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-    view = glm::translate(view, glm::vec3(0, -speed, 0));
+    pos += glm::vec3(0, speed, 0);
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-    view = glm::translate(view, glm::vec3(0, speed, 0));
+    pos += glm::vec3(0, -speed, 0);
   }
+  sf::Vector2i new_pos = sf::Mouse::getPosition();
+  sf::Vector2i delta = old_pos - new_pos;
+  old_pos = new_pos;
+  dir = glm::rotate(dir, glm::radians(0.05f * delta.x), glm::vec3(0, 1, 0));
+
+  glm::mat4 view = glm::lookAt(
+    pos,               // pos
+    pos + dir,         // target
+    glm::vec3(0,1,0)); // up
   glUniformMatrix4fv(projectionID, 1, GL_FALSE, &projection[0][0]);
   glUniformMatrix4fv(viewID, 1, GL_FALSE, &view[0][0]);
 }
