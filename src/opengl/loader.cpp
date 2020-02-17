@@ -7,6 +7,8 @@
 #include <string.h>
 #include <fstream>
 #include <glm/gtx/string_cast.hpp>
+#include "../models/model.h"
+#include <string>
 
 using namespace std;
 
@@ -94,17 +96,17 @@ GLuint loadShaderProgram(string vertexFilename, string fragmentFilename) {
 }
 
 bool loadOBJ (
-  const char* path,
-  std::vector<uint>& out_indices,
-  std::vector<glm::vec3>& out_vertices,
-  std::vector<glm::vec2>& out_uvs,
-  std::vector<glm::vec3>& out_normals
+    string path,
+    std::vector<uint>& out_indices,
+    std::vector<glm::vec3>& out_vertices,
+    std::vector<glm::vec2>& out_uvs,
+    std::vector<glm::vec3>& out_normals
 ) {
   std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
   std::vector<glm::vec3> vertices;
   std::vector<glm::vec2> uvs;
   std::vector<glm::vec3> normals;
-  FILE* file = fopen(path, "r");
+  FILE* file = fopen(path.c_str(), "r");
   if (file == NULL) {
     cout << "Failed to open the file !" << endl;
     return false;
@@ -203,3 +205,22 @@ GLuint createVAO(
 
   return vao;
 }
+
+bool loadModel(string path, Model* model) {
+  if (path.rfind(".obj") == (path.size() - string(".obj").size())) {
+    std::vector<uint> indices;
+    std::vector<glm::vec3> vertices;
+    std::vector<glm::vec2> uvs;
+    std::vector<glm::vec3> normals;
+    loadOBJ(path, indices, vertices, uvs, normals);
+    GLuint vao = createVAO(indices, vertices, uvs, normals);
+    uint length = indices.size();
+    model->vao = vao;
+    model->length = length;
+  } else {
+    cout << "Unrecognized file format " << path << ", failed to load model" << endl;
+    return false;
+  }
+  return true;
+}
+

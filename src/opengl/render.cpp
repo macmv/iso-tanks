@@ -21,7 +21,7 @@ void Render::createPrograms() {
   programID = loadShaderProgram("src/shader/vertex.glsl", "src/shader/fragment.glsl");
 }
 
-void Render::update(uint vao, uint length) {
+void Render::update(Model* model) {
   glClear(GL_COLOR_BUFFER_BIT);
   if (!display->update()) {
     display->close();
@@ -32,9 +32,9 @@ void Render::update(uint vao, uint length) {
 
   camera->update();
 
-  glBindVertexArray(vao);
+  glBindVertexArray(model->vao);
   glEnableVertexAttribArray(0);
-  glDrawElements(GL_TRIANGLES, length, GL_UNSIGNED_INT, 0);
+  glDrawElements(GL_TRIANGLES, model->length, GL_UNSIGNED_INT, 0);
   glDisableVertexAttribArray(0);
   glBindVertexArray(0);
 

@@ -3,6 +3,7 @@
 #include "../world/world.h"
 #include "display.h"
 #include "camera.h"
+#include "../models/model.h"
 
 #ifndef _RENDER_H
 #define _RENDER_H
@@ -16,7 +17,7 @@ class Render {
 
   public:
     Render(World* world);
-    void update(uint vao, uint length);
+    void update(Model* model);
 
   private:
     void createPrograms();
