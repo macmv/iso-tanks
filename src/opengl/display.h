@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include "camera.h"
 
 #ifndef _DISPLAY_H
 #define _DISPLAY_H
@@ -11,7 +12,7 @@ class Display {
     Display();
     void init();
     void createWindow();
-    bool update();
+    bool update(Camera* camera);
     void render();
     void close();
 };

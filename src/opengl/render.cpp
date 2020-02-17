@@ -23,7 +23,7 @@ void Render::createPrograms() {
 
 void Render::update(Model* model) {
   glClear(GL_COLOR_BUFFER_BIT);
-  if (!display->update()) {
+  if (!display->update(camera)) {
     display->close();
     exit(0);
   }

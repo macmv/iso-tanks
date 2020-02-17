@@ -14,6 +14,7 @@ class Camera {
   public:
     Camera(GLuint programID);
     void update();
+    void update_size(uint width, uint height);
 };
 
 #endif

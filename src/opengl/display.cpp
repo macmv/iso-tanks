@@ -38,7 +38,7 @@ void Display::createWindow() {
   window->setFramerateLimit(60);
 }
 
-bool Display::update() {
+bool Display::update(Camera* camera) {
   sf::Event event;
   while (window->pollEvent(event)) {
     if (event.type == sf::Event::Closed) {
@@ -47,6 +47,7 @@ bool Display::update() {
     } else if (event.type == sf::Event::Resized) {
       // adjust the viewport when the window is resized
       glViewport(0, 0, event.size.width, event.size.height);
+      camera->update_size(event.size.width, event.size.height);
     }
   }
   return true;
