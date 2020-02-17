@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string.h>
 #include <fstream>
+#include <glm/gtx/string_cast.hpp>
 
 using namespace std;
 

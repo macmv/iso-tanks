@@ -13,6 +13,7 @@ class Camera {
 
   public:
     Camera(GLuint programID);
+    void update();
 };
 
 #endif

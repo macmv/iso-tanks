@@ -30,6 +30,8 @@ void Render::update(uint vao) {
 
   glUseProgram(programID);
 
+  camera->update();
+
   glBindVertexArray(vao);
   glEnableVertexAttribArray(0);
   glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
