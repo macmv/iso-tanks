@@ -13,65 +13,53 @@ Terrain::Terrain(int detail) {
   std::vector<glm::vec3> normals;
 
   double t = (1.0 + sqrt(5.0)) / 2.0;
-  double size = 10;
+  scale = 10;
+  this->detail = detail;
 
   std::vector<glm::vec3> points;
 
-  points.push_back(glm::vec3(-size,  t * size,  0));
-  points.push_back(glm::vec3( size,  t * size,  0));
-  points.push_back(glm::vec3(-size, -t * size,  0));
-  points.push_back(glm::vec3( size, -t * size,  0));
+  points.push_back(glm::vec3(-1,  t,  0));
+  points.push_back(glm::vec3( 1,  t,  0));
+  points.push_back(glm::vec3(-1, -t,  0));
+  points.push_back(glm::vec3( 1, -t,  0));
 
-  points.push_back(glm::vec3( 0, -size,  t * size));
-  points.push_back(glm::vec3( 0,  size,  t * size));
-  points.push_back(glm::vec3( 0, -size, -t * size));
-  points.push_back(glm::vec3( 0,  size, -t * size));
+  points.push_back(glm::vec3( 0, -1,  t));
+  points.push_back(glm::vec3( 0,  1,  t));
+  points.push_back(glm::vec3( 0, -1, -t));
+  points.push_back(glm::vec3( 0,  1, -t));
 
-  points.push_back(glm::vec3( t * size,  0, -size));
-  points.push_back(glm::vec3( t * size,  0,  size));
-  points.push_back(glm::vec3(-t * size,  0, -size));
-  points.push_back(glm::vec3(-t * size,  0,  size));
+  points.push_back(glm::vec3( t,  0, -1));
+  points.push_back(glm::vec3( t,  0,  1));
+  points.push_back(glm::vec3(-t,  0, -1));
+  points.push_back(glm::vec3(-t,  0,  1));
 
   // 5 faces around point 0
-  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(0), points.at(11), points.at(5));
-  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(0), points.at(5),  points.at(1));
-  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(0), points.at(1),  points.at(7));
-  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(0), points.at(7),  points.at(10));
-  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(0), points.at(10), points.at(11));
+  gen_triangle(&indices, &vertices, &uvs, &normals, points.at(0), points.at(11), points.at(5));
+  gen_triangle(&indices, &vertices, &uvs, &normals, points.at(0), points.at(5),  points.at(1));
+  gen_triangle(&indices, &vertices, &uvs, &normals, points.at(0), points.at(1),  points.at(7));
+  gen_triangle(&indices, &vertices, &uvs, &normals, points.at(0), points.at(7),  points.at(10));
+  gen_triangle(&indices, &vertices, &uvs, &normals, points.at(0), points.at(10), points.at(11));
 
   // 5 adjacent faces
-  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(1),  points.at(5),  points.at(9));
-  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(5),  points.at(11), points.at(4));
-  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(11), points.at(10), points.at(2));
-  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(10), points.at(7),  points.at(6));
-  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(7),  points.at(1),  points.at(8));
+  gen_triangle(&indices, &vertices, &uvs, &normals, points.at(1),  points.at(5),  points.at(9));
+  gen_triangle(&indices, &vertices, &uvs, &normals, points.at(5),  points.at(11), points.at(4));
+  gen_triangle(&indices, &vertices, &uvs, &normals, points.at(11), points.at(10), points.at(2));
+  gen_triangle(&indices, &vertices, &uvs, &normals, points.at(10), points.at(7),  points.at(6));
+  gen_triangle(&indices, &vertices, &uvs, &normals, points.at(7),  points.at(1),  points.at(8));
 
   // // 5 faces around point 3
-  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(3), points.at(9), points.at(4));
-  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(3), points.at(4), points.at(2));
-  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(3), points.at(2), points.at(6));
-  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(3), points.at(6), points.at(8));
-  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(3), points.at(8), points.at(9));
+  gen_triangle(&indices, &vertices, &uvs, &normals, points.at(3), points.at(9), points.at(4));
+  gen_triangle(&indices, &vertices, &uvs, &normals, points.at(3), points.at(4), points.at(2));
+  gen_triangle(&indices, &vertices, &uvs, &normals, points.at(3), points.at(2), points.at(6));
+  gen_triangle(&indices, &vertices, &uvs, &normals, points.at(3), points.at(6), points.at(8));
+  gen_triangle(&indices, &vertices, &uvs, &normals, points.at(3), points.at(8), points.at(9));
 
   // // 5 adjacent faces
-  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(4), points.at(9), points.at(5));
-  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(2), points.at(4), points.at(11));
-  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(6), points.at(2), points.at(10));
-  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(8), points.at(6), points.at(7));
-  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(9), points.at(8), points.at(1));
-
-  // indices.push_back(0);
-  // indices.push_back(1);
-  // indices.push_back(2);
-  // vertices.push_back(glm::vec3(0, 0, 0));
-  // vertices.push_back(glm::vec3(0, 1, 0));
-  // vertices.push_back(glm::vec3(1, 0, 0));
-  // uvs.push_back(glm::vec2(0, 0));
-  // uvs.push_back(glm::vec2(0, 1));
-  // uvs.push_back(glm::vec2(1, 0));
-  // normals.push_back(glm::vec3(0, 0, 0));
-  // normals.push_back(glm::vec3(0, 1, 0));
-  // normals.push_back(glm::vec3(1, 0, 0));
+  gen_triangle(&indices, &vertices, &uvs, &normals, points.at(4), points.at(9), points.at(5));
+  gen_triangle(&indices, &vertices, &uvs, &normals, points.at(2), points.at(4), points.at(11));
+  gen_triangle(&indices, &vertices, &uvs, &normals, points.at(6), points.at(2), points.at(10));
+  gen_triangle(&indices, &vertices, &uvs, &normals, points.at(8), points.at(6), points.at(7));
+  gen_triangle(&indices, &vertices, &uvs, &normals, points.at(9), points.at(8), points.at(1));
 
   GLuint vao = createVAO(indices, vertices, uvs, normals);
   uint length = indices.size();
@@ -79,12 +67,11 @@ Terrain::Terrain(int detail) {
   instance = new ModelInstance(model);
 }
 
-void gen_triangle(
+void Terrain::gen_triangle(
   std::vector<uint>* indices,
   std::vector<glm::vec3>* vertices,
   std::vector<glm::vec2>* uvs,
   std::vector<glm::vec3>* normals,
-  int detail,
   glm::vec3 a,
   glm::vec3 b,
   glm::vec3 c) {
@@ -104,6 +91,11 @@ void gen_triangle(
       }
       p01 = glm::normalize(glm::lerp(a, glm::lerp(b, c, (float) (j + 0) / (i + 1)), (float) (i + 1) / detail));
       p11 = glm::normalize(glm::lerp(a, glm::lerp(b, c, (float) (j + 1) / (i + 1)), (float) (i + 1) / detail));
+      p00 *= scale;
+      p01 *= scale;
+      p10 *= scale;
+      p11 *= scale;
+      cout << glm::to_string(p00) << endl;
       //p00 = p00 * (size + noise.get_noise_3d(
       //    p00.x * noiseScale,
       //    p00.y * noiseScale,
@@ -125,8 +117,8 @@ void gen_triangle(
         uvs->push_back(glm::vec2(0, 0));
         normals->push_back(glm::vec3(0, 0, 0));
 
-        indices->push_back(vertices->size() + 2);
         indices->push_back(vertices->size() - 1);
+        indices->push_back(vertices->size() + 2);
         indices->push_back(vertices->size());
       }
       vertices->push_back(p00);
@@ -140,8 +132,8 @@ void gen_triangle(
       normals->push_back(glm::vec3(0, 0, 0));
 
       indices->push_back(vertices->size() - 1);
-      indices->push_back(vertices->size() - 3);
       indices->push_back(vertices->size() - 2);
+      indices->push_back(vertices->size() - 3);
     }
   }
 }

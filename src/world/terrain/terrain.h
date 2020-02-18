@@ -7,20 +7,22 @@
 class Terrain {
   public:
     ModelInstance* instance;
+  private:
+    int detail;
+    float scale;
 
   public:
     Terrain(int detail);
-    int detail;
-};
 
-void gen_triangle(
-  std::vector<uint>* indices,
-  std::vector<glm::vec3>* vertices,
-  std::vector<glm::vec2>* uvs,
-  std::vector<glm::vec3>* normals,
-  int detail,
-  glm::vec3 a,
-  glm::vec3 b,
-  glm::vec3 c);
+  private:
+    void gen_triangle(
+      std::vector<uint>* indices,
+      std::vector<glm::vec3>* vertices,
+      std::vector<glm::vec2>* uvs,
+      std::vector<glm::vec3>* normals,
+      glm::vec3 a,
+      glm::vec3 b,
+      glm::vec3 c);
+};
 
 #endif
