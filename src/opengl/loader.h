@@ -10,6 +10,7 @@
 using namespace std;
 
 GLuint loadShaderProgram(string vertexFilename, string fragmentFilename);
+GLuint loadShaderProgram(string vertexFilename, string geometryFilename, string fragmentFilename);
 
 bool loadModel(string path, Model* model);
 

@@ -95,6 +95,38 @@ GLuint loadShaderProgram(string vertexFilename, string fragmentFilename) {
   return programID;
 }
 
+GLuint loadShaderProgram(string vertexFilename, string geometryFilename, string fragmentFilename) {
+  cout << "Loading shader program" << endl;
+  GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+  GLuint geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+  GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+  bool res = loadShader(vertexShader, vertexFilename);
+  if (!res) {
+    exit(1);
+  }
+  res = loadShader(geometryShader, geometryFilename);
+  if (!res) {
+    exit(1);
+  }
+  res = loadShader(fragmentShader, fragmentFilename);
+  if (!res) {
+    exit(1);
+  }
+
+  GLuint programID = glCreateProgram();
+
+  glAttachShader(programID, vertexShader);
+  glAttachShader(programID, geometryShader);
+  glAttachShader(programID, fragmentShader);
+
+  glLinkProgram(programID);
+
+  cout << "Loaded shader program" << endl;
+
+  return programID;
+}
+
 bool loadOBJ (
     string path,
     std::vector<uint>& out_indices,
