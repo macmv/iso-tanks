@@ -34,17 +34,10 @@ Terrain::Terrain(int detail) {
 
   // 5 faces around point 0
   gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(0), points.at(11), points.at(5));
-  // gen_triangle(indices, vertices, uvs, normals, detail, points.at(0), points.at(5),  points.at(1));
-  // gen_triangle(indices, vertices, uvs, normals, detail, points.at(0), points.at(1),  points.at(7));
-  // gen_triangle(indices, vertices, uvs, normals, detail, points.at(0), points.at(7),  points.at(10));
-  // gen_triangle(indices, vertices, uvs, normals, detail, points.at(0), points.at(10), points.at(11));
-
-  for (int i = 0; i < indices.size(); i++) {
-    std::cout << indices[i] << std::endl;
-  }
-  for (int i = 0; i < vertices.size(); i++) {
-    std::cout << glm::to_string(vertices[i]) << std::endl;
-  }
+  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(0), points.at(5),  points.at(1));
+  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(0), points.at(1),  points.at(7));
+  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(0), points.at(7),  points.at(10));
+  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(0), points.at(10), points.at(11));
 
   // 5 adjacent faces
   // min_max_len = gen_triangle(st, min_max_len, points[1], points[5], points[9])
