@@ -22,7 +22,8 @@ void Render::createPrograms() {
 }
 
 void Render::update(Model* model) {
-  glClear(GL_COLOR_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
   if (!display->update()) {
     display->close();
     exit(0);
@@ -34,8 +35,12 @@ void Render::update(Model* model) {
 
   glBindVertexArray(model->vao);
   glEnableVertexAttribArray(0);
+  glEnableVertexAttribArray(1);
+  glEnableVertexAttribArray(2);
   glDrawElements(GL_TRIANGLES, model->length, GL_UNSIGNED_INT, 0);
   glDisableVertexAttribArray(0);
+  glDisableVertexAttribArray(1);
+  glDisableVertexAttribArray(2);
   glBindVertexArray(0);
 
   glUseProgram(NULL);

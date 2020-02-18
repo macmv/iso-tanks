@@ -31,11 +31,12 @@ void Display::createWindow() {
   settings.minorVersion = 6;
 
   window = new Window(sf::VideoMode(800, 600), "Iso Tanks", sf::Style::Default, settings);
+
   window->setVerticalSyncEnabled(true);
-
   window->setActive(true);
-
   window->setFramerateLimit(60);
+
+  glEnable(GL_DEPTH_TEST);
 }
 
 bool Display::update() {
