@@ -40,25 +40,25 @@ Terrain::Terrain(int detail) {
   gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(0), points.at(10), points.at(11));
 
   // 5 adjacent faces
-  // min_max_len = gen_triangle(st, min_max_len, points[1], points[5], points[9])
-  // min_max_len = gen_triangle(st, min_max_len, points[5], points[11], points[4])
-  // min_max_len = gen_triangle(st, min_max_len, points[11], points[10], points[2])
-  // min_max_len = gen_triangle(st, min_max_len, points[10], points[7], points[6])
-  // min_max_len = gen_triangle(st, min_max_len, points[7], points[1], points[8])
+  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(1),  points.at(5),  points.at(9));
+  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(5),  points.at(11), points.at(4));
+  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(11), points.at(10), points.at(2));
+  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(10), points.at(7),  points.at(6));
+  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(7),  points.at(1),  points.at(8));
 
   // // 5 faces around point 3
-  // min_max_len = gen_triangle(st, min_max_len, points[3], points[9], points[4])
-  // min_max_len = gen_triangle(st, min_max_len, points[3], points[4], points[2])
-  // min_max_len = gen_triangle(st, min_max_len, points[3], points[2], points[6])
-  // min_max_len = gen_triangle(st, min_max_len, points[3], points[6], points[8])
-  // min_max_len = gen_triangle(st, min_max_len, points[3], points[8], points[9])
+  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(3), points.at(9), points.at(4));
+  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(3), points.at(4), points.at(2));
+  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(3), points.at(2), points.at(6));
+  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(3), points.at(6), points.at(8));
+  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(3), points.at(8), points.at(9));
 
   // // 5 adjacent faces
-  // min_max_len = gen_triangle(st, min_max_len, points[4], points[9], points[5])
-  // min_max_len = gen_triangle(st, min_max_len, points[2], points[4], points[11])
-  // min_max_len = gen_triangle(st, min_max_len, points[6], points[2], points[10])
-  // min_max_len = gen_triangle(st, min_max_len, points[8], points[6], points[7])
-  // min_max_len = gen_triangle(st, min_max_len, points[9], points[8], points[1])
+  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(4), points.at(9), points.at(5));
+  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(2), points.at(4), points.at(11));
+  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(6), points.at(2), points.at(10));
+  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(8), points.at(6), points.at(7));
+  gen_triangle(&indices, &vertices, &uvs, &normals, detail, points.at(9), points.at(8), points.at(1));
 
   // indices.push_back(0);
   // indices.push_back(1);
