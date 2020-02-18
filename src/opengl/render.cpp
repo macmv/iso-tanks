@@ -23,14 +23,14 @@ void Render::createPrograms() {
 
 void Render::update(Model* model) {
   glClear(GL_COLOR_BUFFER_BIT);
-  if (!display->update(camera)) {
+  if (!display->update()) {
     display->close();
     exit(0);
   }
 
   glUseProgram(programID);
 
-  camera->update();
+  camera->update(display);
 
   glBindVertexArray(model->vao);
   glEnableVertexAttribArray(0);

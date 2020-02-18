@@ -1,4 +1,5 @@
 #include "camera.h"
+#include "display.h"
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -21,17 +22,18 @@ Camera::Camera(GLuint programID) {
   viewID = glGetUniformLocation(programID, "view");
 }
 
-void Camera::update() {
+void Camera::update(Display* display) {
   float speed = 0.1;
-  glm::vec3 left = glm::rotate(dir, glm::radians(90.f), glm::vec3(0, 1, 0));
+  glm::vec3 forward = glm::normalize(glm::vec3(dir.x, 0, dir.z));
+  glm::vec3 left = glm::rotate(forward, glm::radians(90.f), glm::vec3(0, 1, 0));
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-    pos += glm::vec3(dir.x * speed, 0, dir.z * speed);
+    pos += glm::vec3(forward.x * speed, 0, forward.z * speed);
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
     pos += glm::vec3(left.x * speed, 0, left.z * speed);
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-    pos += glm::vec3(-dir.x * speed, 0, -dir.z * speed);
+    pos += glm::vec3(-forward.x * speed, 0, -forward.z * speed);
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
     pos += glm::vec3(-left.x * speed, 0, -left.z * speed);
@@ -43,9 +45,18 @@ void Camera::update() {
     pos += glm::vec3(0, -speed, 0);
   }
   sf::Vector2i new_pos = sf::Mouse::getPosition();
-  sf::Vector2i delta = old_pos - new_pos;
-  old_pos = new_pos;
+  display->reset_mouse();
+  sf::Vector2i delta;
+  if (new_pos.x != 0) {
+    delta = display->get_center() - new_pos;
+  } else {
+    delta = new_pos;
+  }
   dir = glm::rotate(dir, glm::radians(0.05f * delta.x), glm::vec3(0, 1, 0));
+  dir = glm::rotate(dir, glm::radians(-0.05f * delta.y), left);
+  if (dir.y < -0.999 || dir.y > 0.999) {
+    dir = glm::rotate(dir, glm::radians(0.05f * delta.y), left);
+  }
 
   glm::mat4 view = glm::lookAt(
     pos,               // pos

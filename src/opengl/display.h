@@ -1,8 +1,7 @@
-#include <SFML/Graphics.hpp>
-#include "camera.h"
-
 #ifndef _DISPLAY_H
 #define _DISPLAY_H
+
+#include <SFML/Graphics.hpp>
 
 class Display {
   private:
@@ -12,7 +11,10 @@ class Display {
     Display();
     void init();
     void createWindow();
-    bool update(Camera* camera);
+    bool update();
+    void reset_mouse();
+    sf::Vector2u get_window_size();
+    sf::Vector2i get_center();
     void render();
     void close();
 };

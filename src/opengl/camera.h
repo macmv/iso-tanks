@@ -1,9 +1,10 @@
+#ifndef _CAMERA_H
+#define _CAMERA_H
+
+#include "display.h"
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 #include <SFML/Window.hpp>
-
-#ifndef _CAMERA_H
-#define _CAMERA_H
 
 class Camera {
   private:
@@ -16,8 +17,9 @@ class Camera {
 
   public:
     Camera(GLuint programID);
-    void update();
+    void update(Display* display);
     void update_size(uint width, uint height);
+    void set_mouse(uint x, uint y);
 };
 
 #endif

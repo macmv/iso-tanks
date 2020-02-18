@@ -38,7 +38,7 @@ void Display::createWindow() {
   window->setFramerateLimit(60);
 }
 
-bool Display::update(Camera* camera) {
+bool Display::update() {
   sf::Event event;
   while (window->pollEvent(event)) {
     if (event.type == sf::Event::Closed) {
@@ -47,10 +47,21 @@ bool Display::update(Camera* camera) {
     } else if (event.type == sf::Event::Resized) {
       // adjust the viewport when the window is resized
       glViewport(0, 0, event.size.width, event.size.height);
-      camera->update_size(event.size.width, event.size.height);
     }
   }
   return true;
+}
+
+void Display::reset_mouse() {
+  sf::Mouse::setPosition(get_center());
+}
+
+sf::Vector2i Display::get_center() {
+  return sf::Vector2i(window->getSize().x / 2, window->getSize().y / 2);
+}
+
+sf::Vector2u Display::get_window_size() {
+  return window->getSize();
 }
 
 void Display::render() {
