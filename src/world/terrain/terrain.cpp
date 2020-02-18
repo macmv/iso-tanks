@@ -95,7 +95,6 @@ void Terrain::gen_triangle(
       p01 *= scale;
       p10 *= scale;
       p11 *= scale;
-      cout << glm::to_string(p00) << endl;
       //p00 = p00 * (size + noise.get_noise_3d(
       //    p00.x * noiseScale,
       //    p00.y * noiseScale,
