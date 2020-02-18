@@ -19,7 +19,8 @@ Render::Render(World* world) {
 }
 
 void Render::createPrograms() {
-  programID = loadShaderProgram("src/shader/vertex.glsl", "src/shader/fragment.glsl");
+  programID = loadShaderProgram("src/shader/flat_vertex.glsl", "src/shader/flat_geometry.glsl", "src/shader/flat_fragment.glsl");
+  // programID = loadShaderProgram("src/shader/simple_vertex.glsl", "src/shader/simple_fragment.glsl");
 }
 
 void Render::update(ModelInstance* instance) {
