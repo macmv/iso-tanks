@@ -2,6 +2,6 @@
 
 ModelInstance::ModelInstance(Model* model) {
   this->model = model;
-  this->transform = glm::mat4();
+  transform = glm::mat4(1);
 }
 

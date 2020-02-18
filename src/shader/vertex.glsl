@@ -5,6 +5,7 @@ layout (location = 0) in vec3 normal;
 
 uniform mat4 projection;
 uniform mat4 view;
+uniform mat4 model;
 
 out vec3 surfaceNormal;
 out vec3 toLightVec;
@@ -12,9 +13,11 @@ out vec3 toLightVec;
 void main() {
   vec3 lightPos = vec3(0, 5, 5);
 
-  vec4 screen_pos = projection * view * vec4(pos, 1);
+  vec3 world_pos = (model * vec4(pos, 1)).xyz;
+
+  vec4 screen_pos = projection * view * vec4(world_pos, 1);
   gl_Position = screen_pos;
 
-  surfaceNormal = normal;
-  toLightVec = lightPos - vec3(0, 0, 0);
+  surfaceNormal = (model * vec4(normal, 1)).xyz;
+  toLightVec = lightPos - world_pos;
 }

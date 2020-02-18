@@ -1,4 +1,5 @@
 #include "camera.h"
+#include "../models/model_instance.h"
 #include "display.h"
 #include <iostream>
 #include <glm/glm.hpp>
@@ -20,6 +21,7 @@ Camera::Camera(GLuint programID) {
   dir = glm::vec3(0, 0, -1);
   projectionID = glGetUniformLocation(programID, "projection");
   viewID = glGetUniformLocation(programID, "view");
+  modelID = glGetUniformLocation(programID, "model");
 }
 
 void Camera::update(Display* display) {
@@ -64,6 +66,10 @@ void Camera::update(Display* display) {
     glm::vec3(0,1,0)); // up
   glUniformMatrix4fv(projectionID, 1, GL_FALSE, &projection[0][0]);
   glUniformMatrix4fv(viewID, 1, GL_FALSE, &view[0][0]);
+}
+
+void Camera::load(ModelInstance* model) {
+  glUniformMatrix4fv(modelID, 1, GL_FALSE, &model->transform[0][0]);
 }
 
 void Camera::update_size(uint width, uint height) {

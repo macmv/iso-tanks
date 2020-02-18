@@ -5,14 +5,12 @@
 #define _MODEL_INSTANCE_H
 
 class ModelInstance {
-  private:
+  public:
     Model* model;
     glm::mat4 transform;
 
   public:
     ModelInstance(Model* model);
-    Model* getModel();
-    glm::mat4 getTransform();
 };
 
 #endif

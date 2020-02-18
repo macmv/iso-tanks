@@ -3,7 +3,7 @@
 #include "../world/world.h"
 #include "display.h"
 #include "camera.h"
-#include "../models/model.h"
+#include "../models/model_instance.h"
 
 #ifndef _RENDER_H
 #define _RENDER_H
@@ -17,7 +17,7 @@ class Render {
 
   public:
     Render(World* world);
-    void update(Model* model);
+    void update(ModelInstance* model);
 
   private:
     void createPrograms();

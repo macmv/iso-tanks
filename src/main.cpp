@@ -11,8 +11,9 @@ int main() {
 
   Model* model = new Model();
   loadModel("assets/test.obj", model);
+  ModelInstance* m = new ModelInstance(model);
 
   while (true) {
-    render->update(model);
+    render->update(m);
   }
 }
