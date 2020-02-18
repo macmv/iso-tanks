@@ -1,7 +1,7 @@
 #include <iostream>
 #include "opengl/render.h"
 #include "opengl/loader.h"
-#include "models/model.h"
+#include "world/terrain/terrain.h"
 
 using namespace std;
 
@@ -9,11 +9,9 @@ int main() {
   World* world;
   Render* render = new Render(world);
 
-  Model* model = new Model();
-  loadModel("assets/test.obj", model);
-  ModelInstance* m = new ModelInstance(model);
+  Terrain* terrain = new Terrain(1);
 
   while (true) {
-    render->update(m);
+    render->update(terrain->instance);
   }
 }

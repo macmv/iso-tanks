@@ -36,5 +36,4 @@ void main() {
   set_pos(1);
   set_pos(2);
   EndPrimitive();
-
 }
