@@ -3,9 +3,11 @@ TARGET = iso-tanks
 SRC_DIR = src
 OBJ_DIR = obj
 
-CPP_FILES  = $(wildcard $(SRC_DIR)/*.cpp) $(wildcard $(SRC_DIR)/**/*.cpp)
-H_FILES   = $(wildcard $(SRC_DIR)/*.h) $(wildcard $(SRC_DIR)/**/*.h)
-OBJ_FILES = $(wildcard $(OBJ_DIR)/*.o) $(wildcard $(OBJ_DIR)/**/*.o)
+rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
+
+CPP_FILES = $(call rwildcard,$(SRC_DIR)/,*.cpp)
+H_FILES   = $(call rwildcard,$(SRC_DIR)/,*.h)
+OBJ_FILES = $(call rwildcard,$(OBJ_DIR)/,*.o)
 
 OBJS = $(patsubst %.cpp,$(OBJ_DIR)/%.o,$(CPP_FILES))
 OBJS := $(subst /src/,/,$(OBJS))
