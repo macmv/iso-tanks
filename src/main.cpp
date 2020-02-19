@@ -13,6 +13,8 @@ int main() {
   World* world = new World(terrain);
   render->world = world;
 
+  world->add_player();
+
   while (true) {
     world->update();
     render->update(terrain->instance);

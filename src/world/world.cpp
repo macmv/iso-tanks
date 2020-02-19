@@ -1,4 +1,5 @@
 #include "world.h"
+#include "../player/player.h"
 #include <bullet/btBulletDynamicsCommon.h>
 #include <glm/glm.hpp>
 #include <iostream>
@@ -26,13 +27,13 @@ World::World(Terrain* terrain) {
     glm::vec3 c = terrain->vertices->at(terrain->indices->at(i * 3 + 2));
     mesh->addTriangle(btVector3(a.x, a.y, a.z), btVector3(b.x, b.y, b.z), btVector3(c.x, c.y, c.z));
   }
+
   btCollisionShape* groundShape = new btBvhTriangleMeshShape(mesh, true, true);
   collisionShapes->push_back(groundShape);
 
   btCollisionShape* sphereShape = new btSphereShape(btScalar(1.));
   //btCollisionShape* colShape = new btBoxShape(btVector3(1,1,1));
   collisionShapes->push_back(sphereShape);
-
 
   btTransform groundTransform;
   groundTransform.setIdentity();
@@ -54,22 +55,31 @@ World::World(Terrain* terrain) {
   //add the body to the dynamics world
   dynamicsWorld->addRigidBody(body);
 
+  players = new std::vector<Player*>();
+  models = new std::vector<ModelInstance*>();
+}
+
+void World::add_player() {
+  btCollisionShape* shape = collisionShapes->at(1);
 
   btTransform startTransform;
   startTransform.setIdentity();
 
-  mass = 1.f;
-
-  sphereShape->calculateLocalInertia(mass, localInertia);
-
+  float mass = 1.f;
+  btVector3 localInertia(0, 0, 0);
+  shape->calculateLocalInertia(mass, localInertia);
   startTransform.setOrigin(btVector3(2, 10, 0));
 
   //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-  myMotionState = new btDefaultMotionState(startTransform);
-  rbInfo = btRigidBody::btRigidBodyConstructionInfo(mass, myMotionState, sphereShape, localInertia);
-  body = new btRigidBody(rbInfo);
+  btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
+  btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, shape, localInertia);
+  btRigidBody* body = new btRigidBody(rbInfo);
 
   dynamicsWorld->addRigidBody(body);
+
+  Player* player = new Player(body);
+  players->push_back(player);
+  models->push_back(player->instance);
 }
 
 World::~World() {
