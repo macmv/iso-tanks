@@ -9,14 +9,15 @@
 #define _RENDER_H
 
 class Render {
-  private:
+  public:
     World* world;
+  private:
     Display* display;
     Camera* camera;
     GLuint programID;
 
   public:
-    Render(World* world);
+    Render();
     void update(ModelInstance* model);
 
   private:

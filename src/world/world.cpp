@@ -1,8 +1,11 @@
 #include "world.h"
 #include <bullet/btBulletDynamicsCommon.h>
 #include <glm/glm.hpp>
+#include <iostream>
 
-World::World() {
+using namespace std;
+
+World::World(Terrain* terrain) {
   // init
 
   btDefaultCollisionConfiguration*     collisionConfiguration = new btDefaultCollisionConfiguration();
@@ -18,7 +21,14 @@ World::World() {
 
   btAlignedObjectArray<btCollisionShape*> collisionShapes;
 
+  cout << "size:" << endl;
+  cout << terrain->indices->size() << endl;
+
   btTriangleMesh* mesh = new btTriangleMesh();
+
+  for (int i = 0; i < terrain->indices->size() / 3; i++) {
+
+  }
 
   mesh->addTriangle(btVector3(-10, 0, -10), btVector3(10, 0, -10), btVector3(0, 0, 10));
 

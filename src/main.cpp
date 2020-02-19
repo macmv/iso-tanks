@@ -7,10 +7,11 @@
 using namespace std;
 
 int main() {
-  World* world = new World();
-  Render* render = new Render(world);
+  Render* render = new Render();
 
   Terrain* terrain = new Terrain(100);
+  World* world = new World(terrain);
+  render->world = world;
 
   while (true) {
     render->update(terrain->instance);

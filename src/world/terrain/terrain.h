@@ -7,6 +7,8 @@
 class Terrain {
   public:
     ModelInstance* instance;
+    std::vector<uint>* indices;
+    std::vector<glm::vec3>* vertices;
   private:
     int detail;
     float scale;

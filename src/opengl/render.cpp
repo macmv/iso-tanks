@@ -9,8 +9,7 @@
 #include "camera.h"
 #include <glm/gtc/matrix_transform.hpp>
 
-Render::Render(World* world) {
-  this->world = world;
+Render::Render() {
   display = new Display();
 
   createPrograms();
