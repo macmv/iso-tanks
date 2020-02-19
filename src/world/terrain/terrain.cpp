@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/compatibility.hpp>
 #include <glm/gtx/string_cast.hpp>
+#include <glm/gtc/noise.hpp>
 #include <iostream>
 
 Terrain::Terrain(int detail) {
@@ -61,6 +62,8 @@ Terrain::Terrain(int detail) {
   gen_triangle(&indices, &vertices, &uvs, &normals, points.at(8), points.at(6), points.at(7));
   gen_triangle(&indices, &vertices, &uvs, &normals, points.at(9), points.at(8), points.at(1));
 
+  cout << indices.size() << endl;
+
   GLuint vao = createVAO(indices, vertices, uvs, normals);
   uint length = indices.size();
   Model* model = new Model(vao, length);
@@ -76,63 +79,48 @@ void Terrain::gen_triangle(
   glm::vec3 b,
   glm::vec3 c) {
 
-  for (int i = 0; i < detail; i++) {
+  int row_start = vertices->size();
+
+  for (int i = 0; i < detail + 1; i++) {
+    row_start += i;
     for (int j = 0; j < i + 1; j++) {
-      glm::vec3 p00;
-      glm::vec3 p01;
-      glm::vec3 p10;
-      glm::vec3 p11;
-      if (i == 0) {
-        p00 = glm::normalize(glm::lerp(a, lerp(b, c, 0.f), (float) i / detail));
-        p10 = glm::normalize(glm::lerp(a, lerp(b, c, 0.f), (float) i / detail));
+      glm::vec3 point;
+      if (i == 0) { // div by 0 errors
+        point = glm::normalize(a);
       } else {
-        p00 = glm::normalize(glm::lerp(a, lerp(b, c, (j + 0.f) / i), (float) i / detail));
-        p10 = glm::normalize(glm::lerp(a, lerp(b, c, (j + 1.f) / i), (float) i / detail));
+        point = glm::normalize(glm::lerp(a, lerp(b, c, (float) j / i), (float) i / detail));
       }
-      p01 = glm::normalize(glm::lerp(a, glm::lerp(b, c, (float) (j + 0) / (i + 1)), (float) (i + 1) / detail));
-      p11 = glm::normalize(glm::lerp(a, glm::lerp(b, c, (float) (j + 1) / (i + 1)), (float) (i + 1) / detail));
-      p00 *= scale;
-      p01 *= scale;
-      p10 *= scale;
-      p11 *= scale;
-      //p00 = p00 * (size + noise.get_noise_3d(
-      //    p00.x * noiseScale,
-      //    p00.y * noiseScale,
-      //    p00.z * noiseScale) * size * noiseWeight)
-      //p01 = p01 * (size + noise.get_noise_3d(
-      //    p01.x * noiseScale,
-      //    p01.y * noiseScale,
-      //    p01.z * noiseScale) * size * noiseWeight)
-      //p10 = p10 * (size + noise.get_noise_3d(
-      //    p10.x * noiseScale,
-      //    p10.y * noiseScale,
-      //    p10.z * noiseScale) * size * noiseWeight)
-      //p11 = p11 * (size + noise.get_noise_3d(
-      //    p11.x * noiseScale,
-      //    p11.y * noiseScale,
-      //    p11.z * noiseScale) * size * noiseWeight)
-      if (j < i) {
-        vertices->push_back(p10);
-        uvs->push_back(glm::vec2(0, 0));
-        normals->push_back(glm::vec3(0, 0, 0));
-
-        indices->push_back(vertices->size() - 1);
-        indices->push_back(vertices->size() + 2);
-        indices->push_back(vertices->size());
+      point *= scale + layered_noise(point, 8, 2, 0.5f);
+      vertices->push_back(point);
+      uvs->push_back(glm::vec2(0, 0));
+      normals->push_back(glm::vec3(0, 0, 0));
+      if (i != detail) {
+        // triangle with two points on bottom row and one point on top row
+        indices->push_back(row_start + j);
+        indices->push_back(row_start + i + j + 2);
+        indices->push_back(row_start + i + j + 1);
+        if (j != i) {
+          // triangle with one point on bottom row and two points on top row
+          indices->push_back(row_start + j);
+          indices->push_back(row_start + j + 1);
+          indices->push_back(row_start + i + j + 2);
+        }
       }
-      vertices->push_back(p00);
-      uvs->push_back(glm::vec2(0, 0));
-      normals->push_back(glm::vec3(0, 0, 0));
-      vertices->push_back(p01);
-      uvs->push_back(glm::vec2(0, 0));
-      normals->push_back(glm::vec3(0, 0, 0));
-      vertices->push_back(p11);
-      uvs->push_back(glm::vec2(0, 0));
-      normals->push_back(glm::vec3(0, 0, 0));
-
-      indices->push_back(vertices->size() - 1);
-      indices->push_back(vertices->size() - 2);
-      indices->push_back(vertices->size() - 3);
     }
   }
+}
+
+float layered_noise(glm::vec3 pos, int layers, float roughness, float persistence) {
+  float value = 0;
+  float frequency = .5f;
+  float amplitude = 2;
+
+  for (int i = 0; i < layers; i++) {
+    float val = glm::perlin(pos * frequency) * amplitude;
+    value += val;
+    frequency *= roughness;
+    amplitude *= persistence;
+  }
+
+  return value;
 }

@@ -9,7 +9,7 @@ int main() {
   World* world;
   Render* render = new Render(world);
 
-  Terrain* terrain = new Terrain(10);
+  Terrain* terrain = new Terrain(100);
 
   while (true) {
     render->update(terrain->instance);

@@ -18,7 +18,7 @@ void set_pos(int i) {
 }
 
 void main() {
-  vec3 lightPos = vec3(0, 8, 0);
+  vec3 lightPos = vec3(0, 0, 0);
   float specularStrength = 0.5;
   float diffuseStrength = 0.5;
   vec3 cam = vec3(0, 0, 10);

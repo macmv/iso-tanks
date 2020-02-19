@@ -25,4 +25,6 @@ class Terrain {
       glm::vec3 c);
 };
 
+float layered_noise(glm::vec3 pos, int layers, float roughness, float persistence);
+
 #endif
