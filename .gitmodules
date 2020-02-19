@@ -1,3 +1,6 @@
 [submodule "lib/qu3e"]
 	path = lib/qu3e
 	url = git@github.com:RandyGaul/qu3e.git
+[submodule "lib/reactphysics3d"]
+	path = lib/reactphysics3d
+	url = git@github.com:DanielChappuis/reactphysics3d.git

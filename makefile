@@ -14,10 +14,11 @@ OBJS := $(subst /src/,/,$(OBJS))
 
 CXX = gcc
 CXXFLAGS = -lsfml-system -lsfml-window -lm -lGLEW -lGL -lstdc++
-INCLUDES = -Ilib/qu3e/src
+INCLUDES = -Ilib/reactphysics3d/src/
+LIBS = lib/reactphysics3d/build/lib/libreactphysics3d.a
 
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $?
+	$(CXX) $(CXXFLAGS) -o $@ $? $(LIBS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(CPP_FILES)
 	mkdir -p $(dir $@)
