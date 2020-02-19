@@ -36,7 +36,7 @@ void Render::update(ModelInstance* instance) {
   camera->update(display);
   camera->load(instance);
 
-  instance->transform = glm::rotate(instance->transform, glm::radians(1.f), glm::vec3(0, 1, 0));
+  //instance->transform = glm::rotate(instance->transform, glm::radians(1.f), glm::vec3(0, 1, 0));
 
   glBindVertexArray(instance->model->vao);
   glEnableVertexAttribArray(0);

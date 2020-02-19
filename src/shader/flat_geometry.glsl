@@ -22,7 +22,7 @@ void set_pos(int i) {
 void main() {
   vec3 lightPos = vec3(0, 0, 0);
   float specularStrength = 0.5;
-  float diffuseStrength = 0.5;
+  float diffuseStrength = 1;
   vec3 cam = vec3(0, 0, 10);
 
   // matrix maths
@@ -43,7 +43,7 @@ void main() {
   float specular = specularStrength * spec;
 
   // final color
-  pass_color = vec4(diffuse * color[0] + specular, 1);
+  pass_color = vec4(diffuse * color[0], 1);
 
   set_pos(0);
   set_pos(1);

@@ -14,7 +14,7 @@ Terrain::Terrain(int detail) {
   std::vector<glm::vec3> normals;
 
   double t = (1.0 + sqrt(5.0)) / 2.0;
-  scale = 10;
+  scale = 30;
   this->detail = detail;
 
   std::vector<glm::vec3> points;
@@ -78,18 +78,12 @@ glm::vec3 get_color(float value) {
   colors.push_back(std::pair<float, glm::vec3>(.25f, glm::vec3(.1, .5, .3)));
   colors.push_back(std::pair<float, glm::vec3>(.5f,  glm::vec3(.2, .6, .2)));
   colors.push_back(std::pair<float, glm::vec3>(.65f, glm::vec3(.2, .6, .2)));
-  colors.push_back(std::pair<float, glm::vec3>(.7f,  glm::vec3(.1, .2, .6)));
-  colors.push_back(std::pair<float, glm::vec3>(1.f,  glm::vec3(.1, .2, .6)));
-  // colors[.0f] = glm::vec3(1, 1, 1);
-  // colors[.15f] = glm::vec3(1, 1, 1);
-  // colors[.2f] = glm::vec3(.5, .25, .25);
-  // colors[.25f] = glm::vec3(.1, .5, .3);
-  // colors[.5f] = glm::vec3(.2, .6, .2);
-  // colors[1.f] = glm::vec3(.2, .6, .2);
+  colors.push_back(std::pair<float, glm::vec3>(.7f,  glm::vec3(.2, .4, .8)));
+  colors.push_back(std::pair<float, glm::vec3>(1.f,  glm::vec3(.1, .2, .8)));
   std::pair<float, glm::vec3> prev;
-  value = glm::min(glm::max((value + 2) / 4.f, 0.f), 1.f);
+  value = glm::min(glm::max((value + 2) / 4.f, 0.001f), 1.f);
   for (std::pair<float, glm::vec3> val : colors) {
-    if (val.first > value) {
+    if (val.first >= value) {
       return glm::lerp(
           prev.second,
           val.second,
@@ -120,7 +114,7 @@ void Terrain::gen_triangle(
         point = glm::normalize(glm::lerp(a, lerp(b, c, (float) j / i), (float) i / detail));
       }
       float noise = layered_noise(point, 8, 2, 0.5f);
-      point *= scale + noise;
+      point *= scale + (noise * scale / 10);
       vertices->push_back(point);
       uvs->push_back(glm::vec2(0, 0));
       normals->push_back(get_color(noise));
@@ -146,7 +140,7 @@ float layered_noise(glm::vec3 pos, int layers, float roughness, float persistenc
   float amplitude = 2;
 
   for (int i = 0; i < layers; i++) {
-    float val = glm::perlin(pos * frequency) * amplitude;
+    float val = glm::perlin(pos * frequency + glm::vec3(1000, 0, 0)) * amplitude;
     value += val;
     frequency *= roughness;
     amplitude *= persistence;
