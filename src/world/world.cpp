@@ -27,10 +27,11 @@ World::World(Terrain* terrain) {
   btTriangleMesh* mesh = new btTriangleMesh();
 
   for (int i = 0; i < terrain->indices->size() / 3; i++) {
-
+    glm::vec3 a = terrain->vertices->at(terrain->indices->at(i * 3 + 0));
+    glm::vec3 b = terrain->vertices->at(terrain->indices->at(i * 3 + 1));
+    glm::vec3 c = terrain->vertices->at(terrain->indices->at(i * 3 + 2));
+    mesh->addTriangle(btVector3(a.x, a.y, a.z), btVector3(b.x, b.y, b.z), btVector3(c.x, c.y, c.z));
   }
-
-  mesh->addTriangle(btVector3(-10, 0, -10), btVector3(10, 0, -10), btVector3(0, 0, 10));
 
   btCollisionShape* groundShape = new btBvhTriangleMeshShape(mesh, true, true);
   collisionShapes.push_back(groundShape);
@@ -80,7 +81,7 @@ World::World(Terrain* terrain) {
   /// Do some simulation
 
   ///-----stepsimulation_start-----
-  for (int i = 0; i < 150; i++) {
+  for (int i = 0; i < 500; i++) {
     dynamicsWorld->stepSimulation(1.f / 60.f, 10);
 
     //print positions of all objects
