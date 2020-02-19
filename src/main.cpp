@@ -14,6 +14,7 @@ int main() {
   render->world = world;
 
   while (true) {
+    world->update();
     render->update(terrain->instance);
   }
 }
