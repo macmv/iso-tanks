@@ -70,6 +70,35 @@ Terrain::Terrain(int detail) {
   instance = new ModelInstance(model);
 }
 
+glm::vec3 get_color(float value) {
+  std::vector<std::pair<float, glm::vec3>> colors;
+  colors.push_back(std::pair<float, glm::vec3>(.0f,  glm::vec3(1, 1, 1)));
+  colors.push_back(std::pair<float, glm::vec3>(.05f, glm::vec3(1, 1, 1)));
+  colors.push_back(std::pair<float, glm::vec3>(.1f,  glm::vec3(.4, .2, .15)));
+  colors.push_back(std::pair<float, glm::vec3>(.25f, glm::vec3(.1, .5, .3)));
+  colors.push_back(std::pair<float, glm::vec3>(.5f,  glm::vec3(.2, .6, .2)));
+  colors.push_back(std::pair<float, glm::vec3>(.65f, glm::vec3(.2, .6, .2)));
+  colors.push_back(std::pair<float, glm::vec3>(.7f,  glm::vec3(.1, .2, .6)));
+  colors.push_back(std::pair<float, glm::vec3>(1.f,  glm::vec3(.1, .2, .6)));
+  // colors[.0f] = glm::vec3(1, 1, 1);
+  // colors[.15f] = glm::vec3(1, 1, 1);
+  // colors[.2f] = glm::vec3(.5, .25, .25);
+  // colors[.25f] = glm::vec3(.1, .5, .3);
+  // colors[.5f] = glm::vec3(.2, .6, .2);
+  // colors[1.f] = glm::vec3(.2, .6, .2);
+  std::pair<float, glm::vec3> prev;
+  value = glm::min(glm::max((value + 2) / 4.f, 0.f), 1.f);
+  for (std::pair<float, glm::vec3> val : colors) {
+    if (val.first > value) {
+      return glm::lerp(
+          prev.second,
+          val.second,
+          (value - prev.first) / (val.first - prev.first));
+    }
+    prev = val;
+  }
+}
+
 void Terrain::gen_triangle(
   std::vector<uint>* indices,
   std::vector<glm::vec3>* vertices,
@@ -90,10 +119,11 @@ void Terrain::gen_triangle(
       } else {
         point = glm::normalize(glm::lerp(a, lerp(b, c, (float) j / i), (float) i / detail));
       }
-      point *= scale + layered_noise(point, 8, 2, 0.5f);
+      float noise = layered_noise(point, 8, 2, 0.5f);
+      point *= scale + noise;
       vertices->push_back(point);
       uvs->push_back(glm::vec2(0, 0));
-      normals->push_back(glm::vec3(0, 0, 0));
+      normals->push_back(get_color(noise));
       if (i != detail) {
         // triangle with two points on bottom row and one point on top row
         indices->push_back(row_start + j);

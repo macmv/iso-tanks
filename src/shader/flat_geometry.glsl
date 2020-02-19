@@ -6,6 +6,8 @@ uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
 
+in vec3 color[];
+
 flat out vec4 pass_color;
 
 void set_pos(int i) {
@@ -41,7 +43,7 @@ void main() {
   float specular = specularStrength * spec;
 
   // final color
-  pass_color = vec4(diffuse + specular);
+  pass_color = vec4(diffuse * color[0] + specular, 1);
 
   set_pos(0);
   set_pos(1);
