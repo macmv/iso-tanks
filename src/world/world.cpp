@@ -18,7 +18,11 @@ World::World() {
 
   btAlignedObjectArray<btCollisionShape*> collisionShapes;
 
-  btCollisionShape* groundShape = new btBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
+  btTriangleMesh* mesh = new btTriangleMesh();
+
+  mesh->addTriangle(btVector3(-10, 0, -10), btVector3(10, 0, -10), btVector3(0, 0, 10));
+
+  btCollisionShape* groundShape = new btBvhTriangleMeshShape(mesh, true, true);
   collisionShapes.push_back(groundShape);
 
   btCollisionShape* sphereShape = new btSphereShape(btScalar(1.));
@@ -28,7 +32,7 @@ World::World() {
 
   btTransform groundTransform;
   groundTransform.setIdentity();
-  groundTransform.setOrigin(btVector3(0, -50, 0));
+  groundTransform.setOrigin(btVector3(0, 0, 0));
 
   float mass = 0.f;
 
@@ -54,7 +58,7 @@ World::World() {
 
   sphereShape->calculateLocalInertia(mass, localInertia);
 
-  startTransform.setOrigin(btVector3(2, 50, 0));
+  startTransform.setOrigin(btVector3(2, 10, 0));
 
   //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
   myMotionState = new btDefaultMotionState(startTransform);
