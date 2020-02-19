@@ -13,9 +13,9 @@ OBJS = $(patsubst %.cpp,$(OBJ_DIR)/%.o,$(CPP_FILES))
 OBJS := $(subst /src/,/,$(OBJS))
 
 CXX = gcc
-CXXFLAGS = -lsfml-system -lsfml-window -lm -lGLEW -lGL -lstdc++
-INCLUDES = -Ilib/reactphysics3d/src/
-LIBS = lib/reactphysics3d/build/lib/libreactphysics3d.a
+CXXFLAGS = -lsfml-system -lsfml-window -lm -lGLEW -lGL -lstdc++ -lLinearMath -lBulletDynamics -lBulletCollision -lBulletSoftBody
+INCLUDES = -I/usr/include/bullet/
+LIBS =
 
 $(TARGET): $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $@ $? $(LIBS)

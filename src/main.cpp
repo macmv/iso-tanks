@@ -2,11 +2,12 @@
 #include "opengl/render.h"
 #include "opengl/loader.h"
 #include "world/terrain/terrain.h"
+#include "world/world.h"
 
 using namespace std;
 
 int main() {
-  World* world;
+  World* world = new World();
   Render* render = new Render(world);
 
   Terrain* terrain = new Terrain(100);
