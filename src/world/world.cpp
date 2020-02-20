@@ -31,9 +31,9 @@ World::World(Terrain* terrain) {
   btCollisionShape* groundShape = new btBvhTriangleMeshShape(mesh, true, true);
   collisionShapes->push_back(groundShape);
 
-  btCollisionShape* sphereShape = new btSphereShape(btScalar(1.));
-  //btCollisionShape* colShape = new btBoxShape(btVector3(1,1,1));
-  collisionShapes->push_back(sphereShape);
+  //btCollisionShape* sphereShape = new btSphereShape(btScalar(1.));
+  btCollisionShape* shape = new btBoxShape(btVector3(1, 1, 3.5));
+  collisionShapes->push_back(shape);
 
   btTransform groundTransform;
   groundTransform.setIdentity();
@@ -109,6 +109,10 @@ World::~World() {
 
 void World::update() {
   dynamicsWorld->stepSimulation(1.f / 60.f, 10);
+
+  for (Player* player : *players) {
+    player->update();
+  }
 
   for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--) {
     btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[j];
