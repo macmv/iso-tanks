@@ -5,9 +5,8 @@
 #include <bullet/btBulletDynamicsCommon.h>
 
 class Player {
-  private:
-    btRigidBody* body;
   public:
+    btRigidBody* body;
     ModelInstance* instance;
 
   public:

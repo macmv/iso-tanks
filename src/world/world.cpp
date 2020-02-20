@@ -2,7 +2,9 @@
 #include "../player/player.h"
 #include <bullet/btBulletDynamicsCommon.h>
 #include <glm/glm.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 
@@ -41,11 +43,7 @@ World::World(Terrain* terrain) {
 
   float mass = 0.f;
 
-  bool isDynamic = (mass != 0.f);
-
   btVector3 localInertia(0, 0, 0);
-  if (isDynamic)
-    groundShape->calculateLocalInertia(mass, localInertia);
 
   //using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
   btDefaultMotionState* myMotionState = new btDefaultMotionState(groundTransform);
@@ -111,6 +109,12 @@ void World::update() {
   dynamicsWorld->stepSimulation(1.f / 60.f, 10);
 
   for (Player* player : *players) {
+    glm::vec3 pos = glm::vec3(player->instance->transform[3]);
+    pos = glm::normalize(pos) * 10.f;
+    if (!isnan(pos.x)) {
+      cout << pos.x << endl;
+      player->body->setGravity(btVector3(pos.x, pos.y, pos.z));
+    }
     player->update();
   }
 
