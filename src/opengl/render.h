@@ -18,7 +18,10 @@ class Render {
 
   public:
     Render();
-    void update(ModelInstance* model);
+    void start();  // starts using a shader program, and loads varius matrices
+    void end();    // resets shader program
+    void update(); // updates display
+    void render(ModelInstance* model); // renders object
 
   private:
     void createPrograms();

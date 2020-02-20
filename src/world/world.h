@@ -13,6 +13,7 @@ class World {
     btSequentialImpulseConstraintSolver*     solver;
     btDiscreteDynamicsWorld*                 dynamicsWorld;
     btAlignedObjectArray<btCollisionShape*>* collisionShapes;
+  public:
     std::vector<Player*>*                    players;
     std::vector<ModelInstance*>*             models;
 

@@ -17,6 +17,12 @@ int main() {
 
   while (true) {
     world->update();
-    render->update(terrain->instance);
+    render->start();
+    render->render(terrain->instance);
+    for (Player* player : *world->players) {
+      render->render(player->instance);
+    }
+    render->end();
+    render->update();
   }
 }

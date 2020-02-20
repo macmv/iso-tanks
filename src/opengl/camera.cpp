@@ -68,7 +68,7 @@ void Camera::update(Display* display) {
   glUniformMatrix4fv(viewID, 1, GL_FALSE, &view[0][0]);
 }
 
-void Camera::load(ModelInstance* model) {
+void Camera::loadTransform(ModelInstance* model) {
   glUniformMatrix4fv(modelID, 1, GL_FALSE, &model->transform[0][0]);
 }
 

@@ -63,7 +63,6 @@ Terrain::Terrain(int detail) {
   gen_triangle(indices, vertices, &uvs, &normals, points.at(9), points.at(8), points.at(1));
 
   GLuint vao = createVAO(indices, vertices, &uvs, &normals);
-  cout << "pog!" << endl;
   uint length = indices->size();
   Model* model = new Model(vao, length);
   instance = new ModelInstance(model);

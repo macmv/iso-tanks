@@ -22,7 +22,7 @@ void Render::createPrograms() {
   // programID = loadShaderProgram("src/shader/simple_vertex.glsl", "src/shader/simple_fragment.glsl");
 }
 
-void Render::update(ModelInstance* instance) {
+void Render::start() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   if (!display->update()) {
@@ -33,9 +33,18 @@ void Render::update(ModelInstance* instance) {
   glUseProgram(programID);
 
   camera->update(display);
-  camera->load(instance);
+}
 
-  //instance->transform = glm::rotate(instance->transform, glm::radians(1.f), glm::vec3(0, 1, 0));
+void Render::end() {
+  glUseProgram(NULL);
+}
+
+void Render::update() {
+  display->render();
+}
+
+void Render::render(ModelInstance* instance) {
+  camera->loadTransform(instance);
 
   glBindVertexArray(instance->model->vao);
   glEnableVertexAttribArray(0);
@@ -46,8 +55,4 @@ void Render::update(ModelInstance* instance) {
   glDisableVertexAttribArray(1);
   glDisableVertexAttribArray(2);
   glBindVertexArray(0);
-
-  glUseProgram(NULL);
-
-  display->render();
 }

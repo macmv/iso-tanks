@@ -22,7 +22,7 @@ class Camera {
     void update(Display* display);
     void update_size(uint width, uint height);
     void set_mouse(uint x, uint y);
-    void load(ModelInstance* model);
+    void loadTransform(ModelInstance* model);
 };
 
 #endif

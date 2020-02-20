@@ -79,7 +79,6 @@ void World::add_player() {
 
   Player* player = new Player(body);
   players->push_back(player);
-  models->push_back(player->instance);
 }
 
 World::~World() {
