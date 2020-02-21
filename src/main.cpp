@@ -9,8 +9,8 @@ using namespace std;
 
 int main() {
   Render* render = new Render();
-  render->add_shader("flat", new Shader("src/shaders/flat", true));
-  render->add_shader("simple", new Shader("src/shaders/simple", false));
+  render->add_shader("flat", new Shader("src/shader/flat", true));
+  render->add_shader("simple", new Shader("src/shader/simple", false));
 
   Terrain* terrain = new Terrain(100);
   World* world = new World(terrain);
@@ -20,10 +20,11 @@ int main() {
 
   while (true) {
     world->update();
-    render->start("flat");
+    render->start();
+    render->use("flat");
     render->render(terrain->instance);
     render->end();
-    render->start("simple");
+    render->use("simple");
     for (Player* player : *world->players) {
       render->render(player->instance);
     }

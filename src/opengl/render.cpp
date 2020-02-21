@@ -17,14 +17,16 @@ Render::Render() {
 
   shaders = new unordered_map<string, Shader*>();
 
-  camera = new Camera(0);
+  camera = new Camera();
+
+  currentShader = NULL;
 }
 
 void Render::add_shader(string name, Shader* shader) {
   shaders->insert({ name, shader });
 }
 
-void Render::start(string shader) {
+void Render::start() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   if (!display->update()) {
@@ -32,12 +34,17 @@ void Render::start(string shader) {
     exit(0);
   }
 
-  glUseProgram(shaders->at(shader)->programID);
-
   camera->update(display);
 }
 
+void Render::use(string shader) {
+  currentShader = shaders->at(shader);
+  glUseProgram(currentShader->programID);
+  camera->loadMat(currentShader);
+}
+
 void Render::end() {
+  currentShader = NULL;
   glUseProgram(NULL);
 }
 
@@ -46,7 +53,12 @@ void Render::update() {
 }
 
 void Render::render(ModelInstance* instance) {
-  camera->loadTransform(instance);
+  if (currentShader == NULL) {
+    cout << "Must call Render::start() before Render::render()!" << endl;
+    exit(1);
+  }
+
+  currentShader->loadModel(instance->transform);
 
   glBindVertexArray(instance->model->vao);
   glEnableVertexAttribArray(0);

@@ -1,6 +1,7 @@
 #include "camera.h"
 #include "../models/model_instance.h"
 #include "display.h"
+#include "shader.h"
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -10,7 +11,7 @@
 
 using namespace std;
 
-Camera::Camera(GLuint programID) {
+Camera::Camera() {
   projection = glm::perspective(
     glm::radians(70.f), // The vertical Field of View
     16.0f / 9.0f,       // Aspect Ratio
@@ -19,9 +20,6 @@ Camera::Camera(GLuint programID) {
   );
   pos = glm::vec3(0, 0, 10);
   dir = glm::vec3(0, 0, -1);
-  projectionID = glGetUniformLocation(programID, "projection");
-  viewID = glGetUniformLocation(programID, "view");
-  modelID = glGetUniformLocation(programID, "model");
 }
 
 void Camera::update(Display* display) {
@@ -60,16 +58,15 @@ void Camera::update(Display* display) {
     dir = glm::rotate(dir, glm::radians(0.05f * delta.y), left);
   }
 
-  glm::mat4 view = glm::lookAt(
+  view = glm::lookAt(
     pos,               // pos
     pos + dir,         // target
     glm::vec3(0,1,0)); // up
-  glUniformMatrix4fv(projectionID, 1, GL_FALSE, &projection[0][0]);
-  glUniformMatrix4fv(viewID, 1, GL_FALSE, &view[0][0]);
 }
 
-void Camera::loadTransform(ModelInstance* model) {
-  glUniformMatrix4fv(modelID, 1, GL_FALSE, &model->transform[0][0]);
+void Camera::loadMat(Shader* shader) {
+  shader->loadProjection(projection);
+  shader->loadView(view);
 }
 
 void Camera::update_size(uint width, uint height) {

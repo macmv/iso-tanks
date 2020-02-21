@@ -3,6 +3,7 @@
 
 #include <string>
 #include <GL/glew.h>
+#include <glm/glm.hpp>
 
 class Shader {
   private:
@@ -14,6 +15,9 @@ class Shader {
 
   public:
     Shader(std::string filename, bool has_geometry);
+    void loadProjection(glm::mat4 projection);
+    void loadView(glm::mat4 view);
+    void loadModel(glm::mat4 model);
 };
 
 #endif

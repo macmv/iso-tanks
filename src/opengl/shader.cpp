@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 #include <string>
 #include <iostream>
+#include <glm/glm.hpp>
 
 using namespace std;
 
@@ -40,5 +41,23 @@ Shader::Shader(string filename, bool has_geometry) {
 
   glLinkProgram(programID);
 
+  projectionID = glGetUniformLocation(programID, "projection");
+  viewID = glGetUniformLocation(programID, "view");
+  modelID = glGetUniformLocation(programID, "model");
+
   cout << "Loaded shader program" << endl;
 }
+
+void Shader::loadProjection(glm::mat4 projection) {
+  cout << "Loading projection for program " << programID << ", at id " << programID << endl;
+  glUniformMatrix4fv(projectionID, 1, GL_FALSE, &projection[0][0]);
+}
+
+void Shader::loadView(glm::mat4 view) {
+  glUniformMatrix4fv(viewID, 1, GL_FALSE, &view[0][0]);
+}
+
+void Shader::loadModel(glm::mat4 model) {
+  glUniformMatrix4fv(modelID, 1, GL_FALSE, &model[0][0]);
+}
+
