@@ -9,8 +9,7 @@
 
 using namespace std;
 
-GLuint loadShaderProgram(string vertexFilename, string fragmentFilename);
-GLuint loadShaderProgram(string vertexFilename, string geometryFilename, string fragmentFilename);
+bool loadShader(GLuint shader, string filename);
 
 bool loadModel(string path, Model* model);
 

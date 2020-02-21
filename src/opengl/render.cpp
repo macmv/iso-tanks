@@ -7,22 +7,24 @@
 #include "loader.h"
 #include <iostream>
 #include "camera.h"
+#include "shader.h"
 #include <glm/gtc/matrix_transform.hpp>
+
+using namespace std;
 
 Render::Render() {
   display = new Display();
 
-  createPrograms();
+  shaders = new unordered_map<string, Shader*>();
 
-  camera = new Camera(programID);
+  camera = new Camera(0);
 }
 
-void Render::createPrograms() {
-  programID = loadShaderProgram("src/shader/flat_vertex.glsl", "src/shader/flat_geometry.glsl", "src/shader/flat_fragment.glsl");
-  // programID = loadShaderProgram("src/shader/simple_vertex.glsl", "src/shader/simple_fragment.glsl");
+void Render::add_shader(string name, Shader* shader) {
+  shaders->insert({ name, shader });
 }
 
-void Render::start() {
+void Render::start(string shader) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   if (!display->update()) {
@@ -30,7 +32,7 @@ void Render::start() {
     exit(0);
   }
 
-  glUseProgram(programID);
+  glUseProgram(shaders->at(shader)->programID);
 
   camera->update(display);
 }

@@ -1,6 +1,7 @@
 #include <iostream>
 #include "opengl/render.h"
 #include "opengl/loader.h"
+#include "opengl/shader.h"
 #include "world/terrain/terrain.h"
 #include "world/world.h"
 
@@ -8,6 +9,8 @@ using namespace std;
 
 int main() {
   Render* render = new Render();
+  render->add_shader("flat", new Shader("src/shaders/flat", true));
+  render->add_shader("simple", new Shader("src/shaders/simple", false));
 
   Terrain* terrain = new Terrain(100);
   World* world = new World(terrain);
@@ -17,8 +20,10 @@ int main() {
 
   while (true) {
     world->update();
-    render->start();
+    render->start("flat");
     render->render(terrain->instance);
+    render->end();
+    render->start("simple");
     for (Player* player : *world->players) {
       render->render(player->instance);
     }
