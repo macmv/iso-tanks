@@ -8,7 +8,6 @@
 using namespace std;
 
 Shader::Shader(string filename, bool has_geometry) {
-  cout << "Loading shader program" << endl;
   GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
   GLuint geometryShader;
   GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -44,12 +43,9 @@ Shader::Shader(string filename, bool has_geometry) {
   projectionID = glGetUniformLocation(programID, "projection");
   viewID = glGetUniformLocation(programID, "view");
   modelID = glGetUniformLocation(programID, "model");
-
-  cout << "Loaded shader program" << endl;
 }
 
 void Shader::loadProjection(glm::mat4 projection) {
-  cout << "Loading projection for program " << programID << ", at id " << programID << endl;
   glUniformMatrix4fv(projectionID, 1, GL_FALSE, &projection[0][0]);
 }
 

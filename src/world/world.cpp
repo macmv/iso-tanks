@@ -112,21 +112,20 @@ void World::update() {
     glm::vec3 pos = glm::vec3(player->instance->transform[3]);
     pos = glm::normalize(pos) * 10.f;
     if (!isnan(pos.x)) {
-      cout << pos.x << endl;
       player->body->setGravity(btVector3(pos.x, pos.y, pos.z));
     }
     player->update();
   }
 
-  for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--) {
-    btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[j];
-    btRigidBody* body = btRigidBody::upcast(obj);
-    btTransform trans;
-    if (body && body->getMotionState()) {
-      body->getMotionState()->getWorldTransform(trans);
-    } else {
-      trans = obj->getWorldTransform();
-    }
-    printf("world pos object %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
-  }
+  // for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--) {
+  //   btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[j];
+  //   btRigidBody* body = btRigidBody::upcast(obj);
+  //   btTransform trans;
+  //   if (body && body->getMotionState()) {
+  //     body->getMotionState()->getWorldTransform(trans);
+  //   } else {
+  //     trans = obj->getWorldTransform();
+  //   }
+  //   printf("world pos object %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
+  // }
 }
