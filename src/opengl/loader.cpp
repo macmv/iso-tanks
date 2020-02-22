@@ -1,4 +1,5 @@
 #include "loader.h"
+#include <GL/glew.h>
 #include <vector>
 #include <glm/glm.hpp>
 #include <cstdio>
@@ -107,7 +108,7 @@ bool loadOBJ (
   std::vector<glm::vec3> normals;
   FILE* file = fopen(path.c_str(), "r");
   if (file == NULL) {
-    cout << "Failed to open the file !" << endl;
+    cout << "Failed to open the file " << path << " (obj loader)" << endl;
     return false;
   }
   while (true) {
@@ -135,7 +136,7 @@ bool loadOBJ (
           &vertexIndex[1], &uvIndex[1], &normalIndex[1],
           &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
       if (matches != 9) {
-        printf("Found face that is not a triangle!\n");
+        cout << "Found face that is not a triangle when loading " << path << " (obj loader)" << endl;
         return false;
       }
       vertexIndices.push_back(vertexIndex[0]);
@@ -163,6 +164,7 @@ bool loadOBJ (
     out_uvs[vertexIndex]      = uvs.at(uvIndex);
     out_normals[vertexIndex]  = normals.at(normalIndex);
   }
+  return true;
 }
 
 GLuint createVAO(
@@ -211,7 +213,9 @@ bool loadModel(string path, Model* model) {
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec2> uvs;
     std::vector<glm::vec3> normals;
-    loadOBJ(path, indices, vertices, uvs, normals);
+    if (!loadOBJ(path, indices, vertices, uvs, normals)) {
+      return false;
+    }
     GLuint vao = createVAO(&indices, &vertices, &uvs, &normals);
     uint length = indices.size();
     model->vao = vao;
