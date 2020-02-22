@@ -33,8 +33,8 @@ World::World(Terrain* terrain) {
   btCollisionShape* groundShape = new btBvhTriangleMeshShape(mesh, true, true);
   collisionShapes->push_back(groundShape);
 
-  //btCollisionShape* sphereShape = new btSphereShape(btScalar(1.));
-  btCollisionShape* shape = new btBoxShape(btVector3(1, 1, 3.5));
+  btCollisionShape* shape = new btSphereShape(btScalar(1.));
+  //btCollisionShape* shape = new btBoxShape(btVector3(1, 1, 3.5));
   collisionShapes->push_back(shape);
 
   btTransform groundTransform;

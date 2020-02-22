@@ -11,13 +11,13 @@ out vec3 surfaceNormal;
 out vec3 toLightVec;
 
 void main() {
-  vec3 lightPos = vec3(0, 5, 5);
+  vec3 lightPos = vec3(0, 40, 0);
 
   vec3 world_pos = (model * vec4(pos, 1)).xyz;
 
   vec4 screen_pos = projection * view * vec4(world_pos, 1);
   gl_Position = screen_pos;
 
-  surfaceNormal = (model * vec4(normal, 1)).xyz;
+  surfaceNormal = (model * vec4(normal, 0)).xyz;
   toLightVec = lightPos - world_pos;
 }
