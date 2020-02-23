@@ -33,8 +33,21 @@ World::World(Terrain* terrain) {
   btCollisionShape* groundShape = new btBvhTriangleMeshShape(mesh, true, true);
   collisionShapes->push_back(groundShape);
 
-  btCollisionShape* shape = new btSphereShape(btScalar(1.));
-  //btCollisionShape* shape = new btBoxShape(btVector3(1, 1, 3.5));
+  btTransform t;
+
+  //btCollisionShape* shape = new btSphereShape(btScalar(1.));
+  btCollisionShape* cube = new btBoxShape(btVector3(4, 1, 2));
+  btCollisionShape* cylinder = new btCylinderShapeX(btVector3(1, 1, 1));
+  btCompoundShape* shape = new btCompoundShape();
+  t.setIdentity();
+  t.setOrigin(btVector3(0, 0, 0));
+  shape->addChildShape(t, cube);
+  t.setIdentity();
+  t.setOrigin(btVector3(1, 0, 0));
+  shape->addChildShape(t, cylinder);
+  t.setIdentity();
+  t.setOrigin(btVector3(-1, 0, 0));
+  shape->addChildShape(t, cylinder);
   collisionShapes->push_back(shape);
 
   btTransform groundTransform;
@@ -66,7 +79,7 @@ void World::add_player() {
   float mass = 1.f;
   btVector3 localInertia(0, 0, 0);
   shape->calculateLocalInertia(mass, localInertia);
-  startTransform.setOrigin(btVector3(2, 10, 0));
+  startTransform.setOrigin(btVector3(10, 0, 0));
 
   //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
   btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
