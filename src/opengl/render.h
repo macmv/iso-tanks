@@ -22,10 +22,10 @@ class Render {
   public:
     Render();
     void add_shader(std::string name, Shader* shader);
-    void start();                  // updates camera and checks window events
-    void use(std::string shader);  // starts using a shader program, and loads varius matrices
-    void end();    // resets shader program
-    void update(); // updates display
+    void start(Player* player);   // updates camera and checks window events
+    void use(std::string shader); // starts using a shader program, and loads varius matrices
+    void end();                   // resets shader program
+    void update();                // updates display
     void render(ModelInstance* model); // renders object
 
   private:

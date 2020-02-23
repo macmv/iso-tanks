@@ -12,6 +12,7 @@ class Player {
   public:
     Player(btRigidBody* body);
     void update();
+    glm::mat4 getTransform();
 };
 
 #endif

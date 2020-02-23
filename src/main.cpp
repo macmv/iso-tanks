@@ -21,7 +21,7 @@ int main() {
 
   while (true) {
     world->update();
-    render->start();
+    render->start(world->getPlayer());
     render->use("flat");
     render->render(terrain->instance);
     render->end();

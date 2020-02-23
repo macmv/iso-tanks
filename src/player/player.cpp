@@ -50,3 +50,7 @@ void Player::update() {
   body->activate();
   body->applyCentralImpulse(btVector3(force.x, force.y, force.z));
 }
+
+glm::mat4 Player::getTransform() {
+  return instance->transform;
+}

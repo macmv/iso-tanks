@@ -26,7 +26,7 @@ void Render::add_shader(string name, Shader* shader) {
   shaders->insert({ name, shader });
 }
 
-void Render::start() {
+void Render::start(Player* player) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   if (!display->update()) {
@@ -34,7 +34,7 @@ void Render::start() {
     exit(0);
   }
 
-  camera->update(display);
+  camera->update(display, player);
 }
 
 void Render::use(string shader) {

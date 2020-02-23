@@ -4,6 +4,7 @@
 #include "display.h"
 #include "../models/model_instance.h"
 #include "shader.h"
+#include "../player/player.h"
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 #include <SFML/Window.hpp>
@@ -18,7 +19,7 @@ class Camera {
 
   public:
     Camera();
-    void update(Display* display);
+    void update(Display* display, Player* player);
     void update_size(uint width, uint height);
     void set_mouse(uint x, uint y);
     void loadMat(Shader* shader);

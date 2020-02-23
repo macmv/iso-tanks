@@ -2,6 +2,7 @@
 #include "../models/model_instance.h"
 #include "display.h"
 #include "shader.h"
+#include "../player/player.h"
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -22,28 +23,15 @@ Camera::Camera() {
   dir = glm::vec3(0, 0, -1);
 }
 
-void Camera::update(Display* display) {
-  float speed = 0.1;
-  glm::vec3 forward = glm::normalize(glm::vec3(dir.x, 0, dir.z));
-  glm::vec3 left = glm::rotate(forward, glm::radians(90.f), glm::vec3(0, 1, 0));
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-    pos += glm::vec3(forward.x * speed, 0, forward.z * speed);
-  }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-    pos += glm::vec3(left.x * speed, 0, left.z * speed);
-  }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-    pos += glm::vec3(-forward.x * speed, 0, -forward.z * speed);
-  }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-    pos += glm::vec3(-left.x * speed, 0, -left.z * speed);
-  }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
-    pos += glm::vec3(0, speed, 0);
-  }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
-    pos += glm::vec3(0, -speed, 0);
-  }
+void Camera::update(Display* display, Player* player) {
+  glm::vec3 pos = glm::vec3(player->getTransform()[3]);
+  glm::vec3 up = glm::normalize(pos * -1.f);
+  glm::vec3 forward = glm::vec3(player->getTransform() * glm::vec4(0, 0, 1, 0));
+  pos += up * 5.f - forward * 5.f;
+
+  glm::vec3 camForward = glm::normalize(dir);
+  glm::vec3 camLeft = cross(up, camForward);
+
   sf::Vector2i new_pos = sf::Mouse::getPosition();
   display->reset_mouse();
   sf::Vector2i delta;
@@ -52,16 +40,16 @@ void Camera::update(Display* display) {
   } else {
     delta = new_pos;
   }
-  dir = glm::rotate(dir, glm::radians(0.05f * delta.x), glm::vec3(0, 1, 0));
-  dir = glm::rotate(dir, glm::radians(-0.05f * delta.y), left);
+  dir = glm::rotate(dir, glm::radians(0.05f * delta.x), up);
+  dir = glm::rotate(dir, glm::radians(-0.05f * delta.y), camLeft);
   if (dir.y < -0.999 || dir.y > 0.999) {
-    dir = glm::rotate(dir, glm::radians(0.05f * delta.y), left);
+    dir = glm::rotate(dir, glm::radians(0.05f * delta.y), camLeft);
   }
 
   view = glm::lookAt(
-    pos,               // pos
-    pos + dir,         // target
-    glm::vec3(0,1,0)); // up
+    pos,           // pos
+    pos + dir, // target
+    up);          // up
 }
 
 void Camera::loadMat(Shader* shader) {

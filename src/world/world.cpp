@@ -93,7 +93,7 @@ void World::add_player() {
   float mass = 1.f;
   btVector3 localInertia(0, 0, 0);
   shape->calculateLocalInertia(mass, localInertia);
-  startTransform.setOrigin(btVector3(10, 0, 0));
+  startTransform.setOrigin(btVector3(0, -10, 0));
 
   //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
   btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
@@ -104,6 +104,10 @@ void World::add_player() {
 
   Player* player = new Player(body);
   players->push_back(player);
+}
+
+Player* World::getPlayer() {
+  return players->at(0);
 }
 
 World::~World() {

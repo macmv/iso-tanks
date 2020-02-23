@@ -26,6 +26,7 @@ class World {
     void update();
     void drawDebug();
     void clean();
+    Player* getPlayer();
 };
 
 #endif
