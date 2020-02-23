@@ -11,6 +11,7 @@ int main() {
   Render* render = new Render();
   render->add_shader("flat", new Shader("src/shader/flat", true));
   render->add_shader("simple", new Shader("src/shader/simple", false));
+  render->add_shader("line", new Shader("src/shader/line", false));
 
   Terrain* terrain = new Terrain(100);
   World* world = new World(terrain);
@@ -29,6 +30,10 @@ int main() {
       render->render(player->instance);
     }
     render->end();
+    render->use("line");
+    world->drawDebug();
+    render->end();
     render->update();
   }
+  world->clean();
 }

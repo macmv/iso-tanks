@@ -3,6 +3,7 @@
 
 #include "terrain/terrain.h"
 #include "../player/player.h"
+#include "debug.h"
 #include <bullet/btBulletDynamicsCommon.h>
 
 class World {
@@ -13,6 +14,7 @@ class World {
     btSequentialImpulseConstraintSolver*     solver;
     btDiscreteDynamicsWorld*                 dynamicsWorld;
     btAlignedObjectArray<btCollisionShape*>* collisionShapes;
+    DebugDraw* debugDraw;
   public:
     std::vector<Player*>*                    players;
     std::vector<ModelInstance*>*             models;
@@ -22,6 +24,8 @@ class World {
     ~World();
     void add_player();
     void update();
+    void drawDebug();
+    void clean();
 };
 
 #endif
