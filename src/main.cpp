@@ -35,4 +35,5 @@ int main() {
     render->end();
     render->update();
   }
+  world->clean();
 }

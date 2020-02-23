@@ -57,13 +57,19 @@ World::World(Terrain* terrain) {
   players = new std::vector<Player*>();
   models = new std::vector<ModelInstance*>();
 
-  DebugDraw* d = new DebugDraw();
-  d->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
-  dynamicsWorld->setDebugDrawer(d);
+  debugDraw = new DebugDraw();
+  debugDraw->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
+  dynamicsWorld->setDebugDrawer(debugDraw);
 }
 
 void World::drawDebug() {
+  debugDraw->start();
   dynamicsWorld->debugDrawWorld();
+  debugDraw->end();
+}
+
+void World::clean() {
+  debugDraw->clean();
 }
 
 void World::add_player() {
