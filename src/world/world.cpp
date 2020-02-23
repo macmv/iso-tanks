@@ -69,7 +69,6 @@ void World::drawDebug() {
 }
 
 void World::clean() {
-  debugDraw->clean();
 }
 
 void World::add_player() {
