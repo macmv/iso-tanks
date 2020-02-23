@@ -38,10 +38,10 @@ void Camera::update(Display* display) {
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
     pos += glm::vec3(-left.x * speed, 0, -left.z * speed);
   }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
     pos += glm::vec3(0, speed, 0);
   }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
     pos += glm::vec3(0, -speed, 0);
   }
   sf::Vector2i new_pos = sf::Mouse::getPosition();

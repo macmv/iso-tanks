@@ -22,22 +22,22 @@ void Player::update() {
   body->getMotionState()->getWorldTransform(transform);
   transform.getOpenGLMatrix(glm::value_ptr(instance->transform));
 
-  float speed = 1;
+  float speed = .5f;
 
   glm::vec3 force = glm::vec3(0, 0, 0);
   glm::vec3 up = glm::normalize(glm::vec3(instance->transform[3]) * -1.f);
   glm::vec3 forward = glm::vec3(instance->transform * glm::vec4(0, 0, 1, 0));
   glm::vec3 left = cross(up, forward);
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
     force += glm::vec3(forward.x * speed, 0, forward.z * speed);
   }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
     force += glm::vec3(left.x * speed, 0, left.z * speed);
   }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
     force += glm::vec3(-forward.x * speed, 0, -forward.z * speed);
   }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
     force += glm::vec3(-left.x * speed, 0, -left.z * speed);
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
@@ -47,5 +47,6 @@ void Player::update() {
     force += glm::vec3(0, -speed, 0);
   }
 
+  body->activate();
   body->applyCentralImpulse(btVector3(force.x, force.y, force.z));
 }
