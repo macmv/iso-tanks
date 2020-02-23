@@ -30,9 +30,9 @@ int main() {
       render->render(player->instance);
     }
     render->end();
-    render->use("line");
-    world->drawDebug();
-    render->end();
+    // render->use("line");
+    // world->drawDebug();
+    // render->end();
     render->update();
   }
   world->clean();

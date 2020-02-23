@@ -29,16 +29,16 @@ void Player::update() {
   glm::vec3 forward = glm::vec3(instance->transform * glm::vec4(0, 0, 1, 0));
   glm::vec3 left = cross(up, forward);
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-    force += glm::vec3(forward.x * speed, 0, forward.z * speed);
+    force += forward * speed;
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-    force += glm::vec3(left.x * speed, 0, left.z * speed);
+    force += left * speed;
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-    force += glm::vec3(-forward.x * speed, 0, -forward.z * speed);
+    force += -forward * speed;
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-    force += glm::vec3(-left.x * speed, 0, -left.z * speed);
+    force += -left * speed;
   }
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
     force += glm::vec3(0, speed, 0);

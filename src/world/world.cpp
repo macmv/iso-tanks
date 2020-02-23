@@ -37,17 +37,17 @@ World::World(Terrain* terrain) {
   btTransform t;
 
   //btCollisionShape* shape = new btSphereShape(btScalar(1.));
-  btCollisionShape* cube = new btBoxShape(btVector3(4, 1, 2));
+  btCollisionShape* cube = new btBoxShape(btVector3(1, .1, 1));
   btCollisionShape* cylinder = new btCylinderShapeX(btVector3(1, 1, 1));
   btCompoundShape* shape = new btCompoundShape();
   t.setIdentity();
-  t.setOrigin(btVector3(0, 0, 0));
+  t.setOrigin(btVector3(0, -.9, 0));
   shape->addChildShape(t, cube);
   t.setIdentity();
-  t.setOrigin(btVector3(1, 0, 0));
+  t.setOrigin(btVector3(0, 0, -1));
   shape->addChildShape(t, cylinder);
   t.setIdentity();
-  t.setOrigin(btVector3(-1, 0, 0));
+  t.setOrigin(btVector3(0, 0, 1));
   shape->addChildShape(t, cylinder);
   collisionShapes->push_back(shape);
 
