@@ -5,6 +5,7 @@
 #include <glm/gtx/string_cast.hpp>
 #include <iostream>
 #include <cmath>
+#include "debug.h"
 
 using namespace std;
 
@@ -55,6 +56,14 @@ World::World(Terrain* terrain) {
 
   players = new std::vector<Player*>();
   models = new std::vector<ModelInstance*>();
+
+  DebugDraw* d = new DebugDraw();
+  d->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
+  dynamicsWorld->setDebugDrawer(d);
+}
+
+void World::drawDebug() {
+  dynamicsWorld->debugDrawWorld();
 }
 
 void World::add_player() {

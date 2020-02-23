@@ -28,6 +28,7 @@ int main() {
     for (Player* player : *world->players) {
       render->render(player->instance);
     }
+    world->drawDebug();
     render->end();
     render->update();
   }

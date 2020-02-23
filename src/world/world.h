@@ -22,6 +22,7 @@ class World {
     ~World();
     void add_player();
     void update();
+    void drawDebug();
 };
 
 #endif
