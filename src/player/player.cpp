@@ -23,7 +23,7 @@ void Player::update() {
   body->getMotionState()->getWorldTransform(transform);
   transform.getOpenGLMatrix(glm::value_ptr(instance->transform));
 
-  float speed = .5f;
+  float speed = .10f;
 
   glm::vec3 force = glm::vec3(0, 0, 0);
   glm::vec3 up = glm::normalize(glm::vec3(instance->transform[3]) * -1.f);

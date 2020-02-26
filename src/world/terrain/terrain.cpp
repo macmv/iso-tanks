@@ -14,7 +14,7 @@ Terrain::Terrain(int detail) {
   std::vector<glm::vec3> normals;
 
   double t = (1.0 + sqrt(5.0)) / 2.0;
-  scale = 30;
+  scale = 100;
   this->detail = detail;
 
   std::vector<glm::vec3> points;
