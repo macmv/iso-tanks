@@ -9,6 +9,11 @@
 #include <glm/gtx/string_cast.hpp>
 #include "../models/model.h"
 #include <string>
+#include "../models/scene.h"
+#define TINYGLTF_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "libs/tinygltf/tiny_gltf.h"
 
 using namespace std;
 
