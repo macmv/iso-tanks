@@ -14,6 +14,7 @@ Player::Player(btRigidBody* body) {
   this->body = body;
   Model* model = new Model();
   loadModel("assets/player.obj", model);
+  loadScene("assets/player.glb", NULL);
   instance = new ModelInstance(model);
 }
 

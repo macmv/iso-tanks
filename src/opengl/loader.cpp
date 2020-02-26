@@ -100,6 +100,37 @@ GLuint loadShaderProgram(string vertexFilename, string fragmentFilename) {
   return programID;
 }
 
+bool loadGLTF(std::string path, Scene* scene) {
+  bool ret = false;
+  tinygltf::Model model;
+  tinygltf::TinyGLTF ctx;
+  std::string err;
+  std::string warn;
+  ret = ctx.LoadBinaryFromFile(&model, &err, &warn,
+                               path.c_str());
+  if (!ret) {
+    cout << "Failed to load gltf file " << path << endl;
+    return false;
+  }
+  const tinygltf::Accessor& accessor = model.accessors[0];
+  const tinygltf::BufferView& bufferView = model.bufferViews[accessor.bufferView];
+
+  // cast to float type read only. Use accessor and bufview byte offsets to determine where position data
+  // is located in the buffer.
+  const tinygltf::Buffer& buffer = model.buffers[bufferView.buffer];
+  // bufferView byteoffset + accessor byteoffset tells you where the actual position data is within the buffer. From there
+  // you should already know how the data needs to be interpreted.
+  const float* positions = reinterpret_cast<const float*>(&buffer.data[bufferView.byteOffset + accessor.byteOffset]);
+  // From here, you choose what you wish to do with this position data. In this case, we  will display it out.
+  for (size_t i = 0; i < accessor.count; ++i) {
+    // Positions are Vec3 components, so for each vec3 stride, offset for x, y, and z.
+    std::cout << "(" << positions[i * 3 + 0] << ", "// x
+                     << positions[i * 3 + 1] << ", " // y
+                     << positions[i * 3 + 2] << ")" // z
+                     << "\n";
+  }
+}
+
 bool loadOBJ (
     string path,
     std::vector<uint>& out_indices,
@@ -210,6 +241,18 @@ GLuint createVAO(
   glBindVertexArray(0);
 
   return vao;
+}
+
+bool loadScene(string path, Scene* scene) {
+  if (path.rfind(".glb") == (path.size() - string(".glb").size())) {
+    if (!loadGLTF(path, scene)) {
+      return false;
+    }
+  } else {
+    cout << "Unrecognized file format " << path << ", failed to load scene" << endl;
+    return false;
+  }
+  return true;
 }
 
 bool loadModel(string path, Model* model) {
