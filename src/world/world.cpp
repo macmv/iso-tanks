@@ -141,7 +141,7 @@ void World::update() {
 
   for (Player* player : *players) {
     glm::vec3 pos = glm::vec3(player->instance->transform[3]);
-    pos = glm::normalize(pos) * 10.f;
+    pos = glm::normalize(pos) * 20.f;
     if (!isnan(pos.x)) {
       player->body->setGravity(btVector3(pos.x, pos.y, pos.z));
     }
