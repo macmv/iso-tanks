@@ -102,32 +102,55 @@ GLuint loadShaderProgram(string vertexFilename, string fragmentFilename) {
 
 bool loadGLTF(std::string path, Scene* scene) {
   bool ret = false;
-  tinygltf::Model model;
+  tinygltf::Model loadedModel;
   tinygltf::TinyGLTF ctx;
   std::string err;
   std::string warn;
-  ret = ctx.LoadBinaryFromFile(&model, &err, &warn,
+  ret = ctx.LoadBinaryFromFile(&loadedModel, &err, &warn,
                                path.c_str());
   if (!ret) {
     cout << "Failed to load gltf file " << path << endl;
     return false;
   }
-  const tinygltf::Accessor& accessor = model.accessors[0];
-  const tinygltf::BufferView& bufferView = model.bufferViews[accessor.bufferView];
+  for (int i = 0; i < loadedModel.meshes.size(); i++) {
+    std::vector<uint>*       vec_indices   = new std::vector<uint>();
+    std::vector<glm::vec3*>* vec_positions = new std::vector<glm::vec3*>();
+    std::vector<glm::vec3*>* vec_uvs       = new std::vector<glm::vec3*>();
+    std::vector<glm::vec3*>* vec_normals   = new std::vector<glm::vec3*>();
 
-  // cast to float type read only. Use accessor and bufview byte offsets to determine where position data
-  // is located in the buffer.
-  const tinygltf::Buffer& buffer = model.buffers[bufferView.buffer];
-  // bufferView byteoffset + accessor byteoffset tells you where the actual position data is within the buffer. From there
-  // you should already know how the data needs to be interpreted.
-  const float* positions = reinterpret_cast<const float*>(&buffer.data[bufferView.byteOffset + accessor.byteOffset]);
-  // From here, you choose what you wish to do with this position data. In this case, we  will display it out.
-  for (size_t i = 0; i < accessor.count; ++i) {
-    // Positions are Vec3 components, so for each vec3 stride, offset for x, y, and z.
-    std::cout << "(" << positions[i * 3 + 0] << ", "// x
-                     << positions[i * 3 + 1] << ", " // y
-                     << positions[i * 3 + 2] << ")" // z
-                     << "\n";
+    tinygltf::Mesh& mesh = loadedModel.meshes.at(i);
+    tinygltf::Accessor&     indices_accessor    = loadedModel.accessors[mesh.primitives.at(0).indices];
+    tinygltf::BufferView&   indices_bufferView  = loadedModel.bufferViews[indices_accessor.bufferView];
+    const tinygltf::Buffer& indices_buffer      = loadedModel.buffers[indices_bufferView.buffer];
+    tinygltf::Accessor&     position_accessor   = loadedModel.accessors[mesh.primitives.at(0).attributes["POSITION"]];
+    tinygltf::BufferView&   position_bufferView = loadedModel.bufferViews[position_accessor.bufferView];
+    const tinygltf::Buffer& position_buffer     = loadedModel.buffers[position_bufferView.buffer];
+    tinygltf::Accessor&     uv_accessor         = loadedModel.accessors[mesh.primitives.at(0).attributes["TEXCOORD"]];
+    tinygltf::BufferView&   uv_bufferView       = loadedModel.bufferViews[uv_accessor.bufferView];
+    const tinygltf::Buffer& uv_buffer           = loadedModel.buffers[uv_bufferView.buffer];
+    tinygltf::Accessor&     normal_accessor     = loadedModel.accessors[mesh.primitives.at(0).attributes["NORMAL"]];
+    tinygltf::BufferView&   normal_bufferView   = loadedModel.bufferViews[normal_accessor.bufferView];
+    const tinygltf::Buffer& normal_buffer       = loadedModel.buffers[normal_bufferView.buffer];
+
+    // bufferView byteoffset + accessor byteoffset tells you where the actual position data is within the buffer. From there
+    // you should already know how the data needs to be interpreted.
+    const uint*  indices   = reinterpret_cast<const uint* >(&indices_buffer.data[ indices_bufferView.byteOffset  + indices_accessor.byteOffset]);
+    const float* positions = reinterpret_cast<const float*>(&position_buffer.data[position_bufferView.byteOffset + position_accessor.byteOffset]);
+    const float* uvs       = reinterpret_cast<const float*>(&uv_buffer.data[      uv_bufferView.byteOffset       + uv_accessor.byteOffset]);
+    const float* normals   = reinterpret_cast<const float*>(&normal_buffer.data[  normal_bufferView.byteOffset   + normal_accessor.byteOffset]);
+    int index;
+    // From here, you choose what you wish to do with this position data. In this case, we  will display it out.
+    for (size_t i = 0; i < position_accessor.count; ++i) {
+      // Positions are Vec3 components, so for each vec3 stride, offset for x, y, and z.
+      index = indices[i];
+      vec_indices  ->push_back(indices[i]);
+      vec_positions->push_back(new glm::vec3(positions[i * 3 + 0], positions[i * 3 + 1], positions[i * 3 + 2]));
+      vec_uvs      ->push_back(new glm::vec3(uvs[i * 3 + 0],       uvs[i * 3 + 1],       uvs[i * 3 + 2]));
+      vec_normals  ->push_back(new glm::vec3(normals[i * 3 + 0],   normals[i * 3 + 1],   normals[i * 3 + 2]));
+    }
+
+    //uint vao = createVAO(vec_indices, vec_positions, vec_uvs, vec_normals);
+    //Model* model = new Model(vao, vec_indices.size());
   }
 }
 
