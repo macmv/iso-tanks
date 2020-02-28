@@ -19,7 +19,7 @@ BLENDER = blender
 
 CXX = gcc
 CXXFLAGS = -lsfml-system -lsfml-window -lm -lGLEW -lGL -lstdc++ -lLinearMath -lBulletDynamics -lBulletCollision -lBulletSoftBody
-INCLUDES = -I/usr/include/bullet/
+INCLUDES = -I/usr/include/bullet/ -I.
 LIBS =
 
 $(TARGET): $(OBJS) $(ASSETS)
