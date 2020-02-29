@@ -10,7 +10,7 @@ def _blender_script(ctx):
     ctx.actions.run_shell(
       outputs = [output_file],
       inputs = [input_file, ctx.file.script],
-      command = "blender {} -b -P {} -- {}; tree ./".format(input_file.path, ctx.file.script.path, output_file.path),
+      command = "blender {} -b -P {} -- {} 1> /dev/null 2> /dev/null".format(input_file.path, ctx.file.script.path, output_file.path),
     )
   return [DefaultInfo(files = depset(files), runfiles = ctx.runfiles(files))]
 
