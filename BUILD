@@ -1,4 +1,17 @@
 
+load('//:src/util/blender_export.bzl', 'blender_script')
+
+blender_script(
+  name = "assets",
+  script = "src/util/blender_export.py",
+  srcs = glob(["assets/**/*.blend"]),
+)
+
+filegroup(
+  name = "shaders",
+  srcs = glob(["src/shader/**/*.glsl"]),
+)
+
 cc_library(
   name = "compile",
   srcs = glob(["src/**/*.cpp",
@@ -22,4 +35,8 @@ cc_binary(
               "-lBulletDynamics",
               "-lBulletCollision",
               "-lBulletSoftBody"],
+  data = [
+    ":shaders",
+    ":assets",
+  ],
 )
