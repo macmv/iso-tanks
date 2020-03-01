@@ -5,7 +5,8 @@
 #include <unordered_set>
 
 class Scene {
-  private:
+  public:
+    glm::mat4 transform;
     std::unordered_set<ModelInstance*>* models;
 
   public:

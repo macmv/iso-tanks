@@ -70,3 +70,18 @@ void Render::render(ModelInstance* instance) {
   glDisableVertexAttribArray(2);
   glBindVertexArray(0);
 }
+
+void Render::render(Scene* scene) {
+  if (currentShader == NULL) {
+    cout << "Must call Render::start() before Render::render()!" << endl;
+    exit(1);
+  }
+
+  std::unordered_set<ModelInstance*>* instances = scene->models;
+
+  cout << "Rendering scene" << endl;
+  for (ModelInstance* instance : *instances) {
+    cout << "Rendering model" << endl;
+    render(instance);
+  }
+}

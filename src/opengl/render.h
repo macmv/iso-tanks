@@ -26,7 +26,8 @@ class Render {
     void use(std::string shader); // starts using a shader program, and loads varius matrices
     void end();                   // resets shader program
     void update();                // updates display
-    void render(ModelInstance* model); // renders object
+    void render(Scene* scene);    // renders scene
+    void render(ModelInstance* instance); // renders model
 
   private:
     void createPrograms();

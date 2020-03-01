@@ -1,13 +1,13 @@
 #ifndef _PLAYER_H
 #define _PLAYER_H
 
-#include "../models/model_instance.h"
 #include <bullet/btBulletDynamicsCommon.h>
+#include "../models/scene.h"
 
 class Player {
   public:
     btRigidBody* body;
-    ModelInstance* instance;
+    Scene* scene;
 
   public:
     Player(btRigidBody* body);

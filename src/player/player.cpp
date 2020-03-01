@@ -12,22 +12,20 @@ using namespace std;
 
 Player::Player(btRigidBody* body) {
   this->body = body;
-  Model* model = new Model();
-  loadModel("assets/player.obj", model);
-  loadScene("assets/player.glb", NULL);
-  instance = new ModelInstance(model);
+  scene = new Scene();
+  loadScene("assets/player.glb", scene);
 }
 
 void Player::update() {
   btTransform transform;
   body->getMotionState()->getWorldTransform(transform);
-  transform.getOpenGLMatrix(glm::value_ptr(instance->transform));
+  transform.getOpenGLMatrix(glm::value_ptr(scene->transform));
 
-  float speed = .10f;
+  float speed = .20f;
 
   glm::vec3 force = glm::vec3(0, 0, 0);
-  glm::vec3 up = glm::normalize(glm::vec3(instance->transform[3]) * -1.f);
-  glm::vec3 forward = glm::vec3(instance->transform * glm::vec4(0, 0, 1, 0));
+  glm::vec3 up = glm::normalize(glm::vec3(scene->transform[3]) * -1.f);
+  glm::vec3 forward = glm::vec3(scene->transform * glm::vec4(0, 0, 1, 0));
   glm::vec3 left = cross(up, forward);
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
     force += forward * speed;
@@ -53,5 +51,5 @@ void Player::update() {
 }
 
 glm::mat4 Player::getTransform() {
-  return instance->transform;
+  return scene->transform;
 }

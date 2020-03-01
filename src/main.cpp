@@ -27,7 +27,7 @@ int main() {
     render->end();
     render->use("simple");
     for (Player* player : *world->players) {
-      render->render(player->instance);
+      render->render(player->scene);
     }
     render->end();
     // render->use("line");
