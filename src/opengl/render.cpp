@@ -79,9 +79,7 @@ void Render::render(Scene* scene) {
 
   std::unordered_set<ModelInstance*>* instances = scene->models;
 
-  cout << "Rendering scene" << endl;
   for (ModelInstance* instance : *instances) {
-    cout << "Rendering model" << endl;
     render(instance);
   }
 }

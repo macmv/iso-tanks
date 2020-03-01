@@ -113,10 +113,10 @@ bool loadGLTF(std::string path, Scene* scene) {
     return false;
   }
   for (int i = 0; i < loadedModel.meshes.size(); i++) {
-    std::vector<uint>*       vec_indices   = new std::vector<uint>();
-    std::vector<glm::vec3*>* vec_positions = new std::vector<glm::vec3*>();
-    std::vector<glm::vec3*>* vec_uvs       = new std::vector<glm::vec3*>();
-    std::vector<glm::vec3*>* vec_normals   = new std::vector<glm::vec3*>();
+    std::vector<uint>*      vec_indices   = new std::vector<uint>();
+    std::vector<glm::vec3>* vec_positions = new std::vector<glm::vec3>();
+    std::vector<glm::vec2>* vec_uvs       = new std::vector<glm::vec2>();
+    std::vector<glm::vec3>* vec_normals   = new std::vector<glm::vec3>();
 
     tinygltf::Mesh& mesh = loadedModel.meshes.at(i);
     tinygltf::Accessor&     indices_accessor    = loadedModel.accessors[mesh.primitives.at(0).indices];
@@ -140,17 +140,20 @@ bool loadGLTF(std::string path, Scene* scene) {
     const float* normals   = reinterpret_cast<const float*>(&normal_buffer.data[  normal_bufferView.byteOffset   + normal_accessor.byteOffset]);
     int index;
     // From here, you choose what you wish to do with this position data. In this case, we  will display it out.
+    for (size_t i = 0; i < indices_accessor.count; ++i) {
+      vec_indices->push_back(indices[i]);
+    }
     for (size_t i = 0; i < position_accessor.count; ++i) {
       // Positions are Vec3 components, so for each vec3 stride, offset for x, y, and z.
-      index = indices[i];
-      vec_indices  ->push_back(indices[i]);
-      vec_positions->push_back(new glm::vec3(positions[i * 3 + 0], positions[i * 3 + 1], positions[i * 3 + 2]));
-      vec_uvs      ->push_back(new glm::vec3(uvs[i * 3 + 0],       uvs[i * 3 + 1],       uvs[i * 3 + 2]));
-      vec_normals  ->push_back(new glm::vec3(normals[i * 3 + 0],   normals[i * 3 + 1],   normals[i * 3 + 2]));
+      vec_positions->push_back(glm::vec3(positions[i * 3 + 0], positions[i * 3 + 1], positions[i * 3 + 2]));
+      vec_uvs      ->push_back(glm::vec3(uvs[i * 3 + 0],       uvs[i * 3 + 1],       uvs[i * 3 + 2]));
+      vec_normals  ->push_back(glm::vec3(normals[i * 3 + 0],   normals[i * 3 + 1],   normals[i * 3 + 2]));
     }
 
-    //uint vao = createVAO(vec_indices, vec_positions, vec_uvs, vec_normals);
-    //Model* model = new Model(vao, vec_indices.size());
+    uint vao = createVAO(vec_indices, vec_positions, vec_uvs, vec_normals);
+    Model* model = new Model(vao, vec_indices->size());
+    ModelInstance* instance = new ModelInstance(model);
+    scene->models->insert(instance);
   }
 }
 
