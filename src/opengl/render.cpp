@@ -80,6 +80,8 @@ void Render::render(Scene* scene) {
   std::unordered_set<ModelInstance*>* instances = scene->models;
 
   for (ModelInstance* instance : *instances) {
+    instance->transform *= scene->transform;
     render(instance);
+    instance->transform /= scene->transform;
   }
 }
