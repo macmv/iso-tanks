@@ -7,4 +7,4 @@ bpy.ops.object.visual_transform_apply()
 argv = sys.argv[sys.argv.index("--") + 1:]
 path = argv[0]
 
-bpy.ops.export_scene.gltf(filepath=path)
+bpy.ops.export_scene.gltf(filepath=path, export_apply=True)
