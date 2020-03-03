@@ -163,18 +163,18 @@ bool loadGLTF(std::string path, Scene* scene) {
               node.translation.at(1),
               node.translation.at(2)));
       }
-      if (node.scale.size() != 0) {
-        instance->transform = glm::scale(instance->transform, glm::vec3(
-              node.scale.at(0),
-              node.scale.at(1),
-              node.scale.at(2)));
-      }
       if (node.rotation.size() != 0) {
         instance->transform = instance->transform * glm::toMat4(glm::quat(
               node.rotation.at(3),
               node.rotation.at(0),
               node.rotation.at(1),
               node.rotation.at(2)));
+      }
+      if (node.scale.size() != 0) {
+        instance->transform = glm::scale(instance->transform, glm::vec3(
+              node.scale.at(0),
+              node.scale.at(1),
+              node.scale.at(2)));
       }
 
       scene->models->insert(instance);
