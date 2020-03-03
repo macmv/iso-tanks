@@ -137,17 +137,17 @@ bool loadGLTF(std::string path, Scene* scene) {
 
       // bufferView byteoffset + accessor byteoffset tells you where the actual position data is within the buffer. From there
       // you should already know how the data needs to be interpreted.
-      const uint*  indices   = reinterpret_cast<const uint* >(&indices_buffer.data[ indices_bufferView.byteOffset  + indices_accessor.byteOffset]);
+      const short*  indices   = reinterpret_cast<const short* >(&indices_buffer.data[ indices_bufferView.byteOffset  + indices_accessor.byteOffset]);
       const float* positions = reinterpret_cast<const float*>(&position_buffer.data[position_bufferView.byteOffset + position_accessor.byteOffset]);
       const float* uvs       = reinterpret_cast<const float*>(&uv_buffer.data[      uv_bufferView.byteOffset       + uv_accessor.byteOffset]);
       const float* normals   = reinterpret_cast<const float*>(&normal_buffer.data[  normal_bufferView.byteOffset   + normal_accessor.byteOffset]);
       int index;
       // From here, you choose what you wish to do with this position data. In this case, we  will display it out.
       for (size_t i = 0; i < indices_accessor.count; ++i) {
+        vec_indices->push_back(indices[i]);
       }
       for (size_t i = 0; i < position_accessor.count; ++i) {
         // Positions are Vec3 components, so for each vec3 stride, offset for x, y, and z.
-        vec_indices  ->push_back(i);
         vec_positions->push_back(glm::vec3(positions[i * 3 + 0], positions[i * 3 + 1], positions[i * 3 + 2]));
         vec_uvs      ->push_back(glm::vec2(0, 0));
         vec_normals  ->push_back(glm::vec3(normals[i * 3 + 0],   normals[i * 3 + 1],   normals[i * 3 + 2]));
