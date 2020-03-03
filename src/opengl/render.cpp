@@ -79,9 +79,12 @@ void Render::render(Scene* scene) {
 
   std::unordered_set<ModelInstance*>* instances = scene->models;
 
+  glm::mat4 prev;
+
   for (ModelInstance* instance : *instances) {
-    instance->transform *= scene->transform;
+    prev = instance->transform;
+    instance->transform = scene->transform * instance->transform;
     render(instance);
-    instance->transform /= scene->transform;
+    instance->transform = prev;
   }
 }
