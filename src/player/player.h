@@ -8,6 +8,7 @@ class Player {
   public:
     btRigidBody* body;
     Scene* scene;
+    float turretAngle = 0;
 
   public:
     Player(btRigidBody* body);
