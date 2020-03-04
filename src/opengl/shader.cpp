@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <glm/glm.hpp>
+#include "../models/material.h"
 
 using namespace std;
 
@@ -43,6 +44,7 @@ Shader::Shader(string filename, bool has_geometry) {
   projectionID = glGetUniformLocation(programID, "projection");
   viewID = glGetUniformLocation(programID, "view");
   modelID = glGetUniformLocation(programID, "model");
+  colorID = glGetUniformLocation(programID, "color");
 }
 
 void Shader::loadProjection(glm::mat4 projection) {
@@ -55,5 +57,11 @@ void Shader::loadView(glm::mat4 view) {
 
 void Shader::loadModel(glm::mat4 model) {
   glUniformMatrix4fv(modelID, 1, GL_FALSE, &model[0][0]);
+}
+
+void Shader::loadMaterial(Material* material) {
+  if (material != NULL) {
+    glUniform3f(colorID, material->color.x, material->color.y, material->color.z);
+  }
 }
 

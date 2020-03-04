@@ -59,6 +59,7 @@ void Render::render(ModelInstance* instance) {
   }
 
   currentShader->loadModel(instance->transform);
+  currentShader->loadMaterial(instance->model->material);
 
   glBindVertexArray(instance->model->vao);
   glEnableVertexAttribArray(0);
