@@ -170,7 +170,7 @@ bool loadGLTF(std::string path, Scene* scene) {
       cout << primitive.material << endl;
 
       uint vao = createVAO(vec_indices, vec_positions, vec_uvs, vec_normals);
-      Model* model = new Model(vao, vec_indices->size());
+      Model* model = new Model(node.name, vao, vec_indices->size());
       if (primitive.material >= 0) {
         model->material = materials.at(primitive.material);
       }

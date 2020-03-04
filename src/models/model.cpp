@@ -1,13 +1,15 @@
 #include "model.h"
 #include <GL/glew.h>
 
-Model::Model(GLuint vao, uint length) {
-  this->vao = vao;
-  this->length = length;
-}
+using namespace std;
 
-Model::Model() {
+Model::Model(string name) : name(name) {
   vao = 0;
   length = 0;
+}
+
+Model::Model(string name, GLuint vao, uint length) : name(name) {
+  this->vao = vao;
+  this->length = length;
 }
 
