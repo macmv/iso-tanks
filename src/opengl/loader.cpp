@@ -15,6 +15,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <tiny_gltf.h>
+#include "../models/material.h"
 
 using namespace std;
 
@@ -113,25 +114,38 @@ bool loadGLTF(std::string path, Scene* scene) {
     cout << "Failed to load gltf file " << path << endl;
     return false;
   }
+
+  tinygltf::Material loadedMaterial;
+  Material* material;
+  std::vector<Material*> materials = std::vector<Material*>();
+  for (int i = 0; i < loadedModel.materials.size(); i++) {
+    loadedMaterial = loadedModel.materials.at(i);
+    material = new Material();
+    std::vector<double> baseColor = loadedMaterial.pbrMetallicRoughness.baseColorFactor;
+    material->color = glm::vec3(baseColor.at(0), baseColor.at(1), baseColor.at(2));
+    materials.push_back(material);
+  }
+
   for (int i = 0; i < loadedModel.nodes.size(); i++) {
     tinygltf::Node& node = loadedModel.nodes.at(i);
     if (node.mesh != -1) {
       tinygltf::Mesh& mesh = loadedModel.meshes.at(node.mesh);
+      tinygltf::Primitive& primitive = mesh.primitives.at(0);
 
       std::vector<uint>*      vec_indices   = new std::vector<uint>();
       std::vector<glm::vec3>* vec_positions = new std::vector<glm::vec3>();
       std::vector<glm::vec2>* vec_uvs       = new std::vector<glm::vec2>();
       std::vector<glm::vec3>* vec_normals   = new std::vector<glm::vec3>();
-      tinygltf::Accessor&     indices_accessor    = loadedModel.accessors[mesh.primitives.at(0).indices];
+      tinygltf::Accessor&     indices_accessor    = loadedModel.accessors[primitive.indices];
       tinygltf::BufferView&   indices_bufferView  = loadedModel.bufferViews[indices_accessor.bufferView];
       const tinygltf::Buffer& indices_buffer      = loadedModel.buffers[indices_bufferView.buffer];
-      tinygltf::Accessor&     position_accessor   = loadedModel.accessors[mesh.primitives.at(0).attributes["POSITION"]];
+      tinygltf::Accessor&     position_accessor   = loadedModel.accessors[primitive.attributes["POSITION"]];
       tinygltf::BufferView&   position_bufferView = loadedModel.bufferViews[position_accessor.bufferView];
       const tinygltf::Buffer& position_buffer     = loadedModel.buffers[position_bufferView.buffer];
-      tinygltf::Accessor&     uv_accessor         = loadedModel.accessors[mesh.primitives.at(0).attributes["TEXCOORD_0"]];
+      tinygltf::Accessor&     uv_accessor         = loadedModel.accessors[primitive.attributes["TEXCOORD_0"]];
       tinygltf::BufferView&   uv_bufferView       = loadedModel.bufferViews[uv_accessor.bufferView];
       const tinygltf::Buffer& uv_buffer           = loadedModel.buffers[uv_bufferView.buffer];
-      tinygltf::Accessor&     normal_accessor     = loadedModel.accessors[mesh.primitives.at(0).attributes["NORMAL"]];
+      tinygltf::Accessor&     normal_accessor     = loadedModel.accessors[primitive.attributes["NORMAL"]];
       tinygltf::BufferView&   normal_bufferView   = loadedModel.bufferViews[normal_accessor.bufferView];
       const tinygltf::Buffer& normal_buffer       = loadedModel.buffers[normal_bufferView.buffer];
 
@@ -153,8 +167,13 @@ bool loadGLTF(std::string path, Scene* scene) {
         vec_normals  ->push_back(glm::vec3(normals[i * 3 + 0],   normals[i * 3 + 1],   normals[i * 3 + 2]));
       }
 
+      cout << primitive.material << endl;
+
       uint vao = createVAO(vec_indices, vec_positions, vec_uvs, vec_normals);
       Model* model = new Model(vao, vec_indices->size());
+      if (primitive.material >= 0) {
+        model->material = materials.at(primitive.material);
+      }
       ModelInstance* instance = new ModelInstance(model);
 
       if (node.translation.size() != 0) {
