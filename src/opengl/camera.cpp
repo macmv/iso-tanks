@@ -20,7 +20,7 @@ Camera::Camera() {
     300.0f              // Far clipping plane
   );
   pos = glm::vec3(0, 0, 10);
-  dir = glm::vec3(0, 0, -1);
+  dir = glm::vec3(0, 0, 1);
 }
 
 void Camera::update(Display* display, Player* player) {
@@ -40,6 +40,8 @@ void Camera::update(Display* display, Player* player) {
   } else {
     delta = new_pos;
   }
+  mouseDelta.x = glm::radians(delta.x * 0.05f);
+  mouseDelta.y = glm::radians(delta.y * 0.05f);
   dir = glm::rotate(dir, glm::radians(0.05f * delta.x), up);
   dir = glm::rotate(dir, glm::radians(-0.05f * delta.y), camLeft);
   if (dir.y < -0.999 || dir.y > 0.999) {
@@ -64,4 +66,8 @@ void Camera::update_size(uint width, uint height) {
     0.1f,                   // Near clipping plane
     100.0f                  // Far clipping plane
   );
+}
+
+glm::vec2 Camera::getMouseDelta() {
+  return mouseDelta;
 }

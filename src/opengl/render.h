@@ -15,9 +15,9 @@ class Render {
     World* world;
     std::unordered_map<std::string, Shader*>* shaders;
     Shader* currentShader;
+    Camera* camera;
   private:
     Display* display;
-    Camera* camera;
 
   public:
     Render();

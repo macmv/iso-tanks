@@ -16,6 +16,7 @@ class Camera {
     glm::vec3 pos;
     glm::vec3 dir;
     sf::Vector2i old_pos;
+    glm::vec2 mouseDelta = glm::vec2();
 
   public:
     Camera();
@@ -23,6 +24,7 @@ class Camera {
     void update_size(uint width, uint height);
     void set_mouse(uint x, uint y);
     void loadMat(Shader* shader);
+    glm::vec2 getMouseDelta();
 };
 
 #endif

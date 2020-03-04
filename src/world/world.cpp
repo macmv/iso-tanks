@@ -136,7 +136,7 @@ World::~World() {
   collisionShapes->clear();
 }
 
-void World::update() {
+void World::update(float mouseDelta) {
   dynamicsWorld->stepSimulation(1.f / 60.f, 10);
 
   for (Player* player : *players) {
@@ -145,7 +145,7 @@ void World::update() {
     if (!isnan(pos.x) && !isnan(pos.y) && !isnan(pos.z)) {
       player->body->setGravity(btVector3(pos.x, pos.y, pos.z));
     }
-    player->update();
+    player->update(mouseDelta);
   }
 
   // for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--) {

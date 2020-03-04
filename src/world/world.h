@@ -23,7 +23,7 @@ class World {
     World(Terrain* terrain);
     ~World();
     void add_player();
-    void update();
+    void update(float mouseDelta);
     void drawDebug();
     void clean();
     Player* getPlayer();

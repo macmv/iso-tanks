@@ -12,7 +12,7 @@ class Player {
 
   public:
     Player(btRigidBody* body);
-    void update();
+    void update(float mouseDelta);
     glm::mat4 getTransform();
 };
 

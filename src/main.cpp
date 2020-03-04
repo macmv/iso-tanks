@@ -20,7 +20,8 @@ int main() {
   world->add_player();
 
   while (true) {
-    world->update();
+    world->update(render->camera->getMouseDelta().x);
+
     render->start(world->getPlayer());
     render->use("flat");
     render->render(terrain->instance);

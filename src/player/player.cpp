@@ -14,9 +14,10 @@ Player::Player(btRigidBody* body) {
   this->body = body;
   scene = new Scene();
   loadScene("assets/player.glb", scene);
+  turretAngle = 3;
 }
 
-void Player::update() {
+void Player::update(float mouseDelta) {
   btTransform transform;
   body->getMotionState()->getWorldTransform(transform);
   transform.getOpenGLMatrix(glm::value_ptr(scene->transform));
@@ -57,9 +58,12 @@ void Player::update() {
   glm::vec3 torqueForce = up * torqueAmount;
   body->applyTorqueImpulse(btVector3(torqueForce.x, torqueForce.y, torqueForce.z));
 
+  float turretDelta = mouseDelta;
+  turretAngle += turretDelta;
+
   for (ModelInstance* model : *scene->models) {
     if (model->model->name.compare("Turret") == 0) {
-      model->transform = glm::rotate(glm::mat4(1), .1f, glm::vec3(0, 1, 0)) * model->transform;
+      model->transform = glm::rotate(glm::mat4(1), turretDelta, glm::vec3(0, 1, 0)) * model->transform;
     }
   }
 }
