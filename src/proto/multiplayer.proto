@@ -1,0 +1,20 @@
+
+syntax = 'proto3';
+
+service Multiplayer {
+  rpc UpdatePlayer (PlayerUpdate) returns (PlayerUpdateResponse) {}
+}
+
+message PlayerUpdate {
+  Player player = 1;
+}
+
+message PlayerUpdateResponse {
+  repeated Player player = 1;
+}
+
+message Player {
+  float x = 1;
+  float y = 2;
+}
+
