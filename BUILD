@@ -1,5 +1,6 @@
 
 load('//:src/util/blender_export.bzl', 'blender_script')
+load("@rules_proto_grpc//cpp:defs.bzl", "cpp_grpc_library")
 
 blender_script(
   name = "assets",
@@ -17,7 +18,7 @@ proto_library(
   srcs = glob(["src/proto/**/*.proto"]),
 )
 
-cc_proto_library(
+cpp_grpc_library(
   name = "proto_cc",
   deps = ["proto_lib"],
 )
