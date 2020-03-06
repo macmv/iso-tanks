@@ -1,6 +1,7 @@
 #include "server.h"
-#include "src/proto/multiplayer.pb.h"
 #include <string>
+#include <iostream>
+#include "multiplayer_impl.h"
 
 using namespace std;
 
