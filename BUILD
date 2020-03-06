@@ -12,6 +12,16 @@ filegroup(
   srcs = glob(["src/shader/**/*.glsl"]),
 )
 
+proto_library(
+  name = "proto_lib",
+  srcs = glob(["src/proto/**/*.proto"]),
+)
+
+cc_proto_library(
+  name = "proto_cc",
+  deps = ["proto_lib"],
+)
+
 cc_library(
   name = "compile",
   srcs = glob(["src/**/*.cpp",
@@ -20,6 +30,7 @@ cc_library(
   hdrs = glob(["src/**/*.h"]),
   copts = ["-I/usr/include/bullet/",
            "-Ilibs/tinygltf/"],
+  deps = [":proto_cc"],
 )
 
 cc_binary(
