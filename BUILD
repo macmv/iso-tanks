@@ -24,10 +24,11 @@ cpp_grpc_library(
 )
 
 cc_library(
-  name = "compile",
+  name = "client_lib",
   srcs = glob(["src/**/*.cpp",
                "libs/*/*.h",
-               "libs/*/*.hpp"]),
+               "libs/*/*.hpp"],
+              exclude = ["src/server.cpp"]),
   hdrs = glob(["src/**/*.h"]),
   copts = ["-I/usr/include/bullet/",
            "-Ilibs/tinygltf/"],
@@ -35,8 +36,8 @@ cc_library(
 )
 
 cc_binary(
-  name = "iso-tanks",
-  deps = ["compile"],
+  name = "client",
+  deps = ["client_lib"],
   linkopts = ["-lsfml-system",
               "-lsfml-window",
               "-lm",
@@ -51,4 +52,29 @@ cc_binary(
     ":shaders",
     ":assets",
   ],
+)
+
+cc_library(
+  name = "server_lib",
+  srcs = glob(["src/**/*.cpp",
+               "libs/*/*.h",
+               "libs/*/*.hpp"],
+              exclude = ["src/client.cpp"]),
+  hdrs = glob(["src/**/*.h"]),
+  copts = ["-I/usr/include/bullet/",
+           "-Ilibs/tinygltf/"],
+  deps = [":proto_cc"],
+)
+
+cc_binary(
+  name = "server",
+  deps = ["server_lib"],
+  linkopts = ["-lm",
+              "-lGLEW",
+              "-lGL",
+              "-lstdc++",
+              "-lLinearMath",
+              "-lBulletDynamics",
+              "-lBulletCollision",
+              "-lBulletSoftBody"],
 )
