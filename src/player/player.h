@@ -2,7 +2,10 @@
 #define _PLAYER_H
 
 #include <bullet/btBulletDynamicsCommon.h>
-#include "../models/scene.h"
+#include "network/client.h"
+#include "models/scene.h"
+
+class Client;
 
 class Player {
   public:

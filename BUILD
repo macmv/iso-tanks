@@ -31,7 +31,8 @@ cc_library(
               exclude = ["src/server.cpp"]),
   hdrs = glob(["src/**/*.h"]),
   copts = ["-I/usr/include/bullet/",
-           "-Ilibs/tinygltf/"],
+           "-Ilibs/tinygltf/",
+           "-Isrc/"],
   deps = [":proto_cc"],
 )
 
@@ -62,7 +63,8 @@ cc_library(
               exclude = ["src/client.cpp"]),
   hdrs = glob(["src/**/*.h"]),
   copts = ["-I/usr/include/bullet/",
-           "-Ilibs/tinygltf/"],
+           "-Ilibs/tinygltf/",
+           "-Isrc/"],
   deps = [":proto_cc"],
 )
 

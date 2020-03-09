@@ -1,8 +1,8 @@
 #include "camera.h"
-#include "../models/model_instance.h"
+#include "models/model_instance.h"
 #include "display.h"
 #include "shader.h"
-#include "../player/player.h"
+#include "player/player.h"
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
