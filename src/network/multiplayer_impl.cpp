@@ -1,6 +1,15 @@
 #include "multiplayer_impl.h"
+#include <grpcpp/grpcpp.h>
+#include <string>
 
-grpc::Status UpdatePlayer(grpc::ServerContext* context, const PlayerUpdate* playerUpdate, PlayerUpdateResponse* feature) {
+using namespace std;
+
+MultiplayerImpl::MultiplayerImpl() {
+
+}
+
+grpc::Status MultiplayerImpl::UpdatePlayer(grpc::ServerContext* context, const PlayerUpdate* req, PlayerUpdateResponse* res) {
+  cout << "Got request: " << req;
   return grpc::Status::OK;
 }
 
