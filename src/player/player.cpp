@@ -16,6 +16,7 @@ Player::Player(btRigidBody* body) {
   scene = new Scene();
   loadScene("assets/player.glb", scene);
   turretAngle = 3;
+  client = new Client(this);
 }
 
 void Player::update(float mouseDelta) {
@@ -67,6 +68,8 @@ void Player::update(float mouseDelta) {
       model->transform = glm::rotate(glm::mat4(1), turretDelta, glm::vec3(0, 1, 0)) * model->transform;
     }
   }
+
+  client->update();
 }
 
 glm::mat4 Player::getTransform() {

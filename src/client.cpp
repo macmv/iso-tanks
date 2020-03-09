@@ -23,6 +23,7 @@ int main() {
     world->update(render->camera->getMouseDelta().x);
 
     render->start(world->getPlayer());
+
     render->use("flat");
     render->render(terrain->instance);
     render->end();
@@ -34,6 +35,7 @@ int main() {
     // render->use("line");
     // world->drawDebug();
     // render->end();
+
     render->update();
   }
   world->clean();
