@@ -3,6 +3,7 @@
 
 #include "multiplayer_impl.h"
 #include "player/player.h"
+#include <thread>
 
 class Player;
 
@@ -10,11 +11,14 @@ class Client {
   private:
     Player* player;
     std::unique_ptr<Multiplayer::Stub> stub;
+    std::thread clientThread;
 
   public:
     Client(Player* player);
-    void update();
     void shoot();
+  private:
+    void sendUpdate();
+    static void startUpdateLoop(Client* client);
 };
 
 #endif

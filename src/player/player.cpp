@@ -68,8 +68,6 @@ void Player::update(float mouseDelta) {
       model->transform = glm::rotate(glm::mat4(1), turretDelta, glm::vec3(0, 1, 0)) * model->transform;
     }
   }
-
-  client->update();
 }
 
 glm::mat4 Player::getTransform() {
