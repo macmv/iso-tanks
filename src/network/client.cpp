@@ -13,7 +13,6 @@ Client::Client(Player* player) {
 }
 
 void Client::update() {
-  cout << "Updating client" << endl;
   grpc::ClientContext context;
 
   PlayerUpdate update;

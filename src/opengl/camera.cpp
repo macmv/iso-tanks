@@ -17,7 +17,7 @@ Camera::Camera() {
     glm::radians(70.f), // The vertical Field of View
     16.0f / 9.0f,       // Aspect Ratio
     0.1f,               // Near clipping plane
-    300.0f              // Far clipping plane
+    3000.0f              // Far clipping plane
   );
   pos = glm::vec3(0, 0, 10);
   dir = glm::vec3(0, 0, 1);
