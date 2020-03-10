@@ -1,6 +1,7 @@
 
 load('//:src/util/blender_export.bzl', 'blender_script')
-load("@rules_proto_grpc//cpp:defs.bzl", "cpp_grpc_library")
+load("@rules_proto//proto:defs.bzl", "proto_library")
+load("@com_github_grpc_grpc//bazel:cc_grpc_library.bzl", "cc_grpc_library")
 
 blender_script(
   name = "assets",
@@ -13,14 +14,22 @@ filegroup(
   srcs = glob(["src/shader/**/*.glsl"]),
 )
 
+
 proto_library(
   name = "proto_lib",
   srcs = glob(["src/proto/**/*.proto"]),
 )
 
-cpp_grpc_library(
+cc_proto_library(
   name = "proto_cc",
   deps = ["proto_lib"],
+)
+
+cc_grpc_library(
+  name = "proto_cc_grpc",
+  srcs = [":proto_lib"],
+  deps = [":proto_cc"],
+  grpc_only = True,
 )
 
 cc_library(
@@ -31,9 +40,10 @@ cc_library(
               exclude = ["src/server.cpp"]),
   hdrs = glob(["src/**/*.h"]),
   copts = ["-I/usr/include/bullet/",
+           "-I/usr/include/grpcpp/",
            "-Ilibs/tinygltf/",
            "-Isrc/"],
-  deps = [":proto_cc"],
+  deps = [":proto_cc_grpc"],
 )
 
 cc_binary(
@@ -45,6 +55,8 @@ cc_binary(
               "-lGLEW",
               "-lGL",
               "-lstdc++",
+              "-lgrpc",
+              "-lgrpc++",
               "-lLinearMath",
               "-lBulletDynamics",
               "-lBulletCollision",
@@ -65,7 +77,7 @@ cc_library(
   copts = ["-I/usr/include/bullet/",
            "-Ilibs/tinygltf/",
            "-Isrc/"],
-  deps = [":proto_cc"],
+  deps = [":proto_cc_grpc"],
 )
 
 cc_binary(
@@ -75,6 +87,8 @@ cc_binary(
               "-lGLEW",
               "-lGL",
               "-lstdc++",
+              "-lgrpc",
+              "-lgrpc++",
               "-lLinearMath",
               "-lBulletDynamics",
               "-lBulletCollision",
