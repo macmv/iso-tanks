@@ -4,12 +4,12 @@
 
 using namespace std;
 
-MultiplayerImpl::MultiplayerImpl() {
-
+MultiplayerImpl::MultiplayerImpl(Server* server) {
+  this->server = server;
 }
 
 grpc::Status MultiplayerImpl::UpdatePlayer(grpc::ServerContext* context, const PlayerUpdate* req, PlayerUpdateResponse* res) {
-  cout << "Got request: " << req << endl;
+  server->movePlayer(req->player());
   return grpc::Status::OK;
 }
 

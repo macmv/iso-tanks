@@ -14,7 +14,7 @@ void Server::start() {
   cout << "Server starting..." << endl;
 
   string server_address = "0.0.0.0:" + to_string(port);
-  MultiplayerImpl service;
+  MultiplayerImpl service(this);
 
   grpc::ServerBuilder builder;
   builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
@@ -25,4 +25,8 @@ void Server::start() {
   server->Wait();
 
   cout << "Server stopped" << endl;
+}
+
+void Server::movePlayer(const PlayerProto& player) {
+  cout << "Moving player to x " << player.x() << ", y " << player.y() << endl;
 }
