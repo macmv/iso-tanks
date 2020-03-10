@@ -9,7 +9,7 @@ MultiplayerImpl::MultiplayerImpl() {
 }
 
 grpc::Status MultiplayerImpl::UpdatePlayer(grpc::ServerContext* context, const PlayerUpdate* req, PlayerUpdateResponse* res) {
-  cout << "Got request: " << req;
+  cout << "Got request: " << req << endl;
   return grpc::Status::OK;
 }
 
