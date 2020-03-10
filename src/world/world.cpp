@@ -136,17 +136,19 @@ World::~World() {
   collisionShapes->clear();
 }
 
-void World::update(float mouseDelta) {
-  dynamicsWorld->stepSimulation(1.f / 60.f, 10);
-
+void World::updateControls(float mouseXDelta) {
   for (Player* player : *players) {
     glm::vec3 pos = glm::vec3(player->scene->transform[3]);
     pos = glm::normalize(pos) * 20.f;
     if (!isnan(pos.x) && !isnan(pos.y) && !isnan(pos.z)) {
       player->body->setGravity(btVector3(pos.x, pos.y, pos.z));
     }
-    player->update(mouseDelta);
+    player->update(mouseXDelta);
   }
+}
+
+void World::update() {
+  dynamicsWorld->stepSimulation(1.f / 60.f, 10);
 
   // for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--) {
   //   btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[j];

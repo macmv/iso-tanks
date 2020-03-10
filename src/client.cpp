@@ -20,7 +20,8 @@ int main() {
   world->add_player();
 
   while (true) {
-    world->update(render->camera->getMouseDelta().x);
+    world->updateControls(render->camera->getMouseDelta().x);
+    world->update();
 
     render->start(world->getPlayer());
 

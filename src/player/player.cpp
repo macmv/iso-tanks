@@ -19,7 +19,7 @@ Player::Player(btRigidBody* body) {
   client = new Client(this);
 }
 
-void Player::update(float mouseDelta) {
+void Player::update(float mouseXDelta) {
   btTransform transform;
   body->getMotionState()->getWorldTransform(transform);
   transform.getOpenGLMatrix(glm::value_ptr(scene->transform));
@@ -63,7 +63,7 @@ void Player::update(float mouseDelta) {
   glm::vec3 torqueForce = up * torqueAmount;
   body->applyTorqueImpulse(btVector3(torqueForce.x, torqueForce.y, torqueForce.z));
 
-  float turretDelta = mouseDelta;
+  float turretDelta = mouseXDelta;
   turretAngle += turretDelta;
 
   for (ModelInstance* model : *scene->models) {
