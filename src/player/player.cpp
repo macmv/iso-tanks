@@ -34,6 +34,9 @@ void Player::update(float mouseDelta) {
   glm::vec3 angVel = glm::vec3(body->getAngularVelocity().x(), body->getAngularVelocity().y(), body->getAngularVelocity().z());
   float speed = .8f - glm::length(vel) / 10;
   float torqueSpeed = 0.1f - glm::length(angVel * up) / 10;
+  if (torqueSpeed < 0) {
+    torqueSpeed = 0;
+  }
 
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
     force += forward * speed;
