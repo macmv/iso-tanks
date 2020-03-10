@@ -28,5 +28,5 @@ void Server::start() {
 }
 
 void Server::movePlayer(const PlayerProto& player) {
-  cout << "Moving player to x " << player.x() << ", y " << player.y() << endl;
+  cout << "Moving player to " << player.DebugString() << endl;
 }

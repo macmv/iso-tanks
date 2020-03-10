@@ -20,8 +20,8 @@ void Client::sendUpdate() {
   grpc::ClientContext context;
 
   PlayerUpdate update;
-  update.mutable_player()->set_x(2);
-  update.mutable_player()->set_y(3);
+  update.mutable_player()->mutable_transform()->mutable_position()->set_x(3);
+  update.mutable_player()->mutable_transform()->mutable_position()->set_y(4);
   PlayerUpdateResponse res;
   stub->UpdatePlayer(&context, (const PlayerUpdate&) update, &res);
 }
