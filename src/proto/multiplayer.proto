@@ -6,14 +6,23 @@ service Multiplayer {
 }
 
 message PlayerUpdate {
-  Player player = 1;
+  PlayerProto player = 1;
+  PlayerShootEvent shoot = 2;
 }
 
 message PlayerUpdateResponse {
-  repeated Player player = 1;
+  repeated PlayerProto player = 1;
 }
 
-message Player {
+message PlayerShootEvent {
+  bool exists = 1;
+  float dirX = 2;
+  float dirY = 3;
+  float dirZ = 4;
+  float dirW = 5;
+}
+
+message PlayerProto {
   float x = 1;
   float y = 2;
 }
