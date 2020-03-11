@@ -6,15 +6,20 @@
 #include <iostream>
 #include <grpc/grpc.h>
 #include <grpcpp/server_builder.h>
+#include <thread>
 
 class Server {
   private:
     int port;
+    std::thread worldThread;
 
   public:
     Server(int port);
     void start();
+    void update();
     void movePlayer(const PlayerProto& player);
+  private:
+    static void startUpdateLoop(Server* server);
 };
 
 #endif

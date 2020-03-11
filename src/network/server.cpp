@@ -3,6 +3,7 @@
 #include <iostream>
 #include "multiplayer_impl.h"
 #include <sstream>
+#include <thread>
 
 using namespace std;
 
@@ -20,6 +21,9 @@ void Server::start() {
   builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
   builder.RegisterService(&service);
 
+  worldThread = thread(startUpdateLoop, this);
+  worldThread.detach();
+
   unique_ptr<grpc::Server> server = builder.BuildAndStart();
   cout << "Listening on " << server_address << endl;
   server->Wait();
@@ -29,4 +33,20 @@ void Server::start() {
 
 void Server::movePlayer(const PlayerProto& player) {
   cout << "Moving player to " << player.DebugString() << endl;
+}
+
+void Server::update() {
+  cout << "Updating world" << endl;
+}
+
+void Server::startUpdateLoop(Server* server) {
+  cout << "World update loop started" << endl;
+  struct timespec tim, tim2;
+  tim.tv_sec = 0;
+  // 20 updates per second
+  tim.tv_nsec = 50000000;
+  while(1) {
+    nanosleep(&tim, &tim2);
+    server->update();
+  }
 }
