@@ -83,7 +83,9 @@ cc_library(
 cc_binary(
   name = "server",
   deps = ["server_lib"],
-  linkopts = ["-lm",
+  linkopts = ["-lsfml-system",
+              "-lsfml-window",
+              "-lm",
               "-lGLEW",
               "-lGL",
               "-lstdc++",

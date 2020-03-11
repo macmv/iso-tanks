@@ -11,12 +11,15 @@ class Terrain {
     ModelInstance* instance;
     std::vector<uint>* indices;
     std::vector<glm::vec3>* vertices;
+    std::vector<glm::vec2>* uvs;
+    std::vector<glm::vec3>* normals;
   private:
     int detail;
     float scale;
 
   public:
     Terrain(int detail);
+    void createModel();
 
   private:
     void gen_triangle(

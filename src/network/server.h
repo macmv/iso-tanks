@@ -9,11 +9,13 @@ class Server;
 #include <grpc/grpc.h>
 #include <grpcpp/server_builder.h>
 #include <thread>
+#include "world/world.h"
 
 class Server {
   private:
     int port;
     std::thread worldThread;
+    World* world;
 
   public:
     Server(int port);

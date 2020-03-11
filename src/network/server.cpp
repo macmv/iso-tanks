@@ -4,11 +4,14 @@
 #include "multiplayer_impl.h"
 #include <sstream>
 #include <thread>
+#include "world/world.h"
 
 using namespace std;
 
 Server::Server(int port) {
   this->port = port;
+  Terrain* terrain = new Terrain(100);
+  world = new World(terrain, false);
 }
 
 void Server::start() {

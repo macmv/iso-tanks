@@ -14,7 +14,7 @@ int main() {
   render->add_shader("line", new Shader("src/shader/line", false));
 
   Terrain* terrain = new Terrain(100);
-  World* world = new World(terrain);
+  World* world = new World(terrain, true);
   render->world = world;
 
   world->add_player();

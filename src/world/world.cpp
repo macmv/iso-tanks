@@ -10,7 +10,7 @@
 
 using namespace std;
 
-World::World(Terrain* terrain) {
+World::World(Terrain* terrain, bool needsDebug) {
   // init
 
   collisionConfiguration = new btDefaultCollisionConfiguration();
@@ -73,9 +73,11 @@ World::World(Terrain* terrain) {
   players = new std::vector<Player*>();
   models = new std::vector<ModelInstance*>();
 
-  debugDraw = new DebugDraw();
-  debugDraw->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
-  dynamicsWorld->setDebugDrawer(debugDraw);
+  if (needsDebug) {
+    debugDraw = new DebugDraw();
+    debugDraw->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
+    dynamicsWorld->setDebugDrawer(debugDraw);
+  }
 
   prev_update =
     std::chrono::system_clock::now().time_since_epoch() /

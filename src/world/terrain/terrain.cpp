@@ -1,5 +1,5 @@
 #include "terrain.h"
-#include "../../opengl/loader.h"
+#include "opengl/loader.h"
 #include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtx/compatibility.hpp>
@@ -10,8 +10,8 @@
 Terrain::Terrain(int detail) {
   indices = new std::vector<uint>();
   vertices = new std::vector<glm::vec3>();
-  std::vector<glm::vec2> uvs;
-  std::vector<glm::vec3> normals;
+  uvs = new std::vector<glm::vec2>();
+  normals = new std::vector<glm::vec3>();
 
   double t = (1.0 + sqrt(5.0)) / 2.0;
   scale = 1000;
@@ -35,34 +35,36 @@ Terrain::Terrain(int detail) {
   points.push_back(glm::vec3(-t,  0,  1));
 
   // 5 faces around point 0
-  gen_triangle(indices, vertices, &uvs, &normals, points.at(0), points.at(11), points.at(5));
-  gen_triangle(indices, vertices, &uvs, &normals, points.at(0), points.at(5),  points.at(1));
-  gen_triangle(indices, vertices, &uvs, &normals, points.at(0), points.at(1),  points.at(7));
-  gen_triangle(indices, vertices, &uvs, &normals, points.at(0), points.at(7),  points.at(10));
-  gen_triangle(indices, vertices, &uvs, &normals, points.at(0), points.at(10), points.at(11));
+  gen_triangle(indices, vertices, uvs, normals, points.at(0), points.at(11), points.at(5));
+  gen_triangle(indices, vertices, uvs, normals, points.at(0), points.at(5),  points.at(1));
+  gen_triangle(indices, vertices, uvs, normals, points.at(0), points.at(1),  points.at(7));
+  gen_triangle(indices, vertices, uvs, normals, points.at(0), points.at(7),  points.at(10));
+  gen_triangle(indices, vertices, uvs, normals, points.at(0), points.at(10), points.at(11));
 
   // 5 adjacent faces
-  gen_triangle(indices, vertices, &uvs, &normals, points.at(1),  points.at(5),  points.at(9));
-  gen_triangle(indices, vertices, &uvs, &normals, points.at(5),  points.at(11), points.at(4));
-  gen_triangle(indices, vertices, &uvs, &normals, points.at(11), points.at(10), points.at(2));
-  gen_triangle(indices, vertices, &uvs, &normals, points.at(10), points.at(7),  points.at(6));
-  gen_triangle(indices, vertices, &uvs, &normals, points.at(7),  points.at(1),  points.at(8));
+  gen_triangle(indices, vertices, uvs, normals, points.at(1),  points.at(5),  points.at(9));
+  gen_triangle(indices, vertices, uvs, normals, points.at(5),  points.at(11), points.at(4));
+  gen_triangle(indices, vertices, uvs, normals, points.at(11), points.at(10), points.at(2));
+  gen_triangle(indices, vertices, uvs, normals, points.at(10), points.at(7),  points.at(6));
+  gen_triangle(indices, vertices, uvs, normals, points.at(7),  points.at(1),  points.at(8));
 
   // 5 faces around point 3
-  gen_triangle(indices, vertices, &uvs, &normals, points.at(3), points.at(9), points.at(4));
-  gen_triangle(indices, vertices, &uvs, &normals, points.at(3), points.at(4), points.at(2));
-  gen_triangle(indices, vertices, &uvs, &normals, points.at(3), points.at(2), points.at(6));
-  gen_triangle(indices, vertices, &uvs, &normals, points.at(3), points.at(6), points.at(8));
-  gen_triangle(indices, vertices, &uvs, &normals, points.at(3), points.at(8), points.at(9));
+  gen_triangle(indices, vertices, uvs, normals, points.at(3), points.at(9), points.at(4));
+  gen_triangle(indices, vertices, uvs, normals, points.at(3), points.at(4), points.at(2));
+  gen_triangle(indices, vertices, uvs, normals, points.at(3), points.at(2), points.at(6));
+  gen_triangle(indices, vertices, uvs, normals, points.at(3), points.at(6), points.at(8));
+  gen_triangle(indices, vertices, uvs, normals, points.at(3), points.at(8), points.at(9));
 
   // 5 adjacent faces
-  gen_triangle(indices, vertices, &uvs, &normals, points.at(4), points.at(9), points.at(5));
-  gen_triangle(indices, vertices, &uvs, &normals, points.at(2), points.at(4), points.at(11));
-  gen_triangle(indices, vertices, &uvs, &normals, points.at(6), points.at(2), points.at(10));
-  gen_triangle(indices, vertices, &uvs, &normals, points.at(8), points.at(6), points.at(7));
-  gen_triangle(indices, vertices, &uvs, &normals, points.at(9), points.at(8), points.at(1));
+  gen_triangle(indices, vertices, uvs, normals, points.at(4), points.at(9), points.at(5));
+  gen_triangle(indices, vertices, uvs, normals, points.at(2), points.at(4), points.at(11));
+  gen_triangle(indices, vertices, uvs, normals, points.at(6), points.at(2), points.at(10));
+  gen_triangle(indices, vertices, uvs, normals, points.at(8), points.at(6), points.at(7));
+  gen_triangle(indices, vertices, uvs, normals, points.at(9), points.at(8), points.at(1));
+}
 
-  GLuint vao = createVAO(indices, vertices, &uvs, &normals);
+void Terrain::createModel() {
+  GLuint vao = createVAO(indices, vertices, uvs, normals);
   uint length = indices->size();
   Model* model = new Model("terrain", vao, length);
   instance = new ModelInstance(model);

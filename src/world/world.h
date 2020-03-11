@@ -24,7 +24,7 @@ class World {
     std::vector<ModelInstance*>*             models;
 
   public:
-    World(Terrain* terrain);
+    World(Terrain* terrain, bool needsTerrain);
     ~World();
     void add_player();
     void updateControls(float mouseXDelta);
