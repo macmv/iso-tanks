@@ -6,6 +6,7 @@
 #include <iostream>
 #include <cmath>
 #include "debug.h"
+#include <time.h>
 
 using namespace std;
 
@@ -75,6 +76,10 @@ World::World(Terrain* terrain) {
   debugDraw = new DebugDraw();
   debugDraw->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
   dynamicsWorld->setDebugDrawer(debugDraw);
+
+  prev_update =
+    std::chrono::system_clock::now().time_since_epoch() /
+    std::chrono::milliseconds(1);
 }
 
 void World::drawDebug() {
@@ -152,7 +157,11 @@ void World::updateControls(float mouseXDelta) {
 }
 
 void World::update() {
-  dynamicsWorld->stepSimulation(1.f / 60.f, 10);
+  ulong update_time =
+    std::chrono::system_clock::now().time_since_epoch() /
+    std::chrono::milliseconds(1);
+  dynamicsWorld->stepSimulation((double) (update_time - prev_update) / 1000, 10);
+  prev_update = update_time;
 
   // for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--) {
   //   btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[j];

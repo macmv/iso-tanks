@@ -5,6 +5,7 @@
 #include "../player/player.h"
 #include "debug.h"
 #include <bullet/btBulletDynamicsCommon.h>
+#include <time.h>
 
 class World {
   private:
@@ -15,6 +16,7 @@ class World {
     btDiscreteDynamicsWorld*                 dynamicsWorld;
     btAlignedObjectArray<btCollisionShape*>* collisionShapes;
     DebugDraw* debugDraw;
+    clock_t prev_update;
   public:
     std::vector<Player*>*                    players;
     std::vector<ModelInstance*>*             models;
