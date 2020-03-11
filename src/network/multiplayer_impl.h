@@ -1,3 +1,5 @@
+class MultiplayerImpl;
+
 #ifndef _MULTIPLAYER_IMPL_H
 #define _MULTIPLAYER_IMPL_H
 

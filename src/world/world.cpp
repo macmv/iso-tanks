@@ -1,5 +1,5 @@
 #include "world.h"
-#include "../player/player.h"
+#include "player/player.h"
 #include <bullet/btBulletDynamicsCommon.h>
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>

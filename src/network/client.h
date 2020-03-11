@@ -1,11 +1,11 @@
+class Client;
+
 #ifndef _CLIENT_H
 #define _CLIENT_H
 
 #include "multiplayer_impl.h"
 #include "player/player.h"
 #include <thread>
-
-class Player;
 
 class Client {
   private:

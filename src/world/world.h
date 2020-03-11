@@ -1,8 +1,10 @@
+class World;
+
 #ifndef _WORLD_H
 #define _WORLD_H
 
 #include "terrain/terrain.h"
-#include "../player/player.h"
+#include "player/player.h"
 #include "debug.h"
 #include <bullet/btBulletDynamicsCommon.h>
 #include <time.h>

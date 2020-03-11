@@ -1,3 +1,5 @@
+class Terrain;
+
 #ifndef _TERRAIN_H
 #define _TERRAIN_H
 
