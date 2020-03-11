@@ -63,6 +63,8 @@ World::World(Terrain* terrain) {
   btDefaultMotionState* myMotionState = new btDefaultMotionState(groundTransform);
   btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, groundShape, localInertia);
   btRigidBody* body = new btRigidBody(rbInfo);
+  body->setFriction(.8);
+  body->setRollingFriction(.8);
 
   //add the body to the dynamics world
   dynamicsWorld->addRigidBody(body);
@@ -99,6 +101,8 @@ void World::add_player() {
   btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
   btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, shape, localInertia);
   btRigidBody* body = new btRigidBody(rbInfo);
+  body->setFriction(.5);
+  body->setSpinningFriction(.3);
 
   dynamicsWorld->addRigidBody(body);
 

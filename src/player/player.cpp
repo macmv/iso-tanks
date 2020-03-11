@@ -32,8 +32,11 @@ void Player::update(float mouseXDelta) {
 
   glm::vec3 vel = glm::vec3(body->getLinearVelocity().x(), body->getLinearVelocity().y(), body->getLinearVelocity().z());
   glm::vec3 angVel = glm::vec3(body->getAngularVelocity().x(), body->getAngularVelocity().y(), body->getAngularVelocity().z());
-  float speed = .8f - glm::length(vel) / 10;
-  float torqueSpeed = 0.1f - glm::length(angVel * up) / 10;
+  float speed = .9f - glm::length(vel) / 10;
+  if (speed < 0) {
+    speed = 0;
+  }
+  float torqueSpeed = (0.1f - glm::length(angVel * up) / 10) * 6;
   if (torqueSpeed < 0) {
     torqueSpeed = 0;
   }
