@@ -1,5 +1,3 @@
-class Display;
-
 #ifndef _DISPLAY_H
 #define _DISPLAY_H
 

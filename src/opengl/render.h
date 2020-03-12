@@ -1,12 +1,10 @@
-class Render;
-
 #include <GL/glew.h>
 #include <SDL2/SDL.h>
-#include "../world/world.h"
+#include "world/world.h"
 #include "display.h"
 #include "camera.h"
 #include "shader.h"
-#include "../models/model_instance.h"
+#include "models/model_instance.h"
 #include <unordered_map>
 
 #ifndef _RENDER_H

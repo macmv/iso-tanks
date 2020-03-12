@@ -1,5 +1,3 @@
-class Server;
-
 #ifndef _SERVER_H
 #define _SERVER_H
 
@@ -10,6 +8,8 @@ class Server;
 #include <grpcpp/server_builder.h>
 #include <thread>
 #include "world/world.h"
+
+class World;
 
 class Server {
   private:

@@ -1,12 +1,10 @@
-class Camera;
-
 #ifndef _CAMERA_H
 #define _CAMERA_H
 
 #include "display.h"
-#include "../models/model_instance.h"
+#include "models/model_instance.h"
 #include "shader.h"
-#include "../player/player.h"
+#include "player/player.h"
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 #include <SFML/Window.hpp>

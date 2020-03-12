@@ -1,7 +1,6 @@
 #include "player.h"
 #include "opengl/loader.h"
 #include "models/model_instance.h"
-#include "network/client.h"
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 #include <glm/gtx/string_cast.hpp>

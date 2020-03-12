@@ -2,8 +2,8 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include <string>
-#include "../models/model.h"
-#include "../models/scene.h"
+#include "models/model.h"
+#include "models/scene.h"
 
 #ifndef _LOADER_H
 #define _LOADER_H

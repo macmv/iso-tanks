@@ -1,12 +1,10 @@
-class Shader;
-
 #ifndef _SHADER_H
 #define _SHADER_H
 
 #include <string>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
-#include "../models/material.h"
+#include "models/material.h"
 
 class Shader {
   private:
