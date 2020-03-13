@@ -2,7 +2,6 @@
 #define _PLAYER_H
 
 #include <bullet/btBulletDynamicsCommon.h>
-#include "network/client.h"
 #include "models/scene.h"
 
 class Player {
@@ -10,7 +9,6 @@ class Player {
     btRigidBody* body;
     Scene* scene;
     float turretAngle = 0;
-    Client* client;
 
   public:
     Player(btRigidBody* body);

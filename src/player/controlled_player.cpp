@@ -1,23 +1,14 @@
-#include "player.h"
-#include "opengl/loader.h"
-#include "models/model_instance.h"
+#include "controlled_player.h"
+#include "network/client.h"
+#include <SFML/Window.hpp>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
-#include <glm/gtx/string_cast.hpp>
-#include <bullet/btBulletDynamicsCommon.h>
-#include <SFML/Window.hpp>
-#include <iostream>
 
-using namespace std;
+ControlledPlayer::ControlledPlayer(btRigidBody* body) : Player(body) {
 
-Player::Player(btRigidBody* body) {
-  this->body = body;
-  scene = new Scene();
-  loadScene("assets/player.glb", scene);
-  turretAngle = 3;
 }
 
-void Player::update(float mouseXDelta) {
+void ControlledPlayer::update(float mouseXDelta) {
   btTransform transform;
   body->getMotionState()->getWorldTransform(transform);
   transform.getOpenGLMatrix(glm::value_ptr(scene->transform));
@@ -30,11 +21,8 @@ void Player::update(float mouseXDelta) {
 
   glm::vec3 vel = glm::vec3(body->getLinearVelocity().x(), body->getLinearVelocity().y(), body->getLinearVelocity().z());
   glm::vec3 angVel = glm::vec3(body->getAngularVelocity().x(), body->getAngularVelocity().y(), body->getAngularVelocity().z());
-  float speed = .9f - glm::length(vel) / 10;
-  if (speed < 0) {
-    speed = 0;
-  }
-  float torqueSpeed = (0.1f - glm::length(angVel * up) / 10) * 6;
+  float speed = .8f - glm::length(vel) / 10;
+  float torqueSpeed = 0.1f - glm::length(angVel * up) / 10;
   if (torqueSpeed < 0) {
     torqueSpeed = 0;
   }
@@ -74,6 +62,3 @@ void Player::update(float mouseXDelta) {
   }
 }
 
-glm::mat4 Player::getTransform() {
-  return scene->transform;
-}

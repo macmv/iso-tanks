@@ -1,5 +1,5 @@
 #include "client.h"
-#include "player/player.h"
+#include "player/controlled_player.h"
 #include "multiplayer_impl.h"
 #include <iostream>
 #include <thread>
@@ -9,7 +9,7 @@
 
 using namespace std;
 
-Client::Client(Player* player) {
+Client::Client(ControlledPlayer* player) {
   this->player = player;
   stub = Multiplayer::NewStub(
     grpc::CreateChannel("localhost:8001",
@@ -19,8 +19,8 @@ Client::Client(Player* player) {
 }
 
 void Client::sendUpdate() {
-  glm::vec3 position = glm::vec3(player->scene->transform[3]);
-  glm::quat rotation = glm::quat_cast(player->scene->transform);
+  glm::vec3 position = glm::vec3(player->getTransform()[3]);
+  glm::quat rotation = glm::quat_cast(player->getTransform());
 
   grpc::ClientContext context;
 

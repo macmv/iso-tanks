@@ -2,6 +2,7 @@
 #define _WORLD_H
 
 #include "terrain/terrain.h"
+#include "player/controlled_player.h"
 #include "player/player.h"
 #include "debug.h"
 #include <bullet/btBulletDynamicsCommon.h>
