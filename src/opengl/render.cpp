@@ -57,6 +57,10 @@ void Render::render(ModelInstance* instance) {
     cout << "Must call Render::start() before Render::render()!" << endl;
     exit(1);
   }
+  if (instance == NULL) {
+    cout << "Cannot pass NULL ModelInstance* into Render::render()!" << endl;
+    exit(1);
+  }
 
   currentShader->loadModel(instance->transform);
   currentShader->loadMaterial(instance->model->material);

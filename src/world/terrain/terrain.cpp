@@ -61,6 +61,7 @@ Terrain::Terrain(int detail) {
   gen_triangle(indices, vertices, uvs, normals, points.at(6), points.at(2), points.at(10));
   gen_triangle(indices, vertices, uvs, normals, points.at(8), points.at(6), points.at(7));
   gen_triangle(indices, vertices, uvs, normals, points.at(9), points.at(8), points.at(1));
+  instance = NULL;
 }
 
 void Terrain::createModel() {
