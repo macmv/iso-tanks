@@ -190,6 +190,7 @@ void World::update() {
     if (!isnan(pos.x) && !isnan(pos.y) && !isnan(pos.z)) {
       player->setGravity(pos);
     }
+    player->update();
   }
 
   // for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--) {

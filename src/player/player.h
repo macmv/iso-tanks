@@ -13,6 +13,7 @@ class Player {
 
   public:
     Player(btRigidBody* body);
+    void update();
     glm::mat4 getTransform();
     void setGravity(glm::vec3 gravity);
 };

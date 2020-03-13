@@ -17,6 +17,12 @@ Player::Player(btRigidBody* body) {
   turretAngle = 3;
 }
 
+void Player::update() {
+  btTransform transform;
+  body->getMotionState()->getWorldTransform(transform);
+  transform.getOpenGLMatrix(glm::value_ptr(scene->transform));
+}
+
 glm::mat4 Player::getTransform() {
   return scene->transform;
 }
