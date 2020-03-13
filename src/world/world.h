@@ -8,6 +8,8 @@
 #include <bullet/btBulletDynamicsCommon.h>
 #include <time.h>
 
+class ControlledPlayer;
+
 class World {
   private:
     btDefaultCollisionConfiguration*         collisionConfiguration;
@@ -20,17 +22,19 @@ class World {
     clock_t prev_update;
   public:
     std::vector<Player*>*                    players;
+    ControlledPlayer*                        thisPlayer;
     std::vector<ModelInstance*>*             models;
 
   public:
     World(Terrain* terrain, bool needsTerrain);
     ~World();
-    void add_player();
+    void createThisPlayer();
+    void addPlayer();
     void updateControls(float mouseXDelta);
     void update();
     void drawDebug();
     void clean();
-    Player* getPlayer();
+    ControlledPlayer* getPlayer();
 };
 
 #endif

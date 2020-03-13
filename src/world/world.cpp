@@ -73,6 +73,7 @@ World::World(Terrain* terrain, bool needsDebug) {
   players = new std::vector<Player*>();
   models = new std::vector<ModelInstance*>();
 
+
   if (needsDebug) {
     debugDraw = new DebugDraw();
     debugDraw->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
@@ -82,6 +83,8 @@ World::World(Terrain* terrain, bool needsDebug) {
   prev_update =
     std::chrono::system_clock::now().time_since_epoch() /
     std::chrono::milliseconds(1);
+
+  thisPlayer = NULL;
 }
 
 void World::drawDebug() {
@@ -93,7 +96,30 @@ void World::drawDebug() {
 void World::clean() {
 }
 
-void World::add_player() {
+void World::createThisPlayer() {
+  btCollisionShape* shape = collisionShapes->at(1);
+
+  btTransform startTransform;
+  startTransform.setIdentity();
+
+  float mass = 1.f;
+  btVector3 localInertia(0, 0, 0);
+  shape->calculateLocalInertia(mass, localInertia);
+  startTransform.setOrigin(btVector3(0, -900, 0));
+
+  //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
+  btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
+  btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, shape, localInertia);
+  btRigidBody* body = new btRigidBody(rbInfo);
+  body->setFriction(.5);
+  body->setSpinningFriction(.3);
+
+  dynamicsWorld->addRigidBody(body);
+
+  thisPlayer = new ControlledPlayer(body);
+}
+
+void World::addPlayer() {
   btCollisionShape* shape = collisionShapes->at(1);
 
   btTransform startTransform;
@@ -117,8 +143,8 @@ void World::add_player() {
   players->push_back(player);
 }
 
-Player* World::getPlayer() {
-  return players->at(0);
+ControlledPlayer* World::getPlayer() {
+  return thisPlayer;
 }
 
 World::~World() {
@@ -148,14 +174,7 @@ World::~World() {
 }
 
 void World::updateControls(float mouseXDelta) {
-  for (Player* player : *players) {
-    glm::vec3 pos = glm::vec3(player->scene->transform[3]);
-    pos = glm::normalize(pos) * 20.f;
-    if (!isnan(pos.x) && !isnan(pos.y) && !isnan(pos.z)) {
-      player->body->setGravity(btVector3(pos.x, pos.y, pos.z));
-    }
-    player->update(mouseXDelta);
-  }
+  thisPlayer->update(mouseXDelta);
 }
 
 void World::update() {
@@ -164,6 +183,14 @@ void World::update() {
     std::chrono::milliseconds(1);
   dynamicsWorld->stepSimulation((double) (update_time - prev_update) / 1000, 10);
   prev_update = update_time;
+
+  for (Player* player : *players) {
+    glm::vec3 pos = glm::vec3(player->scene->transform[3]);
+    pos = glm::normalize(pos) * 20.f;
+    if (!isnan(pos.x) && !isnan(pos.y) && !isnan(pos.z)) {
+      player->setGravity(pos);
+    }
+  }
 
   // for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--) {
   //   btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[j];

@@ -18,7 +18,8 @@ int main() {
   World* world = new World(terrain, true);
   render->world = world;
 
-  world->add_player();
+  world->addPlayer();
+  world->createThisPlayer();
 
   while (true) {
     world->updateControls(render->camera->getMouseDelta().x);
@@ -33,6 +34,7 @@ int main() {
     for (Player* player : *world->players) {
       render->render(player->scene);
     }
+    render->render(world->getPlayer()->scene);
     render->end();
     // render->use("line");
     // world->drawDebug();

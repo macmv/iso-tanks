@@ -167,8 +167,6 @@ bool loadGLTF(std::string path, Scene* scene) {
         vec_normals  ->push_back(glm::vec3(normals[i * 3 + 0],   normals[i * 3 + 1],   normals[i * 3 + 2]));
       }
 
-      cout << primitive.material << endl;
-
       uint vao = createVAO(vec_indices, vec_positions, vec_uvs, vec_normals);
       Model* model = new Model(node.name, vao, vec_indices->size());
       if (primitive.material >= 0) {

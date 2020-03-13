@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include <GL/glew.h>
 #include <stdio.h>
-#include "../world/world.h"
+#include "world/world.h"
 #include "display.h"
 #include "loader.h"
 #include <iostream>
@@ -26,7 +26,7 @@ void Render::add_shader(string name, Shader* shader) {
   shaders->insert({ name, shader });
 }
 
-void Render::start(Player* player) {
+void Render::start(ControlledPlayer* player) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   if (!display->update()) {

@@ -5,15 +5,16 @@
 #include "models/scene.h"
 
 class Player {
-  public:
+  protected:
     btRigidBody* body;
-    Scene* scene;
     float turretAngle = 0;
+  public:
+    Scene* scene;
 
   public:
     Player(btRigidBody* body);
-    void update(float mouseXDelta);
     glm::mat4 getTransform();
+    void setGravity(glm::vec3 gravity);
 };
 
 #endif

@@ -6,7 +6,7 @@
 
 class Client;
 
-class ControlledPlayer final : Player {
+class ControlledPlayer final : public Player {
   private:
     Client* client;
 
