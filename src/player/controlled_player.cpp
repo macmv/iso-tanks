@@ -5,7 +5,7 @@
 #include <glm/ext.hpp>
 
 ControlledPlayer::ControlledPlayer(btRigidBody* body) : Player(body) {
-
+  client = new Client(this);
 }
 
 void ControlledPlayer::update(float mouseXDelta) {

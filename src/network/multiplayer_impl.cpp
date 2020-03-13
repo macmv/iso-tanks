@@ -13,3 +13,8 @@ grpc::Status MultiplayerImpl::UpdatePlayer(grpc::ServerContext* context, const P
   return grpc::Status::OK;
 }
 
+grpc::Status MultiplayerImpl::NewPlayer(grpc::ServerContext* context, const PlayerAddRequest* req, PlayerAddResponse* res) {
+  int id = server->addPlayer(req);
+  res->mutable_player()->set_id(id);
+  return grpc::Status::OK;
+}

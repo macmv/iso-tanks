@@ -13,7 +13,6 @@ class ControlledPlayer final : public Player {
   public:
     ControlledPlayer(btRigidBody* body);
     void update(float mouseXDelta);
-    glm::mat4 getTransform();
 };
 
 #endif

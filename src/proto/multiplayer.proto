@@ -3,6 +3,7 @@ syntax = 'proto3';
 
 service Multiplayer {
   rpc UpdatePlayer (PlayerUpdate) returns (PlayerUpdateResponse) {}
+  rpc NewPlayer (PlayerAddRequest) returns (PlayerAddResponse) {}
 }
 
 message PlayerUpdate {
@@ -14,6 +15,14 @@ message PlayerUpdateResponse {
   repeated PlayerProto player = 1;
 }
 
+message PlayerAddRequest {
+
+}
+
+message PlayerAddResponse {
+  PlayerProto player = 1;
+}
+
 message PlayerShootEvent {
   bool exists = 1;
   float dirX = 2;
@@ -23,7 +32,8 @@ message PlayerShootEvent {
 }
 
 message PlayerProto {
-  Transform transform = 1;
+  int32 id = 1;
+  Transform transform = 2;
 }
 
 message Transform {

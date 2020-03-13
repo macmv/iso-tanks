@@ -10,8 +10,10 @@ using namespace std;
 
 Server::Server(int port) {
   this->port = port;
+  cout << "Starting world generation..." << endl;
   Terrain* terrain = new Terrain(100);
   world = new World(terrain, false);
+  cout << "World generation finished" << endl;
 }
 
 void Server::start() {
@@ -34,12 +36,16 @@ void Server::start() {
   cout << "Server stopped" << endl;
 }
 
+int Server::addPlayer(const PlayerAddRequest* req) {
+  return 4;
+}
+
 void Server::movePlayer(const PlayerProto& player) {
   cout << "Moving player to " << player.DebugString() << endl;
 }
 
 void Server::update() {
-  cout << "Updating world" << endl;
+  world->update();
 }
 
 void Server::startUpdateLoop(Server* server) {
