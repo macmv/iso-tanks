@@ -9,8 +9,12 @@ MultiplayerImpl::MultiplayerImpl(Server* server) {
 }
 
 grpc::Status MultiplayerImpl::UpdatePlayer(grpc::ServerContext* context, const PlayerUpdate* req, PlayerUpdateResponse* res) {
-  server->movePlayer(req->player());
-  return grpc::Status::OK;
+  bool validPlayer = server->movePlayer(req->player());
+  if (validPlayer) {
+    return grpc::Status::OK;
+  } else {
+    return grpc::Status(grpc::StatusCode::UNAUTHENTICATED, "Invalid player id");
+  }
 }
 
 grpc::Status MultiplayerImpl::NewPlayer(grpc::ServerContext* context, const PlayerAddRequest* req, PlayerAddResponse* res) {

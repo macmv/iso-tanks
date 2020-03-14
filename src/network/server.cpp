@@ -40,8 +40,9 @@ int Server::addPlayer(const PlayerAddRequest* req) {
   return 4;
 }
 
-void Server::movePlayer(const PlayerProto& player) {
+bool Server::movePlayer(const PlayerProto& player) {
   cout << "Moving player to " << player.DebugString() << endl;
+  return false;
 }
 
 void Server::update() {

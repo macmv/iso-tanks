@@ -33,7 +33,12 @@ void Client::sendUpdate() {
   update.mutable_player()->mutable_transform()->mutable_rotation()->set_z(rotation.z);
   update.mutable_player()->mutable_transform()->mutable_rotation()->set_w(rotation.w);
   PlayerUpdateResponse res;
-  stub->UpdatePlayer(&context, (const PlayerUpdate&) update, &res);
+  grpc::Status stat = stub->UpdatePlayer(&context, (const PlayerUpdate&) update, &res);
+  if (stat.error_code() != grpc::StatusCode::OK) {
+    cout << "Grpc player update got error code " << stat.error_code() << endl;
+    cout << "Message: " << stat.error_message() << endl;
+    exit(1);
+  }
 }
 
 void Client::startUpdateLoop(Client* client) {
