@@ -1,7 +1,8 @@
 
 load('//:src/util/blender_export.bzl', 'blender_script')
-load("@rules_proto//proto:defs.bzl", "proto_library")
-load("@com_github_grpc_grpc//bazel:cc_grpc_library.bzl", "cc_grpc_library")
+load('//:src/util/grpc.bzl', 'cc_grpc_library')
+load('//:src/util/grpc.bzl', 'cc_grpc_proto')
+# load("@com_github_grpc_grpc//bazel:cc_grpc_library.bzl", "cc_grpc_library")
 
 blender_script(
   name = "assets",
@@ -14,22 +15,20 @@ filegroup(
   srcs = glob(["src/shader/**/*.glsl"]),
 )
 
+# cc_grpc_library(
+#   name = "proto_cc_grpc",
+#   srcs = glob(["src/proto/**/*.proto"]),
+#   deps = [],
+# )
 
-proto_library(
-  name = "proto_lib",
+cc_grpc_proto(
+  name = "proto_cc_grpc",
   srcs = glob(["src/proto/**/*.proto"]),
 )
 
-cc_proto_library(
-  name = "proto_cc",
-  deps = ["proto_lib"],
-)
-
 cc_grpc_library(
-  name = "proto_cc_grpc",
-  srcs = [":proto_lib"],
-  deps = [":proto_cc"],
-  grpc_only = True,
+  name = "proto_cc_grpc_lib",
+  deps = [":proto_cc_grpc"],
 )
 
 cc_library(
@@ -40,10 +39,9 @@ cc_library(
               exclude = ["src/server.cpp"]),
   hdrs = glob(["src/**/*.h"]),
   copts = ["-I/usr/include/bullet/",
-           "-I/usr/include/grpcpp/",
            "-Ilibs/tinygltf/",
            "-Isrc/"],
-  deps = [":proto_cc_grpc"],
+  deps = [":proto_cc_grpc_lib"],
 )
 
 cc_binary(
