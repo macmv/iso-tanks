@@ -12,12 +12,14 @@ class Client {
     ControlledPlayer* player;
     std::unique_ptr<Multiplayer::Stub> stub;
     std::thread clientThread;
+    int id;
 
   public:
     Client(ControlledPlayer* player);
     void shoot();
   private:
     void sendUpdate();
+    bool sendNewPlayer();
     static void startUpdateLoop(Client* client);
 };
 

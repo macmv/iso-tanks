@@ -36,13 +36,13 @@ void Server::start() {
   cout << "Server stopped" << endl;
 }
 
-int Server::addPlayer(const PlayerAddRequest* req) {
+int Server::newPlayer(const NewPlayerRequest* req) {
   return 4;
 }
 
 bool Server::movePlayer(const PlayerProto& player) {
   cout << "Moving player to " << player.DebugString() << endl;
-  return false;
+  return player.id() == 4;
 }
 
 void Server::update() {

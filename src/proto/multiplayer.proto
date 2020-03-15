@@ -3,7 +3,7 @@ syntax = 'proto3';
 
 service Multiplayer {
   rpc UpdatePlayer (PlayerUpdate) returns (PlayerUpdateResponse) {}
-  rpc NewPlayer (PlayerAddRequest) returns (PlayerAddResponse) {}
+  rpc NewPlayer (NewPlayerRequest) returns (NewPlayerResponse) {}
 }
 
 message PlayerUpdate {
@@ -15,11 +15,11 @@ message PlayerUpdateResponse {
   repeated PlayerProto player = 1;
 }
 
-message PlayerAddRequest {
+message NewPlayerRequest {
 
 }
 
-message PlayerAddResponse {
+message NewPlayerResponse {
   PlayerProto player = 1;
 }
 
