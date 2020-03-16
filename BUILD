@@ -1,7 +1,6 @@
 
 load('//:src/util/blender_export.bzl', 'blender_script')
 load('//:src/util/grpc.bzl', 'cc_grpc_library')
-load('//:src/util/grpc.bzl', 'cc_grpc_proto')
 # load("@com_github_grpc_grpc//bazel:cc_grpc_library.bzl", "cc_grpc_library")
 
 blender_script(
@@ -21,14 +20,9 @@ filegroup(
 #   deps = [],
 # )
 
-cc_grpc_proto(
+cc_grpc_library(
   name = "proto_cc_grpc",
   srcs = glob(["src/proto/**/*.proto"]),
-)
-
-cc_grpc_library(
-  name = "proto_cc_grpc_lib",
-  deps = [":proto_cc_grpc"],
 )
 
 cc_library(
@@ -41,7 +35,7 @@ cc_library(
   copts = ["-I/usr/include/bullet/",
            "-Ilibs/tinygltf/",
            "-Isrc/"],
-  deps = [":proto_cc_grpc_lib"],
+  deps = [":proto_cc_grpc"],
 )
 
 cc_binary(

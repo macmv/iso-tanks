@@ -1,5 +1,40 @@
 
-def _cc_grpc_proto(ctx):
+def cc_grpc_library(
+  name,
+  srcs,
+  **kwargs):
+  if len(srcs) > 1:
+    fail("Only one srcs value supported", "srcs")
+
+  extra_deps = []
+  proto_targets = []
+
+  proto_target = "_" + name + "_only"
+  cc_proto_target = "_" + name + "_cc_proto"
+
+  native.cc_proto_library(
+    name = cc_proto_target,
+    deps = [":" + proto_target],
+    **kwargs
+  )
+  extra_deps.append(":" + cc_proto_target)
+  proto_targets.append(proto_target)
+
+  codegen_grpc_target = "_" + name + "_grpc_codegen"
+  generate_cc(
+    name = codegen_grpc_target,
+    srcs = srcs,
+    **kwargs
+  )
+
+  native.cc_library(
+    name = name,
+    srcs = [":" + codegen_grpc_target],
+    hdrs = [":" + codegen_grpc_target],
+    **kwargs
+  )
+
+def _generate_cc(ctx):
   files = []
   for proto_file in ctx.files.srcs:
     name = proto_file.path[0:-len(proto_file.extension) - 1]
@@ -21,38 +56,9 @@ def _cc_grpc_proto(ctx):
 
   return [DefaultInfo(files=depset(files))]
 
-cc_grpc_proto = rule(
-  implementation = _cc_grpc_proto,
+generate_cc = rule(
+  implementation = _generate_cc,
   attrs = {
     "srcs": attr.label_list(allow_files=True),
-  },
-)
-
-def _cc_grpc_library(ctx):
-  headers = []
-  includes = []
-  if not ctx.attr.deps:
-    fail("Need exactly 1 item in deps", "deps")
-  generated = ctx.attr.deps[0].files.to_list()
-  for proto_file in generated:
-    print(proto_file)
-    name = proto_file.path[0:-len(proto_file.extension) - 1]
-    source_object = ctx.actions.declare_file(name + ".pb.o")
-    grpc_object = ctx.actions.declare_file(name + ".grpc.pb.o")
-    print(proto_file.dirname)
-    ctx.actions.cc_library(
-      outputs = [source_object, grpc_object],
-      inputs = [proto_file],
-    )
-
-  return [
-    CcInfo(compilation_context=cc_common.create_compilation_context(
-      includes=depset(includes),
-      headers=depset(headers)))]
-
-cc_grpc_library = rule(
-  implementation = _cc_grpc_library,
-  attrs = {
-    "deps": attr.label_list(allow_rules=["cc_grpc_proto"]),
   },
 )
