@@ -6,6 +6,7 @@
 #include <thread>
 #include "world/world.h"
 #include "proto_util.h"
+#include <glm/gtx/string_cast.hpp>
 
 using namespace std;
 
@@ -43,7 +44,7 @@ int Server::newPlayer(const NewPlayerRequest* req) {
 
 bool Server::movePlayer(const PlayerProto& player) {
   cout << "Moving player to " << player.DebugString() << endl;
-  ProtoUtil::to_glm(player.transform());
+  cout << glm::to_string(ProtoUtil::to_glm(player.transform())) << endl;
   return player.id() == 4;
 }
 

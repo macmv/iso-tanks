@@ -2,7 +2,7 @@
 #define _PROTO_UTIL_H
 
 #include "src/proto/multiplayer.grpc.pb.h"
-#include "glm/glm.hpp"
+#include <glm/glm.hpp>
 
 class ProtoUtil {
   public:
