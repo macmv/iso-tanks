@@ -47,9 +47,15 @@ def _generate_cc(ctx):
     files.append(grpc_header)
     files.append(grpc_source)
     output_path = header.path[0:-len(name) - 5]
-    command = "protoc {} --cpp_out {} --grpc_out {} --plugin=protoc-gen-grpc=/usr/bin/grpc_cpp_plugin".format(proto_file.path, output_path, output_path)
+    command = "protoc {} --cpp_out {}".format(proto_file.path, output_path)
     ctx.actions.run_shell(
-      outputs = [header, source, grpc_header, grpc_source],
+      outputs = [header, source],
+      inputs = [proto_file],
+      command = command,
+    )
+    command = "protoc {} --grpc_out {} --plugin=protoc-gen-grpc=/usr/bin/grpc_cpp_plugin".format(proto_file.path, output_path)
+    ctx.actions.run_shell(
+      outputs = [grpc_header, grpc_source],
       inputs = [proto_file],
       command = command,
     )
