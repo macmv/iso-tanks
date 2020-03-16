@@ -5,6 +5,7 @@
 #include <sstream>
 #include <thread>
 #include "world/world.h"
+#include "proto_util.h"
 
 using namespace std;
 
@@ -42,6 +43,7 @@ int Server::newPlayer(const NewPlayerRequest* req) {
 
 bool Server::movePlayer(const PlayerProto& player) {
   cout << "Moving player to " << player.DebugString() << endl;
+  ProtoUtil::to_glm(player.transform());
   return player.id() == 4;
 }
 
