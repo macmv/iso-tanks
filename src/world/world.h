@@ -21,7 +21,7 @@ class World {
     DebugDraw* debugDraw;
     clock_t prev_update;
   public:
-    std::vector<Player*>*                    players;
+    std::unordered_map<uint, Player*>*        players;
     ControlledPlayer*                        thisPlayer;
     std::vector<ModelInstance*>*             models;
 
@@ -29,7 +29,8 @@ class World {
     World(Terrain* terrain, bool needsTerrain);
     ~World();
     void createThisPlayer();
-    void addPlayer();
+    uint addPlayer();
+    bool hasPlayer(uint id);
     void updateControls(float mouseXDelta);
     void update();
     void drawDebug();

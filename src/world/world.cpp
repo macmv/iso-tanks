@@ -70,7 +70,7 @@ World::World(Terrain* terrain, bool needsDebug) {
   //add the body to the dynamics world
   dynamicsWorld->addRigidBody(body);
 
-  players = new std::vector<Player*>();
+  players = new std::unordered_map<uint, Player*>();
   models = new std::vector<ModelInstance*>();
 
 
@@ -85,6 +85,8 @@ World::World(Terrain* terrain, bool needsDebug) {
     std::chrono::milliseconds(1);
 
   thisPlayer = NULL;
+
+  srand(time(0));
 }
 
 void World::drawDebug() {
@@ -119,7 +121,7 @@ void World::createThisPlayer() {
   thisPlayer = new ControlledPlayer(body);
 }
 
-void World::addPlayer() {
+uint World::addPlayer() {
   btCollisionShape* shape = collisionShapes->at(1);
 
   btTransform startTransform;
@@ -140,7 +142,14 @@ void World::addPlayer() {
   dynamicsWorld->addRigidBody(body);
 
   Player* player = new Player(body);
-  players->push_back(player);
+  uint id = (uint) rand();
+  cout << "Adding player to world with id: " << id << endl;
+  players->insert({id, player});
+  return id;
+}
+
+bool World::hasPlayer(uint id) {
+  return players->find(id) != players->end();
 }
 
 ControlledPlayer* World::getPlayer() {
@@ -184,7 +193,9 @@ void World::update() {
   dynamicsWorld->stepSimulation((double) (update_time - prev_update) / 1000, 10);
   prev_update = update_time;
 
-  for (Player* player : *players) {
+  Player* player;
+  for (std::pair<int, Player*> pair : *players) {
+    player = pair.second;
     glm::vec3 pos = glm::vec3(player->scene->transform[3]);
     pos = glm::normalize(pos) * 20.f;
     if (!isnan(pos.x) && !isnan(pos.y) && !isnan(pos.z)) {

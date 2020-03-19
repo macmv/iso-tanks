@@ -38,14 +38,25 @@ void Server::start() {
   cout << "Server stopped" << endl;
 }
 
-int Server::newPlayer(const NewPlayerRequest* req) {
-  return 4;
+uint Server::newPlayer(const NewPlayerRequest* req) {
+  uint id = world->addPlayer();
+  return id;
 }
 
 bool Server::movePlayer(const PlayerProto& player) {
-  cout << "Moving player to " << player.DebugString() << endl;
-  cout << glm::to_string(ProtoUtil::to_glm(player.transform())) << endl;
-  return player.id() == 4;
+  uint id = player.id();
+  bool playerExists = world->hasPlayer(id);
+  if (!playerExists) {
+    cout << "Player with invalid id " << id << " tried to move!" << endl;
+    return false;
+  }
+  // glm::mat4 transform = ProtoUtil::to_glm(player.transform());
+  // bool success = world->movePlayer(id, transform);
+  // if (!success) {
+  //   return false;
+  // }
+  cout << "Moving player" << endl << player.DebugString() << endl;
+  return true;
 }
 
 void Server::update() {

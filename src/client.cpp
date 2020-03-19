@@ -31,7 +31,9 @@ int main() {
     render->render(terrain->instance);
     render->end();
     render->use("simple");
-    for (Player* player : *world->players) {
+    Player* player;
+    for (std::pair<int, Player*> pair : *world->players) {
+      player = pair.second;
       render->render(player->scene);
     }
     render->render(world->getPlayer()->scene);

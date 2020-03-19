@@ -22,7 +22,7 @@ class Server {
     void start();
     void update();
     bool movePlayer(const PlayerProto& player);
-    int newPlayer(const NewPlayerRequest* req);
+    uint newPlayer(const NewPlayerRequest* req);
   private:
     static void startUpdateLoop(Server* server);
 };
