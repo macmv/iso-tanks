@@ -8,13 +8,18 @@ MultiplayerImpl::MultiplayerImpl(Server* server) {
   this->server = server;
 }
 
-grpc::Status MultiplayerImpl::UpdatePlayer(grpc::ServerContext* context, const PlayerUpdate* req, PlayerUpdateResponse* res) {
-  bool validPlayer = server->movePlayer(req->player());
-  if (validPlayer) {
-    return grpc::Status::OK;
-  } else {
-    return grpc::Status(grpc::StatusCode::UNAUTHENTICATED, "Invalid player id");
+grpc::Status MultiplayerImpl::UpdatePlayer(grpc::ServerContext* context, grpc::ServerReaderWriter<PlayerUpdateResponse, PlayerUpdate>* stream) {
+  PlayerUpdateResponse res;
+  PlayerUpdate update;
+  while (stream->Read(&update)) {
+    bool validPlayer = server->movePlayer(update.player());
+    if (!validPlayer) {
+      return grpc::Status(grpc::StatusCode::UNAUTHENTICATED, "Invalid player id");
+    }
+    stream->Write(res);
   }
+  cout << "Connection with client closed" << endl;
+  return grpc::Status::OK;
 }
 
 grpc::Status MultiplayerImpl::NewPlayer(grpc::ServerContext* context, const NewPlayerRequest* req, NewPlayerResponse* res) {

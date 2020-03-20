@@ -18,8 +18,9 @@ class Client {
     Client(ControlledPlayer* player);
     void shoot();
   private:
-    void sendUpdate();
+    void sendUpdate(std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, PlayerUpdateResponse>> stream);
     bool sendNewPlayer();
+    std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, PlayerUpdateResponse>> createStream();
     static void startUpdateLoop(Client* client);
 };
 

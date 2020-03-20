@@ -13,7 +13,7 @@ class MultiplayerImpl final : public Multiplayer::Service {
 
   public:
     explicit MultiplayerImpl(Server* server);
-    grpc::Status UpdatePlayer(grpc::ServerContext* context, const PlayerUpdate* req, PlayerUpdateResponse* res) override;
+    grpc::Status UpdatePlayer(grpc::ServerContext* context, grpc::ServerReaderWriter<PlayerUpdateResponse, PlayerUpdate>* stream);
     grpc::Status NewPlayer(grpc::ServerContext* context, const NewPlayerRequest* req, NewPlayerResponse* res) override;
 };
 

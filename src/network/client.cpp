@@ -19,7 +19,7 @@ Client::Client(ControlledPlayer* player) {
   clientThread.detach();
 }
 
-void Client::sendUpdate() {
+void Client::sendUpdate(std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, PlayerUpdateResponse>> stream) {
   glm::vec3 position = glm::vec3(player->getTransform()[3]);
   glm::quat rotation = glm::quat_cast(player->getTransform());
 
@@ -35,12 +35,8 @@ void Client::sendUpdate() {
   update.mutable_player()->mutable_transform()->mutable_rotation()->set_w(rotation.w);
   update.mutable_player()->set_id(id);
   PlayerUpdateResponse res;
-  grpc::Status stat = stub->UpdatePlayer(context, (const PlayerUpdate&) update, &res);
-  if (stat.error_code() != grpc::StatusCode::OK) {
-    cout << "Grpc player update got error code " << stat.error_code() << endl;
-    cout << "Message: " << stat.error_message() << endl;
-    exit(1);
-  }
+  stream->Write(update);
+  stream->Read(&res);
 }
 
 bool Client::sendNewPlayer() {
@@ -58,6 +54,11 @@ bool Client::sendNewPlayer() {
   return true;
 }
 
+std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, PlayerUpdateResponse>> Client::createStream() {
+  grpc::ClientContext* context = new grpc::ClientContext();
+  return stub->UpdatePlayer(context);
+}
+
 void Client::startUpdateLoop(Client* client) {
   struct timespec tim, tim2;
   tim.tv_sec = 0;
@@ -68,9 +69,10 @@ void Client::startUpdateLoop(Client* client) {
     cout << "Could not join server" << endl;
     return;
   }
+  std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, PlayerUpdateResponse>> stream = client->createStream();
   while(1) {
     nanosleep(&tim, &tim2);
-    client->sendUpdate();
+    client->sendUpdate(stream);
   }
 }
 

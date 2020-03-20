@@ -2,7 +2,7 @@
 syntax = 'proto3';
 
 service Multiplayer {
-  rpc UpdatePlayer (PlayerUpdate) returns (PlayerUpdateResponse) {}
+  rpc UpdatePlayer (stream PlayerUpdate) returns (stream PlayerUpdateResponse) {}
   rpc NewPlayer (NewPlayerRequest) returns (NewPlayerResponse) {}
 }
 
