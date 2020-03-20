@@ -18,7 +18,6 @@ int main() {
   World* world = new World(terrain, true);
   render->world = world;
 
-  world->addPlayer();
   world->createThisPlayer();
 
   while (true) {

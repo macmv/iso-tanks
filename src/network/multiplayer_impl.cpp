@@ -16,6 +16,7 @@ grpc::Status MultiplayerImpl::UpdatePlayer(grpc::ServerContext* context, grpc::S
     if (!validPlayer) {
       return grpc::Status(grpc::StatusCode::UNAUTHENTICATED, "Invalid player id");
     }
+    server->createRes(&res);
     stream->Write(res);
   }
   cout << "Connection with client closed" << endl;

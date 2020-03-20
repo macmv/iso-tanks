@@ -21,7 +21,7 @@ class World {
     DebugDraw* debugDraw;
     clock_t prev_update;
   public:
-    std::unordered_map<uint, Player*>*        players;
+    std::unordered_map<uint, Player*>*       players;
     ControlledPlayer*                        thisPlayer;
     std::vector<ModelInstance*>*             models;
 
