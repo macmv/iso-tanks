@@ -156,6 +156,12 @@ ControlledPlayer* World::getPlayer() {
   return thisPlayer;
 }
 
+bool World::movePlayer(uint id, glm::mat4 transform) {
+  Player* p = players->at(id);
+  p->setTransform(transform);
+  return true;
+}
+
 World::~World() {
   for (int i = dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--) {
     btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[i];

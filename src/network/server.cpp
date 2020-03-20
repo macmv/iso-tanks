@@ -50,11 +50,11 @@ bool Server::movePlayer(const PlayerProto& player) {
     cout << "Player with invalid id " << id << " tried to move!" << endl;
     return false;
   }
-  // glm::mat4 transform = ProtoUtil::to_glm(player.transform());
-  // bool success = world->movePlayer(id, transform);
-  // if (!success) {
-  //   return false;
-  // }
+  glm::mat4 transform = ProtoUtil::to_glm(player.transform());
+  bool success = world->movePlayer(id, transform);
+  if (!success) {
+    return false;
+  }
   cout << "Moving player" << endl << player.DebugString() << endl;
   return true;
 }

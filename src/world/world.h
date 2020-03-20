@@ -31,6 +31,7 @@ class World {
     void createThisPlayer();
     uint addPlayer();
     bool hasPlayer(uint id);
+    bool movePlayer(uint id, glm::mat4 transform);
     void updateControls(float mouseXDelta);
     void update();
     void drawDebug();
