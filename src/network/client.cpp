@@ -6,6 +6,7 @@
 #include <time.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include "proto_util.h"
 
 using namespace std;
 
@@ -14,26 +15,16 @@ Client::Client(ControlledPlayer* player) {
   stub = Multiplayer::NewStub(
     grpc::CreateChannel("localhost:8001",
                         grpc::InsecureChannelCredentials()));
-  id = -1;
+  id = 0;
   clientThread = thread(startUpdateLoop, this);
   clientThread.detach();
 }
 
 void Client::sendUpdate(std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, PlayerUpdateResponse>> stream) {
-  glm::vec3 position = glm::vec3(player->getTransform()[3]);
-  glm::quat rotation = glm::quat_cast(player->getTransform());
-
   grpc::ClientContext* context = new grpc::ClientContext();
 
   PlayerUpdate update;
-  update.mutable_player()->mutable_transform()->mutable_position()->set_x(position.x);
-  update.mutable_player()->mutable_transform()->mutable_position()->set_y(position.y);
-  update.mutable_player()->mutable_transform()->mutable_position()->set_z(position.z);
-  update.mutable_player()->mutable_transform()->mutable_rotation()->set_x(rotation.x);
-  update.mutable_player()->mutable_transform()->mutable_rotation()->set_y(rotation.y);
-  update.mutable_player()->mutable_transform()->mutable_rotation()->set_z(rotation.z);
-  update.mutable_player()->mutable_transform()->mutable_rotation()->set_w(rotation.w);
-  update.mutable_player()->set_id(id);
+  ProtoUtil::to_proto(update.mutable_player(), id, player);
   PlayerUpdateResponse res;
   stream->Write(update);
   stream->Read(&res);
