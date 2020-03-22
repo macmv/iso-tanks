@@ -7,6 +7,7 @@
 #include "debug.h"
 #include <bullet/btBulletDynamicsCommon.h>
 #include <time.h>
+#include <unordered_map>
 
 class ControlledPlayer;
 
@@ -30,8 +31,10 @@ class World {
     ~World();
     void createThisPlayer();
     uint addPlayer();
+    void addPlayer(uint id);
     bool hasPlayer(uint id);
     bool movePlayer(uint id, glm::mat4 transform);
+    bool moveThisPlayer(glm::mat4 transform);
     void updateControls(float mouseXDelta);
     void update();
     void drawDebug();

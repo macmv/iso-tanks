@@ -4,6 +4,7 @@
 #include "opengl/shader.h"
 #include "world/terrain/terrain.h"
 #include "world/world.h"
+#include "network/client.h"
 
 using namespace std;
 
@@ -20,8 +21,11 @@ int main() {
 
   world->createThisPlayer();
 
+  Client* client = new Client(world);
+
   while (true) {
     world->updateControls(render->camera->getMouseDelta().x);
+    client->processResponse();
     world->update();
 
     render->start(world->getPlayer());

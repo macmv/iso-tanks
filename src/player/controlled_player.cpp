@@ -1,11 +1,9 @@
 #include "controlled_player.h"
-#include "network/client.h"
 #include <SFML/Window.hpp>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
 ControlledPlayer::ControlledPlayer(btRigidBody* body) : Player(body) {
-  client = new Client(this);
 }
 
 void ControlledPlayer::update(float mouseXDelta) {

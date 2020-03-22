@@ -10,14 +10,16 @@
 
 using namespace std;
 
-Client::Client(ControlledPlayer* player) {
-  this->player = player;
+Client::Client(World* world) {
+  this->player = world->thisPlayer;
+  this->world = world;
   stub = Multiplayer::NewStub(
     grpc::CreateChannel("localhost:8001",
                         grpc::InsecureChannelCredentials()));
   id = 0;
   clientThread = thread(startUpdateLoop, this);
   clientThread.detach();
+  recentResponse = NULL;
 }
 
 void Client::sendUpdate(std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, PlayerUpdateResponse>> stream) {
@@ -25,10 +27,32 @@ void Client::sendUpdate(std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, P
 
   PlayerUpdate update;
   ProtoUtil::to_proto(update.mutable_player(), id, player);
-  PlayerUpdateResponse res;
+  PlayerUpdateResponse* res = new PlayerUpdateResponse();
   stream->Write(update);
-  stream->Read(&res);
-  cout << "Got res: " << endl << res.DebugString() << endl;
+  stream->Read(res);
+  this->recentResponse = res;
+}
+
+void Client::processResponse() {
+  if (recentResponse == NULL) {
+    cout << "Got no response last frame" << endl;
+    return;
+  }
+  cout << "Got res: " << endl << recentResponse->DebugString() << endl;
+  for (PlayerProto proto : recentResponse->player()) {
+    cout << "Testing need to add other player id: " << proto.id() << endl;
+    if (id == proto.id()) {
+      cout << "Player is me lol" << endl;
+      world->moveThisPlayer(ProtoUtil::to_glm(proto.transform()));
+    } else {
+      if (!world->hasPlayer(proto.id())) {
+        cout << "Adding other player" << endl;
+        world->addPlayer(proto.id());
+      }
+      world->movePlayer(proto.id(), ProtoUtil::to_glm(proto.transform()));
+    }
+  }
+  recentResponse = NULL;
 }
 
 bool Client::sendNewPlayer() {

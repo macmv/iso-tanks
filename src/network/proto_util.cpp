@@ -2,7 +2,10 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include "player/player.h"
+
+using namespace std;
 
 glm::mat4 ProtoUtil::to_glm(Transform trans) {
   glm::mat4 transform = glm::mat4(1);

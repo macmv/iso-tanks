@@ -7,6 +7,8 @@
 #include <cmath>
 #include "debug.h"
 #include <time.h>
+#include <unordered_map>
+#include <chrono>
 
 using namespace std;
 
@@ -122,6 +124,12 @@ void World::createThisPlayer() {
 }
 
 uint World::addPlayer() {
+  uint id = (uint) rand();
+  addPlayer(id);
+  return id;
+}
+
+void World::addPlayer(uint id) {
   btCollisionShape* shape = collisionShapes->at(1);
 
   btTransform startTransform;
@@ -142,10 +150,7 @@ uint World::addPlayer() {
   dynamicsWorld->addRigidBody(body);
 
   Player* player = new Player(body);
-  uint id = (uint) rand();
-  cout << "Adding player to world with id: " << id << endl;
   players->insert({id, player});
-  return id;
 }
 
 bool World::hasPlayer(uint id) {
@@ -156,7 +161,13 @@ ControlledPlayer* World::getPlayer() {
   return thisPlayer;
 }
 
+bool World::moveThisPlayer(glm::mat4 transform) {
+  thisPlayer->setTransform(transform);
+  return true;
+}
+
 bool World::movePlayer(uint id, glm::mat4 transform) {
+  cout << "Moving player with id: " << id << endl;
   Player* p = players->at(id);
   p->setTransform(transform);
   return true;
