@@ -59,11 +59,14 @@ bool Server::movePlayer(const PlayerProto& player) {
   return true;
 }
 
-void Server::createRes(PlayerUpdateResponse* res) {
+// id is the id of the player this res is being sent to
+void Server::createRes(uint id, bool needsPositionSet, PlayerUpdateResponse* res) {
   res->clear_player();
   for (std::pair<uint, Player*> pair : *world->players) {
-    PlayerProto* proto = res->add_player();
-    ProtoUtil::to_proto(proto, pair.first, pair.second);
+    if (!(pair.first == id && !needsPositionSet)) {
+      PlayerProto* proto = res->add_player();
+      ProtoUtil::to_proto(proto, pair.first, pair.second);
+    }
   }
 }
 
