@@ -28,6 +28,7 @@ void Client::sendUpdate(std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, P
   PlayerUpdateResponse res;
   stream->Write(update);
   stream->Read(&res);
+  cout << "Got res: " << endl << res.DebugString() << endl;
 }
 
 bool Client::sendNewPlayer() {

@@ -60,6 +60,7 @@ bool Server::movePlayer(const PlayerProto& player) {
 }
 
 void Server::createRes(PlayerUpdateResponse* res) {
+  res->clear_player();
   for (std::pair<uint, Player*> pair : *world->players) {
     PlayerProto* proto = res->add_player();
     ProtoUtil::to_proto(proto, pair.first, pair.second);
