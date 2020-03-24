@@ -95,6 +95,3 @@ void Render::render(Scene* scene) {
   }
 }
 
-void Render::render(sf::Text* text) {
-  textRender->render(text);
-}

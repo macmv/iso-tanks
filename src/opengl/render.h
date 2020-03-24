@@ -20,7 +20,6 @@ class Render {
     std::unordered_map<std::string, Shader*>* shaders;
     Shader* currentShader;
     Camera* camera;
-  private:
     Display* display;
     TextRender* textRender;
 

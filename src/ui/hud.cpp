@@ -7,4 +7,7 @@ Hud::Hud(ControlledPlayer* player) {
 }
 
 void Hud::render(Render* render) {
+  render->textRender->start();
+  render->textRender->render(render->textRender->createText("reee"));
+  render->textRender->end();
 }

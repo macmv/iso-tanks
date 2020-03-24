@@ -4,8 +4,8 @@
 #include <SFML/Graphics.hpp>
 
 class Display {
-  private:
-    sf::Window* window;
+  public:
+    sf::RenderWindow* window;
 
   public:
     Display();

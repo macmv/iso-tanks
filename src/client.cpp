@@ -33,7 +33,6 @@ int main() {
 
     render->start(world->getPlayer());
 
-    hud->render(render);
     render->use("flat");
     render->render(terrain->instance);
     render->end();
@@ -48,6 +47,7 @@ int main() {
     // render->use("line");
     // world->drawDebug();
     // render->end();
+    hud->render(render);
 
     render->update();
   }
