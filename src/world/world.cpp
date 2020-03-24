@@ -167,7 +167,6 @@ bool World::moveThisPlayer(glm::mat4 transform) {
 }
 
 bool World::movePlayer(uint id, glm::mat4 transform) {
-  cout << "Moving player with id: " << id << endl;
   Player* p = players->at(id);
   p->setTransform(transform);
   return true;

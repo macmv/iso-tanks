@@ -21,8 +21,6 @@ void Display::init() {
 void Display::createWindow() {
   glEnable(GL_TEXTURE_2D);
 
-  cout << "Creating window" << endl;
-
   sf::ContextSettings settings;
   settings.depthBits = 24;
   settings.stencilBits = 8;

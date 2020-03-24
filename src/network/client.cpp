@@ -35,18 +35,13 @@ void Client::sendUpdate(std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, P
 
 void Client::processResponse() {
   if (recentResponse == NULL) {
-    cout << "Got no response last frame" << endl;
     return;
   }
-  cout << "Got res: " << endl << recentResponse->DebugString() << endl;
   for (PlayerProto proto : recentResponse->player()) {
-    cout << "Testing need to add other player id: " << proto.id() << endl;
     if (id == proto.id()) {
-      cout << "Player is me lol" << endl;
       world->moveThisPlayer(ProtoUtil::to_glm(proto.transform()));
     } else {
       if (!world->hasPlayer(proto.id())) {
-        cout << "Adding other player" << endl;
         world->addPlayer(proto.id());
       }
       world->movePlayer(proto.id(), ProtoUtil::to_glm(proto.transform()));
@@ -66,7 +61,6 @@ bool Client::sendNewPlayer() {
     exit(1);
   }
   this->id = res.player().id();
-  cout << res.DebugString() << endl;
   return true;
 }
 

@@ -31,7 +31,6 @@ unsigned long getFileLength(ifstream& file) {
 }
 
 int readFile(string filename, string* file) {
-  cout << "Reading file " << filename << endl;
   string line;
   ifstream stream(filename);
   if (stream.is_open()) {
@@ -77,7 +76,6 @@ bool loadShader(GLuint shader, string filename) {
 }
 
 GLuint loadShaderProgram(string vertexFilename, string fragmentFilename) {
-  cout << "Loading shader program" << endl;
   GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
   GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
@@ -96,8 +94,6 @@ GLuint loadShaderProgram(string vertexFilename, string fragmentFilename) {
   glAttachShader(programID, fragmentShader);
 
   glLinkProgram(programID);
-
-  cout << "Loaded shader program" << endl;
 
   return programID;
 }
