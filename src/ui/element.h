@@ -2,7 +2,8 @@
 #define _ELEMENT_H
 
 #include <glm/glm.hpp>
-#include "hud.h"
+
+class Hud;
 
 class Element {
   protected:
@@ -13,6 +14,7 @@ class Element {
     Element(Hud* container);
     virtual glm::vec2 getPosition() = 0;
     virtual glm::vec2 getSize() = 0;
+    virtual void render(glm::vec2 position, glm::vec2 size) = 0;
 };
 
 #endif
