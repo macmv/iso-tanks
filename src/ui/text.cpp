@@ -6,12 +6,20 @@ Text::Text(Hud* hud, string text) : Element(hud) {
   this->text = uiRender->createText(text);
 }
 
-glm::vec2 Text::getPosition() {
-  return glm::vec2(0, 0);
+bool Text::getLeftShifted() {
+  return true;
+}
+
+bool Text::getTopShifted() {
+  return false;
+}
+
+float getMargin() {
+  return 10;
 }
 
 glm::vec2 Text::getSize() {
-  return glm::vec2(0.1, 0.1);
+  return glm::vec2(100, 30);
 }
 
 void Text::render(glm::vec2 position, glm::vec2 size) {

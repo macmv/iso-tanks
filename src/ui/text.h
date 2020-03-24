@@ -16,8 +16,10 @@ class Text : Element {
 
   public:
     Text(Hud* hud, string text);
-    glm::vec2 getPosition();
+    bool getLeftShifted();
+    bool getTopShifted();
     glm::vec2 getSize();
+    float getMargin();
     void render(glm::vec2 position, glm::vec2 size);
 };
 

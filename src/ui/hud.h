@@ -3,14 +3,13 @@
 
 #include "player/controlled_player.h"
 #include "opengl/render.h"
-#include "text.h"
 
-class Text;
+class Section;
 
 class Hud {
   private:
     ControlledPlayer* player;
-    Text* container;
+    Section* container;
   public:
     UIRender* uiRender;
 
