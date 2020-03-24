@@ -35,3 +35,11 @@ sf::Text* UIRender::createText(string words) {
   text->move(100.f, 200.f);
   return text;
 }
+
+void UIRender::debugRectangle(glm::vec2 position, glm::vec2 size) {
+  sf::RectangleShape shape(sf::Vector2f(size.x, size.y));
+  shape.setFillColor(sf::Color::Transparent);
+  shape.setOutlineThickness(1);
+  shape.setOutlineColor(sf::Color(255, 0, 0));
+  window->draw(shape);
+}

@@ -17,6 +17,7 @@ class UIRender {
     void end();
     void render(sf::Text* text);
     sf::Text* createText(string words);
+    void debugRectangle(glm::vec2 position, glm::vec2 size);
 };
 
 #endif
