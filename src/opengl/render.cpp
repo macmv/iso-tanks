@@ -9,17 +9,18 @@
 #include "camera.h"
 #include "shader.h"
 #include <glm/gtc/matrix_transform.hpp>
+#include <SFML/Graphics/Font.hpp>
 
 using namespace std;
 
 Render::Render() {
   display = new Display();
-
   shaders = new unordered_map<string, Shader*>();
-
   camera = new Camera();
 
   currentShader = NULL;
+
+  textRender = new TextRender(this, "assets/Hack-Regular.ttf");
 }
 
 void Render::add_shader(string name, Shader* shader) {
@@ -92,4 +93,8 @@ void Render::render(Scene* scene) {
     render(instance);
     instance->transform = prev;
   }
+}
+
+void Render::render(sf::Text* text) {
+  textRender->render(text);
 }

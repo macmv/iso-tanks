@@ -5,6 +5,7 @@
 #include "world/terrain/terrain.h"
 #include "world/world.h"
 #include "network/client.h"
+#include "ui/hud.h"
 
 using namespace std;
 
@@ -23,6 +24,8 @@ int main() {
 
   Client* client = new Client(world);
 
+  Hud* hud = new Hud(world->thisPlayer);
+
   while (true) {
     world->updateControls(render->camera->getMouseDelta().x);
     client->processResponse();
@@ -30,6 +33,7 @@ int main() {
 
     render->start(world->getPlayer());
 
+    hud->render(render);
     render->use("flat");
     render->render(terrain->instance);
     render->end();

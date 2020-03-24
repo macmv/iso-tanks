@@ -14,11 +14,10 @@ filegroup(
   srcs = glob(["src/shader/**/*.glsl"]),
 )
 
-# cc_grpc_library(
-#   name = "proto_cc_grpc",
-#   srcs = glob(["src/proto/**/*.proto"]),
-#   deps = [],
-# )
+filegroup(
+  name = "fonts",
+  srcs = glob(["assets/**/*.ttf"]),
+)
 
 cc_grpc_library(
   name = "proto_cc_grpc",
@@ -43,6 +42,7 @@ cc_binary(
   deps = ["client_lib"],
   linkopts = ["-lsfml-system",
               "-lsfml-window",
+              "-lsfml-graphics",
               "-lGLEW",
               "-lGL",
               "-lgrpc++",
@@ -54,6 +54,7 @@ cc_binary(
               "-lBulletSoftBody"],
   data = [
     ":shaders",
+    ":fonts",
     ":assets",
   ],
 )

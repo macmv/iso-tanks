@@ -6,6 +6,10 @@
 #include "shader.h"
 #include "models/model_instance.h"
 #include <unordered_map>
+#include <SFML/Graphics/Font.hpp>
+#include "text_render.h"
+
+class TextRender;
 
 #ifndef _RENDER_H
 #define _RENDER_H
@@ -18,6 +22,7 @@ class Render {
     Camera* camera;
   private:
     Display* display;
+    TextRender* textRender;
 
   public:
     Render();
@@ -28,6 +33,7 @@ class Render {
     void update();                // updates display
     void render(Scene* scene);    // renders scene
     void render(ModelInstance* instance); // renders model
+    void render(sf::Text* text);  // renders text
 
   private:
     void createPrograms();
