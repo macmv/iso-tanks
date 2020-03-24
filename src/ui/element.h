@@ -2,10 +2,17 @@
 #define _ELEMENT_H
 
 #include <glm/glm.hpp>
+#include "hud.h"
 
 class Element {
+  protected:
+    float margin = 0;
+    const Hud* hud;
+
   public:
-    Element(glm::vec2 position);
+    Element(Hud* container);
+    virtual glm::vec2 getPosition() = 0;
+    virtual glm::vec2 getSize() = 0;
 };
 
 #endif

@@ -1,6 +1,7 @@
 #include "element.h"
 #include <glm/glm.hpp>
 
-Element::Element(glm::vec2 position) {
-
+Element::Element(Hud* container) : hud(container) {
+  cout << "Created element" << endl;
 }
+
