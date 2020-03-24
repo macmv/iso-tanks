@@ -7,9 +7,9 @@
 #include "models/model_instance.h"
 #include <unordered_map>
 #include <SFML/Graphics/Font.hpp>
-#include "text_render.h"
+#include "ui_render.h"
 
-class TextRender;
+class UIRender;
 
 #ifndef _RENDER_H
 #define _RENDER_H
@@ -21,7 +21,7 @@ class Render {
     Shader* currentShader;
     Camera* camera;
     Display* display;
-    TextRender* textRender;
+    UIRender* uiRender;
 
   public:
     Render();
@@ -32,7 +32,6 @@ class Render {
     void update();                // updates display
     void render(Scene* scene);    // renders scene
     void render(ModelInstance* instance); // renders model
-    void render(sf::Text* text);  // renders text
 
   private:
     void createPrograms();

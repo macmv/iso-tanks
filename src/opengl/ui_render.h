@@ -6,13 +6,13 @@
 
 using namespace std;
 
-class TextRender {
+class UIRender {
   private:
     sf::Font* font;
     sf::RenderWindow* window;
 
   public:
-    TextRender(Render* render, string font);
+    UIRender(Render* render, string font);
     void start();
     void end();
     void render(sf::Text* text);

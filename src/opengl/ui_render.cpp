@@ -1,10 +1,10 @@
-#include "text_render.h"
+#include "ui_render.h"
 #include "render.h"
 #include <SFML/Graphics.hpp>
 
 using namespace std;
 
-TextRender::TextRender(Render* render, string name) {
+UIRender::UIRender(Render* render, string name) {
   font = new sf::Font();
   if (!font->loadFromFile(name)) {
     cout << "Could not load " << name << " font!" << endl;
@@ -13,19 +13,19 @@ TextRender::TextRender(Render* render, string name) {
   window = render->display->window;
 }
 
-void TextRender::start() {
+void UIRender::start() {
   window->pushGLStates();
 }
 
-void TextRender::end() {
+void UIRender::end() {
   window->popGLStates();
 }
 
-void TextRender::render(sf::Text* text) {
+void UIRender::render(sf::Text* text) {
   window->draw(*text);
 }
 
-sf::Text* TextRender::createText(string words) {
+sf::Text* UIRender::createText(string words) {
   sf::Text* text = new sf::Text();
   text->setFont(*font);
   text->setString(words);

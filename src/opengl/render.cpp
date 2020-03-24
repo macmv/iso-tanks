@@ -20,7 +20,7 @@ Render::Render() {
 
   currentShader = NULL;
 
-  textRender = new TextRender(this, "assets/Hack-Regular.ttf");
+  uiRender = new UIRender(this, "assets/Hack-Regular.ttf");
 }
 
 void Render::add_shader(string name, Shader* shader) {
