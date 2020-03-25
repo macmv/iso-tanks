@@ -3,17 +3,19 @@
 #include <glm/gtx/string_cast.hpp>
 #include "hud.h"
 
-Section::Section(Hud* hud, bool isVertical) : Element(hud) {
+Section::Section(Hud* hud, bool isVertical, bool isLeftShifted, bool isTopShifted) : Element(hud) {
   this->isVertical = isVertical;
   uiRender = hud->uiRender;
+  this->isLeftShifted = isLeftShifted;
+  this->isTopShifted = isTopShifted;
 }
 
 bool Section::getLeftShifted() {
-  return true;
+  return isLeftShifted;
 }
 
 bool Section::getTopShifted() {
-  return true;
+  return isTopShifted;
 }
 
 float Section::getMargin() {
