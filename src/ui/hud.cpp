@@ -14,6 +14,6 @@ Hud::Hud(UIRender* render, ControlledPlayer* player) {
 
 void Hud::render() {
   uiRender->start();
-  container->render(glm::vec2(1000, 100), glm::vec2(1920, 1080));
+  container->render(glm::vec2(0, 0), uiRender->size());
   uiRender->end();
 }
