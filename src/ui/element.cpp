@@ -5,6 +5,5 @@
 using namespace std;
 
 Element::Element(Hud* container) : hud(container) {
-  cout << "Created element" << endl;
 }
 

@@ -8,11 +8,12 @@ Hud::Hud(UIRender* render, ControlledPlayer* player) {
   this->player = player;
   uiRender = render;
   container = new Section(this, true);
-  container->add(new Text(this, "GAMER"));
+  container->add(new Text(this, "GAMER 1", true, false));
+  container->add(new Text(this, "GAMER 2", true, false));
 }
 
 void Hud::render() {
   uiRender->start();
-  container->render(glm::vec2(1000, 1000), glm::vec2(1920, 1080));
+  container->render(glm::vec2(1000, 100), glm::vec2(1920, 1080));
   uiRender->end();
 }

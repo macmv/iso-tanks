@@ -46,44 +46,76 @@ glm::vec2 Section::getSize() {
 }
 
 void Section::render(glm::vec2 position, glm::vec2 size) {
+  std::vector<Element*> firstElements = std::vector<Element*>();
+  std::vector<Element*> lastElements = std::vector<Element*>();
+  for (Element* element : *elements) {
+    if (isVertical) {
+      if (element->getTopShifted()) {
+        firstElements.push_back(element);
+      } else {
+        lastElements.push_back(element);
+      }
+    } else {
+      if (element->getLeftShifted()) {
+        firstElements.push_back(element);
+      } else {
+        lastElements.push_back(element);
+      }
+    }
+  }
+  std::reverse(begin(lastElements), end(lastElements));
+  glm::vec2 elementSize = glm::vec2();
+  glm::vec2 elementPosition = glm::vec2();
   float minX = position.x;
   float minY = position.y;
   float maxX = position.x + size.x;
   float maxY = position.y + size.y;
-  for (Element* element : *elements) {
-    glm::vec2 elementSize = element->getSize();
-    bool leftShifted = element->getLeftShifted();
-    bool topShifted = element->getTopShifted();
-    float margin = element->getMargin();
-    glm::vec2 elementPosition = glm::vec2();
+  for (Element* element : firstElements) {
+    elementSize = element->getSize();
+    margin = element->getMargin();
     if (isVertical) {
-      if (topShifted) {
-        elementPosition.y = minY + margin;
-        minY += elementSize.y + margin * 2;
-      } else {
-        maxY -= elementSize.y + margin * 2;
-        elementPosition.y = maxY + margin;
-      }
-      if (leftShifted) {
+      elementPosition.y = minY + margin;
+      minY += elementSize.y + margin * 2;
+      if (element->getLeftShifted()) {
         elementPosition.x = minX + margin;
       } else {
         elementPosition.x = maxX - elementSize.x - margin;
       }
     } else {
-      if (leftShifted) {
-        elementPosition.x = minX + margin;
-        minX += elementSize.x + margin * 2;
-      } else {
-        maxX -= elementSize.x + margin * 2;
-        elementPosition.x = maxX + margin;
-      }
-      if (topShifted) {
-        elementPosition.y = maxY - elementSize.y - margin;
-      } else {
+      elementPosition.x = minX + margin;
+      minX += elementSize.x + margin * 2;
+      if (element->getTopShifted()) {
         elementPosition.y = minY + margin;
+      } else {
+        elementPosition.y = maxY - elementSize.y - margin;
       }
     }
-    cout << "Rendering element at " << glm::to_string(elementPosition) << endl;
+    element->render(elementPosition, elementSize);
+  }
+  minX = position.x;
+  minY = position.y;
+  maxX = position.x + size.x;
+  maxY = position.y + size.y;
+  for (Element* element : lastElements) {
+    elementSize = element->getSize();
+    margin = element->getMargin();
+    if (isVertical) {
+      maxY -= elementSize.y + margin * 2;
+      elementPosition.y = maxY + margin;
+      if (element->getLeftShifted()) {
+        elementPosition.x = minX + margin;
+      } else {
+        elementPosition.x = maxX - elementSize.x - margin;
+      }
+    } else {
+      maxX -= elementSize.x + margin * 2;
+      elementPosition.x = maxX + margin;
+      if (element->getTopShifted()) {
+        elementPosition.y = minY + margin;
+      } else {
+        elementPosition.y = maxY - elementSize.y - margin;
+      }
+    }
     element->render(elementPosition, elementSize);
   }
   uiRender->debugRectangle(position, size);

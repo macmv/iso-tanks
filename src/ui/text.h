@@ -13,9 +13,11 @@ class Text : public Element {
   private:
     UIRender* uiRender;
     sf::Text* text;
+    bool isLeftShifted;
+    bool isTopShifted;
 
   public:
-    Text(Hud* hud, string text);
+    Text(Hud* hud, string text, bool isLeftShifted, bool isTopShifted);
     bool getLeftShifted();
     bool getTopShifted();
     glm::vec2 getSize();
