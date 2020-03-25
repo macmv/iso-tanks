@@ -34,13 +34,13 @@ glm::vec2 Section::getSize() {
     float margin = e->getMargin();
     if (isVertical) {
       height += size.y + margin * 2;
-      if (size.x > width) {
-        width = size.x;
+      if (size.x + margin * 2 > width) {
+        width = size.x + margin * 2;
       }
     } else {
       width += size.x + margin * 2;
-      if (size.y > height) {
-        height = size.y;
+      if (size.y + margin * 2 > height) {
+        height = size.y + margin * 2;
       }
     }
   }
