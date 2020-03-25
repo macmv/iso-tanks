@@ -1,5 +1,6 @@
 #include "section.h"
 #include <SFML/Graphics.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include "hud.h"
 
 Section::Section(Hud* hud, bool isVertical) : Element(hud) {
@@ -17,6 +18,10 @@ bool Section::getTopShifted() {
 
 float Section::getMargin() {
   return 10;
+}
+
+void Section::add(Element* element) {
+  elements->push_back(element);
 }
 
 glm::vec2 Section::getSize() {
@@ -78,6 +83,7 @@ void Section::render(glm::vec2 position, glm::vec2 size) {
         elementPosition.y = minY + margin;
       }
     }
+    cout << "Rendering element at " << glm::to_string(elementPosition) << endl;
     element->render(elementPosition, elementSize);
   }
   uiRender->debugRectangle(position, size);

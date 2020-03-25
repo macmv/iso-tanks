@@ -5,7 +5,7 @@
 #include <vector>
 #include "opengl/ui_render.h"
 
-class Section : Element {
+class Section : public Element {
   private:
     std::vector<Element*>* elements = new std::vector<Element*>();
     bool isVertical;
@@ -18,6 +18,7 @@ class Section : Element {
     bool getTopShifted();
     float getMargin();
     void render(glm::vec2 position, glm::vec2 size);
+    void add(Element* element);
 };
 
 #endif

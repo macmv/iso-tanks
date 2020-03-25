@@ -41,5 +41,6 @@ void UIRender::debugRectangle(glm::vec2 position, glm::vec2 size) {
   shape.setFillColor(sf::Color::Transparent);
   shape.setOutlineThickness(1);
   shape.setOutlineColor(sf::Color(255, 0, 0));
+  shape.move(sf::Vector2f(position.x, position.y));
   window->draw(shape);
 }

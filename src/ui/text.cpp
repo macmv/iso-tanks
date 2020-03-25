@@ -14,7 +14,7 @@ bool Text::getTopShifted() {
   return false;
 }
 
-float getMargin() {
+float Text::getMargin() {
   return 10;
 }
 

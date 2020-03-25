@@ -9,7 +9,7 @@ using namespace std;
 
 class Hud;
 
-class Text : Element {
+class Text : public Element {
   private:
     UIRender* uiRender;
     sf::Text* text;
