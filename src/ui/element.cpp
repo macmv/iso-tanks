@@ -1,9 +1,15 @@
 #include "element.h"
+#include "position.h"
 #include <glm/glm.hpp>
 #include <iostream>
 
 using namespace std;
 
-Element::Element(Hud* container) : hud(container) {
+Element::Element(Hud* container, Position* position) : hud(container) {
+  this->position = position;
+}
+
+Position Element::getPosition() {
+  return *position;
 }
 

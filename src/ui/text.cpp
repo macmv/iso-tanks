@@ -1,19 +1,9 @@
 #include "text.h"
 #include <SFML/Graphics.hpp>
 
-Text::Text(Hud* hud, string text, bool isLeftShifted, bool isTopShifted) : Element(hud) {
+Text::Text(Hud* hud, Position* position, string text) : Element(hud, position) {
   uiRender = hud->uiRender;
   this->text = uiRender->createText(text);
-  this->isLeftShifted = isLeftShifted;
-  this->isTopShifted = isTopShifted;
-}
-
-bool Text::getLeftShifted() {
-  return isLeftShifted;
-}
-
-bool Text::getTopShifted() {
-  return isTopShifted;
 }
 
 float Text::getMargin() {

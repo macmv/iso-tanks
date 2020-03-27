@@ -3,19 +3,9 @@
 #include <glm/gtx/string_cast.hpp>
 #include "hud.h"
 
-Section::Section(Hud* hud, bool isVertical, bool isLeftShifted, bool isTopShifted) : Element(hud) {
+Section::Section(Hud* hud, Position* position, bool isVertical) : Element(hud, position) {
   this->isVertical = isVertical;
   uiRender = hud->uiRender;
-  this->isLeftShifted = isLeftShifted;
-  this->isTopShifted = isTopShifted;
-}
-
-bool Section::getLeftShifted() {
-  return isLeftShifted;
-}
-
-bool Section::getTopShifted() {
-  return isTopShifted;
 }
 
 float Section::getMargin() {
@@ -52,13 +42,13 @@ void Section::render(glm::vec2 position, glm::vec2 size) {
   std::vector<Element*> lastElements = std::vector<Element*>();
   for (Element* element : *elements) {
     if (isVertical) {
-      if (element->getTopShifted()) {
+      if (element->getPosition().topShifted) {
         firstElements.push_back(element);
       } else {
         lastElements.push_back(element);
       }
     } else {
-      if (element->getLeftShifted()) {
+      if (element->getPosition().leftShifted) {
         firstElements.push_back(element);
       } else {
         lastElements.push_back(element);
@@ -78,7 +68,7 @@ void Section::render(glm::vec2 position, glm::vec2 size) {
     if (isVertical) {
       elementPosition.y = minY + margin;
       minY += elementSize.y + margin * 2;
-      if (element->getLeftShifted()) {
+      if (element->getPosition().leftShifted) {
         elementPosition.x = minX + margin;
       } else {
         elementPosition.x = maxX - elementSize.x - margin;
@@ -86,7 +76,7 @@ void Section::render(glm::vec2 position, glm::vec2 size) {
     } else {
       elementPosition.x = minX + margin;
       minX += elementSize.x + margin * 2;
-      if (element->getTopShifted()) {
+      if (element->getPosition().topShifted) {
         elementPosition.y = minY + margin;
       } else {
         elementPosition.y = maxY - elementSize.y - margin;
@@ -104,7 +94,7 @@ void Section::render(glm::vec2 position, glm::vec2 size) {
     if (isVertical) {
       maxY -= elementSize.y + margin * 2;
       elementPosition.y = maxY + margin;
-      if (element->getLeftShifted()) {
+      if (element->getPosition().leftShifted) {
         elementPosition.x = minX + margin;
       } else {
         elementPosition.x = maxX - elementSize.x - margin;
@@ -112,7 +102,7 @@ void Section::render(glm::vec2 position, glm::vec2 size) {
     } else {
       maxX -= elementSize.x + margin * 2;
       elementPosition.x = maxX + margin;
-      if (element->getTopShifted()) {
+      if (element->getPosition().topShifted) {
         elementPosition.y = minY + margin;
       } else {
         elementPosition.y = maxY - elementSize.y - margin;

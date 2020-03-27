@@ -10,14 +10,10 @@ class Section : public Element {
     std::vector<Element*>* elements = new std::vector<Element*>();
     bool isVertical;
     UIRender* uiRender;
-    bool isLeftShifted;
-    bool isTopShifted;
 
   public:
-    Section(Hud* hud, bool isVertical, bool isLeftShifted, bool isTopShifted);
+    Section(Hud* hud, Position* position, bool isVertical);
     glm::vec2 getSize();
-    bool getLeftShifted();
-    bool getTopShifted();
     float getMargin();
     void render(glm::vec2 position, glm::vec2 size);
     void add(Element* element);

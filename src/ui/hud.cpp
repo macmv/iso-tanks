@@ -7,12 +7,12 @@
 Hud::Hud(UIRender* render, ControlledPlayer* player) {
   this->player = player;
   uiRender = render;
-  container = new Section(this, false, true, true);
-  Section* health = new Section(this, true, true, false);
-  health->add(new Text(this, "Health", true, false));
-  health->add(new Text(this, "<Health Slider Here>", true, false));
+  Section* health = new Section(this, new Position(true, false), true);
+  health->add(new Text(this, new Position(true, false), "Health"));
+  health->add(new Text(this, new Position(true, false), "Health slider"));
+  container = new Section(this, new Position(true, true), false);
   container->add(health);
-  container->add(new Text(this, "GAMER 2", true, false));
+  container->add(new Text(this, new Position(true, false), "GAMER 2"));
 }
 
 void Hud::render() {
