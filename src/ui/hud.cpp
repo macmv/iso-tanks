@@ -1,8 +1,8 @@
 #include "hud.h"
 #include "player/player.h"
 #include "opengl/render.h"
-#include "section.h"
-#include "text.h"
+#include "element/section.h"
+#include "element/text.h"
 
 Hud::Hud(UIRender* render, ControlledPlayer* player) {
   this->player = player;

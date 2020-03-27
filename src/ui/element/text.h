@@ -2,7 +2,7 @@
 #define _TEXT_H
 
 #include <SFML/Graphics.hpp>
-#include "hud.h"
+#include "ui/hud.h"
 #include "element.h"
 
 using namespace std;

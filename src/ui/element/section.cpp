@@ -1,7 +1,7 @@
 #include "section.h"
 #include <SFML/Graphics.hpp>
 #include <glm/gtx/string_cast.hpp>
-#include "hud.h"
+#include "ui/hud.h"
 
 Section::Section(Hud* hud, Position* position, bool isVertical) : Element(hud, position) {
   this->isVertical = isVertical;
