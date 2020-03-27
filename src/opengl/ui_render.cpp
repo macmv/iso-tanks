@@ -45,6 +45,13 @@ void UIRender::debugRectangle(glm::vec2 position, glm::vec2 size) {
   window->draw(shape);
 }
 
+void UIRender::rectangle(glm::vec2 position, glm::vec2 size, sf::Color color) {
+  sf::RectangleShape shape(sf::Vector2f(size.x, size.y));
+  shape.setFillColor(color);
+  shape.setPosition(position.x, position.y);
+  window->draw(shape);
+}
+
 glm::vec2 UIRender::size() {
   sf::Vector2u size = window->getSize();
   return glm::vec2(size.x, size.y);
