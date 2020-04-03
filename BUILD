@@ -1,12 +1,20 @@
 
 load('//:src/util/blender_export.bzl', 'blender_script')
 load('//:src/util/grpc.bzl', 'cc_grpc_library')
-# load("@com_github_grpc_grpc//bazel:cc_grpc_library.bzl", "cc_grpc_library")
+load("@rules_foreign_cc//tools/build_defs:cmake.bzl", "cmake_external")
 
 blender_script(
   name = "assets",
   script = "src/util/blender_export.py",
   srcs = glob(["assets/**/*.blend"]),
+)
+
+cmake_external(
+  name = "sfml",
+  lib_source = "@sfml//:all",
+  shared_libraries = ["libsfml-system.so.2.5",
+                      "libsfml-window.so.2.5",
+                      "libsfml-graphics.so.2.5"],
 )
 
 filegroup(
@@ -26,24 +34,22 @@ cc_grpc_library(
 
 cc_library(
   name = "client_lib",
-  srcs = glob(["src/**/*.cpp",
-               "libs/*/*.h",
-               "libs/*/*.hpp"],
+  srcs = glob(["src/**/*.cpp"],
               exclude = ["src/server.cpp"]),
-  hdrs = glob(["src/**/*.h"]),
+  hdrs = glob(["src/**/*.h",
+               "libs/tinygltf/*.h",
+               "libs/tinygltf/*.hpp",
+               "@sfml/include/**/*"]),
   copts = ["-I/usr/include/bullet/",
            "-Ilibs/tinygltf/",
            "-Isrc/"],
-  deps = [":proto_cc_grpc"],
+  deps = [":proto_cc_grpc", ":sfml"],
 )
 
 cc_binary(
   name = "client",
-  deps = ["client_lib"],
-  linkopts = ["-lsfml-system",
-              "-lsfml-window",
-              "-lsfml-graphics",
-              "-lGLEW",
+  deps = [":client_lib", ":sfml"],
+  linkopts = ["-lGLEW",
               "-lGL",
               "-lgrpc++",
               "-lprotobuf",
