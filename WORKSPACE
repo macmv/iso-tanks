@@ -33,3 +33,11 @@ http_archive(
   urls = ["https://github.com/SFML/SFML/archive/2.5.1.tar.gz"],
   sha256 = "438c91a917cc8aa19e82c6f59f8714da353c488584a007d401efac8368e1c785"
 )
+
+http_archive(
+  name = "bullet",
+  build_file_content = all_content,
+  strip_prefix = "bullet3-2.89",
+  urls = ["https://github.com/bulletphysics/bullet3/archive/2.89.tar.gz"],
+  sha256 = "621b36e91c0371933f3c2156db22c083383164881d2a6b84636759dc4cbb0bb8",
+)
