@@ -12,6 +12,7 @@ blender_script(
 cmake_external(
   name = "sfml",
   lib_source = "@sfml//:all",
+  make_commands = ["make -j $(command nproc 2>/dev/null || echo 12)", "make install"],
   shared_libraries = ["libsfml-system.so.2.5",
                       "libsfml-window.so.2.5",
                       "libsfml-graphics.so.2.5"],
