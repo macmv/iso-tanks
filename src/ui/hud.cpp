@@ -13,10 +13,10 @@ Hud::Hud(UIRender* render, ControlledPlayer* player) {
   uiRender = render;
   Section* health = new Section(this, new Position(true, false), true);
   health->add(new Text(this, new Position(true, false), "Health"));
-  health->add(new Slider(this, new Position(true, false), 0, 100, 75, new AngleBar(uiRender, sf::Color::Red), new AngleBar(uiRender, sf::Color::Black)));
+  health->add(new Slider(this, new Position(true, false), 0, 100, 75, true, new AngleBar(uiRender, sf::Color::Red, true), new AngleBar(uiRender, sf::Color::Black, true)));
   Section* ammo = new Section(this, new Position(false, false), true);
   ammo->add(new Text(this, new Position(false, false), "Ammo"));
-  ammo->add(new Slider(this, new Position(false, false), 0, 100, 75, new AngleBar(uiRender, sf::Color::Yellow), new AngleBar(uiRender, sf::Color::Black)));
+  ammo->add(new Slider(this, new Position(false, false), 0, 100, 75, false, new AngleBar(uiRender, sf::Color::Yellow, false), new AngleBar(uiRender, sf::Color::Black, false)));
   container = new Section(this, new Position(true, true), false);
   container->add(health);
   container->add(ammo);
