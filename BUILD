@@ -122,9 +122,23 @@ cc_binary(
   deps = [":server_lib",
           ":sfml",
           ":bullet"],
-  linkopts = ["-lGLEW",
+  linkopts = ["-Wl,-rpath,$$ORIGIN/sfml/lib",
+              "-Wl,-rpath,$$ORIGIN/bullet/lib",
+              "-Lbazel-out/k8-fastbuild/bin/sfml/lib",
+              "-Lbazel-out/k8-fastbuild/bin/bullet/lib",
+              "-lGLEW",
               "-lGL",
               "-lgrpc++",
               "-lprotobuf",
               "-lpthread"],
+)
+
+genrule(
+  name = "server_zip",
+  srcs = [":server",
+          ":sfml",
+          ":bullet"],
+  tools = ["@bazel_tools//tools/zip:zipper"],
+  outs = ["server.zip"],
+  cmd = "$(location @bazel_tools//tools/zip:zipper) c $@ $(SRCS)",
 )
