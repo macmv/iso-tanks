@@ -110,5 +110,4 @@ void Section::render(glm::vec2 position, glm::vec2 size) {
     }
     element->render(elementPosition, elementSize);
   }
-  uiRender->debugRectangle(position, size);
 }

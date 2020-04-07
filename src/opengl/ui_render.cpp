@@ -32,7 +32,6 @@ sf::Text* UIRender::createText(string words) {
   text->setCharacterSize(24);
   text->setFillColor(sf::Color::Red);
   text->setStyle(sf::Text::Bold);
-  text->move(100.f, 200.f);
   return text;
 }
 

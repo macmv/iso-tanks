@@ -15,7 +15,6 @@ glm::vec2 Text::getSize() {
 }
 
 void Text::render(glm::vec2 position, glm::vec2 size) {
-  uiRender->debugRectangle(position, size);
   text->setPosition(position.x, position.y);
   uiRender->render(text);
 }
