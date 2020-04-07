@@ -11,9 +11,10 @@ class Slider : public Element {
     int max;
     int min;
     int value;
+    bool onLeftSide;
 
   public:
-    Slider(Hud* hud, Position* position, int min, int max, int value, Drawable* foreground, Drawable* background);
+    Slider(Hud* hud, Position* position, int min, int max, int value, bool onLeftSide, Drawable* foreground, Drawable* background);
     glm::vec2 getSize();
     float getMargin();
     void render(glm::vec2 position, glm::vec2 size);
