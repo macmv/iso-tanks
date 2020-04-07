@@ -22,7 +22,7 @@ Render::Render() {
   currentShader = NULL;
 
   uiRender = new UIRender(this, "assets/Hack-Regular.ttf", 24);
-  hud = new Hud(uiRender, 2);
+  hud = new Hud(uiRender, display->get_window_size().y / 1080.0f);
 }
 
 void Render::add_shader(string name, Shader* shader) {
