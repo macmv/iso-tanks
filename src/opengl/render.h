@@ -8,8 +8,10 @@
 #include <unordered_map>
 #include <SFML/Graphics/Font.hpp>
 #include "ui_render.h"
+#include "ui/hud.h"
 
 class UIRender;
+class Hud;
 
 #ifndef _RENDER_H
 #define _RENDER_H
@@ -22,6 +24,8 @@ class Render {
     Camera* camera;
     Display* display;
     UIRender* uiRender;
+  private:
+    Hud* hud;
 
   public:
     Render();

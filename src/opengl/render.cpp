@@ -10,6 +10,7 @@
 #include "shader.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <SFML/Graphics/Font.hpp>
+#include "ui/hud.h"
 
 using namespace std;
 
@@ -20,7 +21,8 @@ Render::Render() {
 
   currentShader = NULL;
 
-  uiRender = new UIRender(this, "assets/Hack-Regular.ttf");
+  uiRender = new UIRender(this, "assets/Hack-Regular.ttf", 24 * 2);
+  hud = new Hud(uiRender, 2);
 }
 
 void Render::add_shader(string name, Shader* shader) {
@@ -50,6 +52,7 @@ void Render::end() {
 }
 
 void Render::update() {
+  hud->render(NULL);
   display->render();
 }
 

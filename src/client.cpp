@@ -24,8 +24,6 @@ int main() {
 
   Client* client = new Client(world);
 
-  Hud* hud = new Hud(render->uiRender, world->thisPlayer);
-
   while (true) {
     world->updateControls(render->camera->getMouseDelta().x);
     client->processResponse();
@@ -47,7 +45,6 @@ int main() {
     // render->use("line");
     // world->drawDebug();
     // render->end();
-    hud->render();
 
     render->update();
   }

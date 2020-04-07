@@ -8,14 +8,14 @@ class Section;
 
 class Hud {
   private:
-    ControlledPlayer* player;
     Section* container;
   public:
+    float scale;
     UIRender* uiRender;
 
   public:
-    Hud(UIRender* render, ControlledPlayer* player);
-    void render();
+    Hud(UIRender* render, float scale);
+    void render(ControlledPlayer* player);
 };
 
 #endif
