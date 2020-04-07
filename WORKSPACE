@@ -41,3 +41,13 @@ http_archive(
   urls = ["https://github.com/bulletphysics/bullet3/archive/2.89.tar.gz"],
   sha256 = "621b36e91c0371933f3c2156db22c083383164881d2a6b84636759dc4cbb0bb8",
 )
+
+http_archive(
+  name = "grpc",
+  strip_prefix = "grpc-1.28.1",
+  urls = ["https://github.com/grpc/grpc/archive/v1.28.1.tar.gz"],
+  sha256 = "4cbce7f708917b6e58b631c24c59fe720acc8fef5f959df9a58cdf9558d0a79b"
+)
+
+load("@grpc//bazel:grpc_deps.bzl", "grpc_deps")
+grpc_deps()

@@ -122,7 +122,8 @@ cc_library(
            "-Isrc/"],
   deps = [":proto_cc_grpc",
           ":sfml",
-          ":bullet"],
+          ":bullet",
+          "@grpc//:grpc++"],
 )
 
 cc_binary(
@@ -132,7 +133,6 @@ cc_binary(
           ":bullet"],
   linkopts = ["-lGLEW",
               "-lGL",
-              "-lgrpc++",
               "-lprotobuf",
               "-lpthread"],
 )
