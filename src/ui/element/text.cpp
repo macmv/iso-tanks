@@ -3,7 +3,7 @@
 
 Text::Text(Hud* hud, Position* position, string text) : Element(hud, position) {
   uiRender = hud->uiRender;
-  this->text = uiRender->createText(text);
+  this->text = uiRender->createText(text, scale);
 }
 
 float Text::getMargin() {

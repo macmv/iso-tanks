@@ -18,7 +18,7 @@ float Slider::getMargin() {
 }
 
 glm::vec2 Slider::getSize() {
-  return glm::vec2(max - min, 20);
+  return glm::vec2(max - min, 20) * scale;
 }
 
 void Slider::render(glm::vec2 position, glm::vec2 size) {

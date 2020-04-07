@@ -4,10 +4,11 @@
 
 using namespace std;
 
-UIRender::UIRender(Render* render, string name) {
+UIRender::UIRender(Render* render, string fontName, float fontSize) {
+  this->fontSize = fontSize;
   font = new sf::Font();
-  if (!font->loadFromFile(name)) {
-    cout << "Could not load " << name << " font!" << endl;
+  if (!font->loadFromFile(fontName)) {
+    cout << "Could not load " << fontName << " font!" << endl;
     exit(1);
   }
   window = render->display->window;
@@ -25,11 +26,11 @@ void UIRender::render(sf::Text* text) {
   window->draw(*text);
 }
 
-sf::Text* UIRender::createText(string words) {
+sf::Text* UIRender::createText(string words, float scale) {
   sf::Text* text = new sf::Text();
   text->setFont(*font);
   text->setString(words);
-  text->setCharacterSize(24);
+  text->setCharacterSize(fontSize * scale);
   text->setFillColor(sf::Color::Red);
   text->setStyle(sf::Text::Bold);
   return text;

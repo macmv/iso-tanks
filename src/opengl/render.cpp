@@ -21,7 +21,7 @@ Render::Render() {
 
   currentShader = NULL;
 
-  uiRender = new UIRender(this, "assets/Hack-Regular.ttf", 24 * 2);
+  uiRender = new UIRender(this, "assets/Hack-Regular.ttf", 24);
   hud = new Hud(uiRender, 2);
 }
 

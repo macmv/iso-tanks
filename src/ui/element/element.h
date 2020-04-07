@@ -11,6 +11,7 @@ class Element {
     float margin = 0;
     const Hud* hud;
     Position* position;
+    float scale;
 
   public:
     Element(Hud* container, Position* position);
