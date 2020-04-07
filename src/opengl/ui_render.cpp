@@ -51,6 +51,16 @@ void UIRender::rectangle(glm::vec2 position, glm::vec2 size, sf::Color color) {
   window->draw(shape);
 }
 
+void UIRender::triangle(glm::vec2 a, glm::vec2 b, glm::vec2 c, sf::Color color) {
+  sf::ConvexShape shape;
+  shape.setPointCount(3);
+  shape.setPoint(0, sf::Vector2f(a.x, a.y));
+  shape.setPoint(1, sf::Vector2f(b.x, b.y));
+  shape.setPoint(2, sf::Vector2f(c.x, c.y));
+  shape.setFillColor(color);
+  window->draw(shape);
+}
+
 glm::vec2 UIRender::size() {
   sf::Vector2u size = window->getSize();
   return glm::vec2(size.x, size.y);

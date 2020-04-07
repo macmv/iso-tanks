@@ -19,6 +19,7 @@ class UIRender {
     sf::Text* createText(string words);
     void debugRectangle(glm::vec2 position, glm::vec2 size);
     void rectangle(glm::vec2 position, glm::vec2 size, sf::Color color);
+    void triangle(glm::vec2 a, glm::vec2 b, glm::vec2 c, sf::Color color);
     glm::vec2 size();
 };
 
