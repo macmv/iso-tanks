@@ -123,7 +123,8 @@ cc_library(
   deps = [":proto_cc_grpc",
           ":sfml",
           ":bullet",
-          "@grpc//:grpc++"],
+          "@grpc//:grpc++",
+          "@com_google_protobuf//:protobuf"],
 )
 
 cc_binary(
@@ -133,7 +134,6 @@ cc_binary(
           ":bullet"],
   linkopts = ["-lGLEW",
               "-lGL",
-              "-lprotobuf",
               "-lpthread"],
 )
 
