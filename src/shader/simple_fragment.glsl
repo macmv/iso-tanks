@@ -1,4 +1,4 @@
-#version 460 core
+#version 330 core
 in vec3 surfaceNormal;
 in vec3 toLightVec;
 

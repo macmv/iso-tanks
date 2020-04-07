@@ -1,4 +1,4 @@
-#version 460 core
+#version 330 core
 flat in vec4 pass_color;
 
 out vec4 out_color;
