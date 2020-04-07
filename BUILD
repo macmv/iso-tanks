@@ -101,6 +101,14 @@ cc_binary(
     ":assets"],
 )
 
+genrule(
+  name = "client_zip",
+  srcs = glob(["bazel-out/k8-fastbuild/bin/client.runfiles/__main__/**/*"]),
+  tools = ["@bazel_tools//tools/zip:zipper"],
+  outs = ["client.zip"],
+  cmd = "$(location @bazel_tools//tools/zip:zipper) c $@ $(SRCS)",
+)
+
 cc_library(
   name = "server_lib",
   srcs = glob(["src/**/*.cpp"],
@@ -122,11 +130,7 @@ cc_binary(
   deps = [":server_lib",
           ":sfml",
           ":bullet"],
-  linkopts = ["-Wl,-rpath,$$ORIGIN/sfml/lib",
-              "-Wl,-rpath,$$ORIGIN/bullet/lib",
-              "-Lbazel-out/k8-fastbuild/bin/sfml/lib",
-              "-Lbazel-out/k8-fastbuild/bin/bullet/lib",
-              "-lGLEW",
+  linkopts = ["-lGLEW",
               "-lGL",
               "-lgrpc++",
               "-lprotobuf",
@@ -135,10 +139,8 @@ cc_binary(
 
 genrule(
   name = "server_zip",
-  srcs = [":server",
-          ":sfml",
-          ":bullet"],
+  srcs = glob(["bazel-out/k8-fastbuild/bin/server.runfiles/__main__/**/*"]),
   tools = ["@bazel_tools//tools/zip:zipper"],
   outs = ["server.zip"],
-  cmd = "$(location @bazel_tools//tools/zip:zipper) c $@ $(SRCS)",
+  cmd = "$(location @bazel_tools//tools/zip:zipper) c $@ -d bazel-out/k8-fastbuild/bin/ $(SRCS)",
 )
