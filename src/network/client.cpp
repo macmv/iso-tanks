@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include "proto_util.h"
+#include "player/event_list.h"
 
 using namespace std;
 
@@ -20,6 +21,7 @@ Client::Client(World* world) {
   clientThread = thread(startUpdateLoop, this);
   clientThread.detach();
   recentResponse = NULL;
+  events = new EventList();
 }
 
 void Client::sendUpdate(std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, PlayerUpdateResponse>> stream) {
@@ -27,6 +29,7 @@ void Client::sendUpdate(std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, P
 
   PlayerUpdate update;
   ProtoUtil::to_proto(update.mutable_player(), id, player);
+  events->toProto(update.mutable_events());
   PlayerUpdateResponse* res = new PlayerUpdateResponse();
   stream->Write(update);
   stream->Read(res);

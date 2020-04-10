@@ -4,6 +4,7 @@
 #include "multiplayer_impl.h"
 #include "world/world.h"
 #include "player/controlled_player.h"
+#include "player/event_list.h"
 #include <thread>
 
 class World;
@@ -17,6 +18,7 @@ class Client {
     uint id;
     World* world;
     PlayerUpdateResponse* recentResponse;
+    EventList* events;
 
   public:
     Client(World* world);
