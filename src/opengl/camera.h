@@ -27,6 +27,7 @@ class Camera {
     void set_mouse(uint x, uint y);
     void loadMat(Shader* shader);
     glm::vec2 getMouseDelta();
+    bool getMousePressed();
 };
 
 #endif

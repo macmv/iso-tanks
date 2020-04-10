@@ -15,10 +15,13 @@ void EventList::toProto(PlayerEvents* proto) {
   if (shootEvent != NULL) {
     cout << "Sending shoot event!" << endl;
     shootEvent->toProto(proto->mutable_shoot());
+    delete shootEvent;
+    shootEvent = NULL;
   }
 }
 
-void EventList::shoot(glm::quat direction) {
-  shootEvent = new ShootEvent(direction);
+void EventList::shoot(ControlledPlayer* player) {
+  delete shootEvent;
+  shootEvent = new ShootEvent(glm::normalize(glm::quat_cast(player->scene->transform)));
 }
 

@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include "event/shoot_event.h"
 #include "src/proto/multiplayer.grpc.pb.h"
+#include "controlled_player.h"
 
 class EventList {
   private:
@@ -12,7 +13,7 @@ class EventList {
   public:
     EventList();
     void toProto(PlayerEvents* proto);
-    void shoot(glm::quat direction);
+    void shoot(ControlledPlayer* player);
 };
 
 #endif

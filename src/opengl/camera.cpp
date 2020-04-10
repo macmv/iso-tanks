@@ -74,3 +74,7 @@ void Camera::update_size(uint width, uint height) {
 glm::vec2 Camera::getMouseDelta() {
   return mouseDelta;
 }
+
+bool Camera::getMousePressed() {
+  return sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
+}

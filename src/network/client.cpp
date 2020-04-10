@@ -24,6 +24,12 @@ Client::Client(World* world) {
   events = new EventList();
 }
 
+void Client::updateEvents(ControlledPlayer* player, bool didFire) {
+  if (didFire) {
+    events->shoot(player);
+  }
+}
+
 void Client::sendUpdate(std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, PlayerUpdateResponse>> stream) {
   grpc::ClientContext* context = new grpc::ClientContext();
 

@@ -25,15 +25,17 @@ int main() {
   Client* client = new Client(world);
 
   while (true) {
-    world->updateControls(render->camera->getMouseDelta().x);
     client->processResponse();
+    world->updateControls(render->camera->getMouseDelta().x);
     world->update();
+    client->updateEvents(world->getPlayer(), render->camera->getMousePressed());
 
     render->start(world->getPlayer());
 
     render->use("flat");
     render->render(terrain->instance);
     render->end();
+
     render->use("simple");
     Player* player;
     for (std::pair<int, Player*> pair : *world->players) {
@@ -42,6 +44,7 @@ int main() {
     }
     render->render(world->getPlayer()->scene);
     render->end();
+
     // render->use("line");
     // world->drawDebug();
     // render->end();

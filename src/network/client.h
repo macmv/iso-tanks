@@ -22,7 +22,7 @@ class Client {
 
   public:
     Client(World* world);
-    void shoot();
+    void updateEvents(ControlledPlayer* player, bool didFire);
     void processResponse();
   private:
     void sendUpdate(std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, PlayerUpdateResponse>> stream);
