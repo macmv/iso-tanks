@@ -28,7 +28,7 @@ void ControlledPlayer::update(float mouseXDelta) {
   glm::vec3 force = glm::vec3(0, 0, 0);
   glm::vec3 up = glm::normalize(glm::vec3(scene->transform[3]) * -1.f);
   glm::vec3 forward = glm::vec3(scene->transform * glm::vec4(0, 0, 1, 0));
-  glm::vec3 left = cross(up, forward);
+  // glm::vec3 left = cross(up, forward);
 
   glm::vec3 vel = glm::vec3(body->getLinearVelocity().x(), body->getLinearVelocity().y(), body->getLinearVelocity().z());
   glm::vec3 angVel = glm::vec3(body->getAngularVelocity().x(), body->getAngularVelocity().y(), body->getAngularVelocity().z());

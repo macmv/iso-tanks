@@ -29,7 +29,7 @@ void Camera::setPlayerTransform(glm::mat4* transform) {
 
 void Camera::update(Display* display, Player* player) {
   glm::vec3 up = glm::vec3(0, 1, 0);
-  glm::vec3 forward = glm::vec3(0, 0, 1);
+  // glm::vec3 forward = glm::vec3(0, 0, 1);
   glm::vec3 pos = glm::vec3(0, 3, 0);
 
   glm::vec3 camForward = glm::normalize(dir);
