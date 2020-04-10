@@ -17,9 +17,11 @@ class Camera {
     glm::vec3 dir;
     sf::Vector2i old_pos;
     glm::vec2 mouseDelta = glm::vec2();
+    glm::mat4* playerTransform;
 
   public:
     Camera();
+    void setPlayerTransform(glm::mat4* transform);
     void update(Display* display, Player* player);
     void update_size(uint width, uint height);
     void set_mouse(uint x, uint y);

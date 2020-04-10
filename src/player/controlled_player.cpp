@@ -1,9 +1,23 @@
 #include "controlled_player.h"
+#include "opengl/camera.h"
 #include <SFML/Window.hpp>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
+#include <glm/gtx/projection.hpp>
+#include <glm/gtx/string_cast.hpp>
+#include <iostream>
 
-ControlledPlayer::ControlledPlayer(btRigidBody* body) : Player(body) {
+using namespace std;
+
+ControlledPlayer::ControlledPlayer(btRigidBody* body, Camera* camera) : Player(body) {
+  for (ModelInstance* model : *scene->models) {
+    if (model->model->name.compare("Turret") == 0) {
+      turretTransform = model->transform;
+    }
+  }
+  this->camera = camera;
+  camera->setPlayerTransform(&scene->transform);
 }
 
 void ControlledPlayer::update(float mouseXDelta) {
@@ -58,7 +72,7 @@ void ControlledPlayer::update(float mouseXDelta) {
 
   for (ModelInstance* model : *scene->models) {
     if (model->model->name.compare("Turret") == 0) {
-      model->transform = glm::rotate(glm::mat4(1), turretDelta, glm::vec3(0, 1, 0)) * model->transform;
+      model->transform = glm::rotate(glm::mat4(1), turretAngle, glm::vec3(0, 1, 0)) * turretTransform;
     }
   }
 }

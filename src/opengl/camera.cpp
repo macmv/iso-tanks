@@ -23,11 +23,14 @@ Camera::Camera() {
   dir = glm::vec3(0, 0, 1);
 }
 
+void Camera::setPlayerTransform(glm::mat4* transform) {
+  playerTransform = transform;
+}
+
 void Camera::update(Display* display, Player* player) {
-  glm::vec3 pos = glm::vec3(player->getTransform()[3]);
-  glm::vec3 up = glm::normalize(pos * -1.f);
-  glm::vec3 forward = glm::vec3(player->getTransform() * glm::vec4(0, 0, 1, 0));
-  pos += up * 5.f - forward * 5.f;
+  glm::vec3 up = glm::vec3(0, 1, 0);
+  glm::vec3 forward = glm::vec3(0, 0, 1);
+  glm::vec3 pos = glm::vec3(0, 3, 0);
 
   glm::vec3 camForward = glm::normalize(dir);
   glm::vec3 camLeft = cross(up, camForward);
@@ -49,9 +52,9 @@ void Camera::update(Display* display, Player* player) {
   }
 
   view = glm::lookAt(
-    pos,           // pos
-    pos + dir, // target
-    up);          // up
+    pos,                    // pos
+    pos + dir,              // target
+    up) * glm::inverse(*playerTransform); // up
 }
 
 void Camera::loadMat(Shader* shader) {

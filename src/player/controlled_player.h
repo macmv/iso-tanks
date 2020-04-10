@@ -2,11 +2,15 @@
 #define _CONTROLLED_PLAYER_H
 
 #include "player.h"
+#include "opengl/camera.h"
 
 class ControlledPlayer final : public Player {
+  private:
+    glm::mat4 turretTransform;
+    Camera* camera;
 
   public:
-    ControlledPlayer(btRigidBody* body);
+    ControlledPlayer(btRigidBody* body, Camera* camera);
     void update(float mouseXDelta);
 };
 

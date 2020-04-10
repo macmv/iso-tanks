@@ -20,7 +20,7 @@ int main() {
   World* world = new World(terrain, true);
   render->world = world;
 
-  world->createThisPlayer();
+  world->createThisPlayer(render->camera);
 
   Client* client = new Client(world);
 

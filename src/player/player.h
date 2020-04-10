@@ -8,6 +8,7 @@ class Player {
   protected:
     btRigidBody* body;
     float turretAngle = 0;
+    int health;
   public:
     Scene* scene;
 

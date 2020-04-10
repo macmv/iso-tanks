@@ -4,6 +4,7 @@
 #include "terrain/terrain.h"
 #include "player/controlled_player.h"
 #include "player/player.h"
+#include "opengl/camera.h"
 #include "debug.h"
 #include <bullet/btBulletDynamicsCommon.h>
 #include <time.h>
@@ -18,7 +19,7 @@ class World {
     btBroadphaseInterface*                   overlappingPairCache;
     btSequentialImpulseConstraintSolver*     solver;
     btDiscreteDynamicsWorld*                 dynamicsWorld;
-    btAlignedObjectArray<btCollisionShape*>* collisionShapes;
+    std::vector<btCollisionShape*>*          collisionShapes;
     DebugDraw* debugDraw;
     clock_t prev_update;
   public:
@@ -29,7 +30,7 @@ class World {
   public:
     World(Terrain* terrain, bool needsTerrain);
     ~World();
-    void createThisPlayer();
+    void createThisPlayer(Camera* camera);
     uint addPlayer();
     void addPlayer(uint id);
     bool hasPlayer(uint id);

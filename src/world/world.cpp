@@ -1,4 +1,5 @@
 #include "world.h"
+#include "opengl/camera.h"
 #include "player/player.h"
 #include <bullet/btBulletDynamicsCommon.h>
 #include <glm/glm.hpp>
@@ -22,9 +23,7 @@ World::World(Terrain* terrain, bool needsDebug) {
 
   dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
 
-  dynamicsWorld->setGravity(btVector3(0, -10, 0));
-
-  collisionShapes = new btAlignedObjectArray<btCollisionShape*>();
+  collisionShapes = new std::vector<btCollisionShape*>();
 
   btTriangleMesh* mesh = new btTriangleMesh();
   for (int i = 0; i < terrain->indices->size() / 3; i++) {
@@ -100,7 +99,7 @@ void World::drawDebug() {
 void World::clean() {
 }
 
-void World::createThisPlayer() {
+void World::createThisPlayer(Camera* camera) {
   btCollisionShape* shape = collisionShapes->at(1);
 
   btTransform startTransform;
@@ -109,7 +108,8 @@ void World::createThisPlayer() {
   float mass = 1.f;
   btVector3 localInertia(0, 0, 0);
   shape->calculateLocalInertia(mass, localInertia);
-  startTransform.setOrigin(btVector3(0, -900, 0));
+  startTransform.setOrigin(btVector3(0, 840, 0));
+  startTransform.getBasis().setEulerZYX(180, 0, 0);
 
   //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
   btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
@@ -120,7 +120,7 @@ void World::createThisPlayer() {
 
   dynamicsWorld->addRigidBody(body);
 
-  thisPlayer = new ControlledPlayer(body);
+  thisPlayer = new ControlledPlayer(body, camera);
 }
 
 uint World::addPlayer() {

@@ -14,7 +14,8 @@ Player::Player(btRigidBody* body) {
   this->body = body;
   scene = new Scene();
   loadScene("assets/player.glb", scene);
-  turretAngle = 3;
+  turretAngle = 0;
+  health = 100;
 }
 
 void Player::update() {
