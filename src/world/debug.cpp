@@ -35,6 +35,7 @@ void DebugDraw::renderLines() {
 }
 
 void DebugDraw::start() {
+  delete lineData;
   lineData = new std::vector<glm::vec3>();
 }
 

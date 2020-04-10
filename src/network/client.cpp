@@ -31,8 +31,6 @@ void Client::updateEvents(ControlledPlayer* player, bool didFire) {
 }
 
 void Client::sendUpdate(std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, PlayerUpdateResponse>> stream) {
-  grpc::ClientContext* context = new grpc::ClientContext();
-
   PlayerUpdate update;
   ProtoUtil::to_proto(update.mutable_player(), id, player);
   events->toProto(update.mutable_events());

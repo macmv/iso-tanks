@@ -48,7 +48,7 @@ void Render::use(string shader) {
 
 void Render::end() {
   currentShader = NULL;
-  glUseProgram(NULL);
+  glUseProgram(0);
 }
 
 void Render::update() {

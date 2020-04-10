@@ -22,7 +22,6 @@ using namespace std;
 unsigned long getFileLength(ifstream& file) {
   if(!file.good()) return 0;
 
-  unsigned long pos=file.tellg();
   file.seekg(0, ios::end);
   unsigned long len = file.tellg();
   file.seekg(ios::beg);
@@ -48,8 +47,6 @@ int readFile(string filename, string* file) {
 }
 
 bool loadShader(GLuint shader, string filename) {
-  bool success = true;
-
   string data;
   readFile(filename, &data);
   const char *source[] = {data.c_str()};
@@ -99,13 +96,11 @@ GLuint loadShaderProgram(string vertexFilename, string fragmentFilename) {
 }
 
 bool loadGLTF(std::string path, Scene* scene) {
-  bool ret = false;
   tinygltf::Model loadedModel;
   tinygltf::TinyGLTF ctx;
   std::string err;
   std::string warn;
-  ret = ctx.LoadBinaryFromFile(&loadedModel, &err, &warn,
-                               path.c_str());
+  bool ret = ctx.LoadBinaryFromFile(&loadedModel, &err, &warn, path.c_str());
   if (!ret) {
     cout << "Failed to load gltf file " << path << endl;
     return false;
@@ -114,7 +109,7 @@ bool loadGLTF(std::string path, Scene* scene) {
   tinygltf::Material loadedMaterial;
   Material* material;
   std::vector<Material*> materials = std::vector<Material*>();
-  for (int i = 0; i < loadedModel.materials.size(); i++) {
+  for (ulong i = 0; i < loadedModel.materials.size(); i++) {
     loadedMaterial = loadedModel.materials.at(i);
     material = new Material();
     std::vector<double> baseColor = loadedMaterial.pbrMetallicRoughness.baseColorFactor;
@@ -122,7 +117,7 @@ bool loadGLTF(std::string path, Scene* scene) {
     materials.push_back(material);
   }
 
-  for (int i = 0; i < loadedModel.nodes.size(); i++) {
+  for (ulong i = 0; i < loadedModel.nodes.size(); i++) {
     tinygltf::Node& node = loadedModel.nodes.at(i);
     if (node.mesh != -1) {
       tinygltf::Mesh& mesh = loadedModel.meshes.at(node.mesh);
@@ -138,21 +133,21 @@ bool loadGLTF(std::string path, Scene* scene) {
       tinygltf::Accessor&     position_accessor   = loadedModel.accessors[primitive.attributes["POSITION"]];
       tinygltf::BufferView&   position_bufferView = loadedModel.bufferViews[position_accessor.bufferView];
       const tinygltf::Buffer& position_buffer     = loadedModel.buffers[position_bufferView.buffer];
-      tinygltf::Accessor&     uv_accessor         = loadedModel.accessors[primitive.attributes["TEXCOORD_0"]];
-      tinygltf::BufferView&   uv_bufferView       = loadedModel.bufferViews[uv_accessor.bufferView];
-      const tinygltf::Buffer& uv_buffer           = loadedModel.buffers[uv_bufferView.buffer];
+      // tinygltf::Accessor&     uv_accessor         = loadedModel.accessors[primitive.attributes["TEXCOORD_0"]];
+      // tinygltf::BufferView&   uv_bufferView       = loadedModel.bufferViews[uv_accessor.bufferView];
+      // const tinygltf::Buffer& uv_buffer           = loadedModel.buffers[uv_bufferView.buffer];
       tinygltf::Accessor&     normal_accessor     = loadedModel.accessors[primitive.attributes["NORMAL"]];
       tinygltf::BufferView&   normal_bufferView   = loadedModel.bufferViews[normal_accessor.bufferView];
       const tinygltf::Buffer& normal_buffer       = loadedModel.buffers[normal_bufferView.buffer];
 
       // bufferView byteoffset + accessor byteoffset tells you where the actual position data is within the buffer. From there
       // you should already know how the data needs to be interpreted.
-      const short*  indices   = reinterpret_cast<const short* >(&indices_buffer.data[ indices_bufferView.byteOffset  + indices_accessor.byteOffset]);
+
+      const short* indices   = reinterpret_cast<const short*>(&indices_buffer.data[ indices_bufferView.byteOffset  + indices_accessor.byteOffset]);
       const float* positions = reinterpret_cast<const float*>(&position_buffer.data[position_bufferView.byteOffset + position_accessor.byteOffset]);
-      const float* uvs       = reinterpret_cast<const float*>(&uv_buffer.data[      uv_bufferView.byteOffset       + uv_accessor.byteOffset]);
+      // const float* uvs       = reinterpret_cast<const float*>(&uv_buffer.data[      uv_bufferView.byteOffset       + uv_accessor.byteOffset]);
       const float* normals   = reinterpret_cast<const float*>(&normal_buffer.data[  normal_bufferView.byteOffset   + normal_accessor.byteOffset]);
-      int index;
-      // From here, you choose what you wish to do with this position data. In this case, we  will display it out.
+
       for (size_t i = 0; i < indices_accessor.count; ++i) {
         vec_indices->push_back(indices[i]);
       }
@@ -193,6 +188,7 @@ bool loadGLTF(std::string path, Scene* scene) {
       scene->models->insert(instance);
     }
   }
+  return true;
 }
 
 bool loadOBJ (
