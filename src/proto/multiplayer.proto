@@ -8,11 +8,12 @@ service Multiplayer {
 
 message PlayerUpdate {
   PlayerProto player = 1;
-  PlayerShootEvent shoot = 2;
+  PlayerEvents events = 2;
 }
 
 message PlayerUpdateResponse {
   repeated PlayerProto player = 1;
+  repeated Projectile newProjectiles = 2;
 }
 
 message NewPlayerRequest {
@@ -23,12 +24,27 @@ message NewPlayerResponse {
   PlayerProto player = 1;
 }
 
+message PlayerEvents {
+  PlayerShootEvent shoot = 1;
+}
+
 message PlayerShootEvent {
   bool exists = 1;
   float dirX = 2;
   float dirY = 3;
   float dirZ = 4;
   float dirW = 5;
+}
+
+message Projectile {
+  Type type = 1;
+  Transform transform = 2;
+
+  enum Type {
+    UNDEFINED = 0;
+    MISSILE = 1;
+    LANDMINE = 2;
+  }
 }
 
 message PlayerProto {
