@@ -26,7 +26,7 @@ World::World(Terrain* terrain, bool needsDebug) {
   collisionShapes = new std::vector<btCollisionShape*>();
 
   btTriangleMesh* mesh = new btTriangleMesh();
-  for (int i = 0; i < terrain->indices->size() / 3; i++) {
+  for (ulong i = 0; i < terrain->indices->size() / 3; i++) {
     glm::vec3 a = terrain->vertices->at(terrain->indices->at(i * 3 + 0));
     glm::vec3 b = terrain->vertices->at(terrain->indices->at(i * 3 + 1));
     glm::vec3 c = terrain->vertices->at(terrain->indices->at(i * 3 + 2));
@@ -183,7 +183,7 @@ World::~World() {
     delete obj;
   }
 
-  for (int i = 0; i < collisionShapes->size(); i++) {
+  for (ulong i = 0; i < collisionShapes->size(); i++) {
     btCollisionShape* shape = collisionShapes->at(i);
     collisionShapes->at(i) = 0;
     delete shape;
