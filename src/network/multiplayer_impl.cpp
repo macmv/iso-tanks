@@ -12,6 +12,7 @@ grpc::Status MultiplayerImpl::UpdatePlayer(grpc::ServerContext* context, grpc::S
   PlayerUpdateResponse res;
   PlayerUpdate update;
   while (stream->Read(&update)) {
+    server->updatePlayerEvents(update.events());
     bool validPlayer = server->movePlayer(update.player());
     if (!validPlayer) {
       return grpc::Status(grpc::StatusCode::UNAUTHENTICATED, "Invalid player id");

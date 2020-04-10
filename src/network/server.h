@@ -21,6 +21,7 @@ class Server {
     Server(int port);
     void start();
     void update();
+    void updatePlayerEvents(const PlayerEvents& events);
     bool movePlayer(const PlayerProto& player);
     uint newPlayer(const NewPlayerRequest* req);
     void createRes(uint id, bool needsPositionSet, PlayerUpdateResponse* res);

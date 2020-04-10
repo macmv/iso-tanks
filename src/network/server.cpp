@@ -7,6 +7,7 @@
 #include "world/world.h"
 #include "proto_util.h"
 #include <glm/gtx/string_cast.hpp>
+#include "player/event/shoot_event.h"
 
 using namespace std;
 
@@ -41,6 +42,12 @@ void Server::start() {
 uint Server::newPlayer(const NewPlayerRequest* req) {
   uint id = world->addPlayer();
   return id;
+}
+
+void Server::updatePlayerEvents(const PlayerEvents& events) {
+  if (events.shoot().exists()) {
+    world->addProjectile(ShootEvent(events.shoot()));
+  }
 }
 
 bool Server::movePlayer(const PlayerProto& player) {

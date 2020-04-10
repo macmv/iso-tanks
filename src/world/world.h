@@ -4,6 +4,7 @@
 #include "terrain/terrain.h"
 #include "player/controlled_player.h"
 #include "player/player.h"
+#include "player/event/shoot_event.h"
 #include "opengl/camera.h"
 #include "debug.h"
 #include <bullet/btBulletDynamicsCommon.h>
@@ -36,6 +37,7 @@ class World {
     bool hasPlayer(uint id);
     bool movePlayer(uint id, glm::mat4 transform);
     bool moveThisPlayer(glm::mat4 transform);
+    void addProjectile(ShootEvent event);
     void updateControls(float mouseXDelta);
     void update();
     void drawDebug();

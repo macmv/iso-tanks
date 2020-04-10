@@ -11,6 +11,7 @@ class ShootEvent {
 
   public:
     ShootEvent(glm::quat direction);
+    ShootEvent(PlayerShootEvent proto);
     void toProto(PlayerShootEvent* proto);
 };
 
