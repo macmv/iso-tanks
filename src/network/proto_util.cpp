@@ -14,17 +14,21 @@ glm::mat4 ProtoUtil::to_glm(Transform trans) {
   return transform;
 }
 
-void ProtoUtil::to_proto(PlayerProto* proto, uint id, Player* player) {
-  glm::vec3 position = glm::vec3(player->getTransform()[3]);
-  glm::quat rotation = glm::quat_cast(player->getTransform());
+void ProtoUtil::to_proto(glm::mat4 transform, Transform* proto) {
+  glm::vec3 position = glm::vec3(transform[3]);
+  glm::quat rotation = glm::quat_cast(transform);
 
-  proto->mutable_transform()->mutable_position()->set_x(position.x);
-  proto->mutable_transform()->mutable_position()->set_y(position.y);
-  proto->mutable_transform()->mutable_position()->set_z(position.z);
-  proto->mutable_transform()->mutable_rotation()->set_x(rotation.x);
-  proto->mutable_transform()->mutable_rotation()->set_y(rotation.y);
-  proto->mutable_transform()->mutable_rotation()->set_z(rotation.z);
-  proto->mutable_transform()->mutable_rotation()->set_w(rotation.w);
+  proto->mutable_position()->set_x(position.x);
+  proto->mutable_position()->set_y(position.y);
+  proto->mutable_position()->set_z(position.z);
+  proto->mutable_rotation()->set_x(rotation.x);
+  proto->mutable_rotation()->set_y(rotation.y);
+  proto->mutable_rotation()->set_z(rotation.z);
+  proto->mutable_rotation()->set_w(rotation.w);
+}
+
+void ProtoUtil::to_proto(PlayerProto* proto, uint id, Player* player) {
+  to_proto(player->getTransform(), proto->mutable_transform());
   proto->set_id(id);
 }
 

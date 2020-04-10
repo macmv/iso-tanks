@@ -7,10 +7,10 @@
 
 class ShootEvent {
   private:
-    glm::quat direction;
+    glm::mat4 transform;
 
   public:
-    ShootEvent(glm::quat direction);
+    ShootEvent(glm::mat4 transform);
     ShootEvent(PlayerShootEvent proto);
     void toProto(PlayerShootEvent* proto);
 };

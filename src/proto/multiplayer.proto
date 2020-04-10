@@ -30,10 +30,7 @@ message PlayerEvents {
 
 message PlayerShootEvent {
   bool exists = 1;
-  float dirX = 2;
-  float dirY = 3;
-  float dirZ = 4;
-  float dirW = 5;
+  Transform transform = 2;
 }
 
 message Projectile {

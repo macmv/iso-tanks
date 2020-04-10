@@ -22,6 +22,6 @@ void EventList::toProto(PlayerEvents* proto) {
 
 void EventList::shoot(ControlledPlayer* player) {
   delete shootEvent;
-  shootEvent = new ShootEvent(glm::normalize(glm::quat_cast(player->scene->transform)));
+  shootEvent = new ShootEvent(player->getTransform());
 }
 
