@@ -16,7 +16,6 @@ ControlledPlayer::ControlledPlayer(btRigidBody* body, Camera* camera) : Player(b
       turretTransform = model->transform;
     }
   }
-  this->camera = camera;
   camera->setPlayerTransform(&scene->transform);
 }
 

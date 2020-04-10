@@ -7,7 +7,6 @@
 class ControlledPlayer final : public Player {
   private:
     glm::mat4 turretTransform;
-    Camera* camera;
 
   public:
     ControlledPlayer(btRigidBody* body, Camera* camera);
