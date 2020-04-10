@@ -108,8 +108,9 @@ void World::createThisPlayer(Camera* camera) {
   float mass = 1.f;
   btVector3 localInertia(0, 0, 0);
   shape->calculateLocalInertia(mass, localInertia);
-  startTransform.setOrigin(btVector3(0, 840, 0));
-  startTransform.getBasis().setEulerZYX(180, 0, 0);
+  startTransform.setOrigin(btVector3(0, -970, 0));
+  // startTransform.setOrigin(btVector3(0, 840, 0));
+  // startTransform.getBasis().setEulerZYX(M_PI, 0, 0);
 
   //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
   btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
