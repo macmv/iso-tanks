@@ -65,7 +65,7 @@ Terrain::Terrain(int detail) {
 }
 
 void Terrain::create_model() {
-  GLuint vao = create_vao(indices, vertices, uvs, normals);
+  GLuint vao = Loader::create_vao(indices, vertices, uvs, normals);
   uint length = indices->size();
   Model* model = new Model("terrain", vao, length);
   instance = new ModelInstance(model);
@@ -92,6 +92,7 @@ glm::vec3 get_color(float value) {
     }
     prev = val;
   }
+  throw "Invalid number passed to get_color!";
 }
 
 void Terrain::gen_triangle(

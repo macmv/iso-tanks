@@ -19,7 +19,7 @@
 
 using namespace std;
 
-unsigned long get_file_length(ifstream& file) {
+unsigned long Loader::get_file_length(ifstream& file) {
   if(!file.good()) return 0;
 
   file.seekg(0, ios::end);
@@ -29,7 +29,7 @@ unsigned long get_file_length(ifstream& file) {
   return len;
 }
 
-int read_file(string filename, string* file) {
+int Loader::read_file(string filename, string* file) {
   string line;
   ifstream stream(filename);
   if (stream.is_open()) {
@@ -46,7 +46,7 @@ int read_file(string filename, string* file) {
   return 0;
 }
 
-bool load_shader(GLuint shader, string filename) {
+bool Loader::load_shader(GLuint shader, string filename) {
   string data;
   read_file(filename, &data);
   const char *source[] = {data.c_str()};
@@ -72,7 +72,7 @@ bool load_shader(GLuint shader, string filename) {
   return true;
 }
 
-GLuint load_shader_program(string vertex_filename, string fragment_filename) {
+GLuint Loader::load_shader_program(string vertex_filename, string fragment_filename) {
   GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
   GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 
@@ -95,7 +95,7 @@ GLuint load_shader_program(string vertex_filename, string fragment_filename) {
   return program_id;
 }
 
-bool load_gltf(std::string path, Scene* scene) {
+bool Loader::load_gltf(std::string path, Scene* scene) {
   tinygltf::Model loaded_model;
   tinygltf::TinyGLTF ctx;
   std::string err;
@@ -191,13 +191,12 @@ bool load_gltf(std::string path, Scene* scene) {
   return true;
 }
 
-bool load_obj(
+bool Loader::load_obj(
     string path,
     std::vector<uint>& out_indices,
     std::vector<glm::vec3>& out_vertices,
     std::vector<glm::vec2>& out_uvs,
-    std::vector<glm::vec3>& out_normals
-) {
+    std::vector<glm::vec3>& out_normals) {
   std::vector<unsigned int> vertex_indices, uv_indices, normal_indices;
   std::vector<glm::vec3> vertices;
   std::vector<glm::vec2> uvs;
@@ -263,12 +262,11 @@ bool load_obj(
   return true;
 }
 
-GLuint create_vao(
+GLuint Loader::create_vao(
   std::vector <unsigned int>* indices,
   std::vector <glm::vec3>* vertices,
   std::vector <glm::vec2>* uvs,
-  std::vector <glm::vec3>* normals
-) {
+  std::vector <glm::vec3>* normals) {
   GLuint vao;
   GLuint vbo;
   GLuint ibo;
@@ -303,7 +301,7 @@ GLuint create_vao(
   return vao;
 }
 
-bool load_scene(string path, Scene* scene) {
+bool Loader::load_scene(string path, Scene* scene) {
   if (path.rfind(".glb") == (path.size() - string(".glb").size())) {
     if (!load_gltf(path, scene)) {
       return false;
@@ -315,7 +313,7 @@ bool load_scene(string path, Scene* scene) {
   return true;
 }
 
-bool load_model(string path, Model* model) {
+bool Loader::load_model(string path, Model* model) {
   if (path.rfind(".obj") == (path.size() - string(".obj").size())) {
     std::vector<uint> indices;
     std::vector<glm::vec3> vertices;

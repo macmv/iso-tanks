@@ -16,16 +16,16 @@ Shader::Shader(string filename, bool has_geometry) {
     geometry_shader = glCreateShader(GL_GEOMETRY_SHADER);
   }
 
-  bool res = load_shader(vertex_shader, filename + "_vertex.glsl");
+  bool res = Loader::load_shader(vertex_shader, filename + "_vertex.glsl");
   if (!res) {
     exit(1);
   }
-  res = load_shader(fragment_shader, filename + "_fragment.glsl");
+  res = Loader::load_shader(fragment_shader, filename + "_fragment.glsl");
   if (!res) {
     exit(1);
   }
   if (has_geometry) {
-    res = load_shader(geometry_shader, filename + "_geometry.glsl");
+    res = Loader::load_shader(geometry_shader, filename + "_geometry.glsl");
     if (!res) {
       exit(1);
     }

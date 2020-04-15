@@ -13,7 +13,7 @@ using namespace std;
 Player::Player(btRigidBody* body) {
   this->body = body;
   scene = new Scene();
-  load_scene("assets/player.glb", scene);
+  Loader::load_scene("assets/player.glb", scene);
   turret_angle = 0;
   health = 100;
 }
