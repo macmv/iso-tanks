@@ -34,6 +34,7 @@ void ProtoUtil::to_proto(PlayerProto* proto, uint id, Player* player) {
 }
 
 void ProtoUtil::to_proto(ProjectileProto* proto, uint id, Projectile* projectile) {
+  cout << "Creating proto from transform: " << glm::to_string(projectile->get_transform()) << endl;
   to_proto(projectile->get_transform(), proto->mutable_transform());
   proto->set_id(id);
   // set type here as well!

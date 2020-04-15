@@ -1,4 +1,5 @@
 #include <iostream>
+#include <glm/gtx/string_cast.hpp>
 #include "opengl/render.h"
 #include "opengl/loader.h"
 #include "opengl/shader.h"
@@ -43,9 +44,15 @@ int main() {
 
     render->use("simple");
     Player* player;
-    for (std::pair<int, Player*> pair : *world->players) {
-      player = pair.second;
+    for (pair<uint, Player*> item : *world->players) {
+      player = item.second;
       render->render(player->scene);
+    }
+    Projectile* projectile;
+    for (pair<uint, Projectile*> item : *world->projectiles) {
+      projectile = item.second;
+      // cout << "Rendering projectile at " << glm::to_string(projectile->get_scene()->transform) << endl;
+      render->render(projectile->get_scene());
     }
     render->render(world->get_this_player()->scene);
     render->end();

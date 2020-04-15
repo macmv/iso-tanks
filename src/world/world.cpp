@@ -217,8 +217,8 @@ void World::update() {
   prev_update = update_time;
 
   Player* player;
-  for (std::pair<int, Player*> pair : *players) {
-    player = pair.second;
+  for (pair<int, Player*> item : *players) {
+    player = item.second;
     glm::vec3 pos = glm::vec3(player->get_transform()[3]);
     pos = glm::normalize(pos) * 20.f;
     if (!isnan(pos.x) && !isnan(pos.y) && !isnan(pos.z)) {
@@ -227,6 +227,16 @@ void World::update() {
     player->update();
   }
 
+  Projectile* projectile;
+  for (pair<int, Projectile*> item : *projectiles) {
+    projectile = item.second;
+    glm::vec3 pos = glm::vec3(projectile->get_transform()[3]);
+    pos = glm::normalize(pos) * 20.f;
+    if (!isnan(pos.x) && !isnan(pos.y) && !isnan(pos.z)) {
+      // projectile->set_gravity(pos);
+    }
+    projectile->update();
+  }
   // for (int j = dynamics_world->getNumCollisionObjects() - 1; j >= 0; j--) {
   //   btCollisionObject* obj = dynamics_world->getCollisionObjectArray()[j];
   //   btRigidBody* body = btRigidBody::upcast(obj);

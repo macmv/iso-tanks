@@ -6,6 +6,8 @@ ModelInstance::ModelInstance(Model* model) {
 }
 
 ModelInstance* ModelInstance::new_instance() {
-  return new ModelInstance(model);
+  ModelInstance* new_instance = new ModelInstance(model);
+  new_instance->transform = transform;
+  return new_instance;
 }
 
