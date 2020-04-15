@@ -50,7 +50,7 @@ World::World(Terrain* terrain, bool needs_debug) {
   t.setIdentity();
   t.setOrigin(btVector3(0, 0, 1));
   shape->addChildShape(t, cylinder);
-  collision_shapes->insert( {"tank", shape} );
+  collision_shapes->insert( {"player", shape} );
 
   btTransform ground_transform;
   ground_transform.setIdentity();
@@ -88,6 +88,10 @@ World::World(Terrain* terrain, bool needs_debug) {
   srand(time(0));
 }
 
+World::World(Terrain* terrain, bool needs_debug, SceneManager* scene_manager) : World(terrain, needs_debug) {
+  this->scene_manager = scene_manager;
+}
+
 void World::draw_debug() {
   debug_draw->start();
   dynamics_world->debugDrawWorld();
@@ -119,7 +123,7 @@ void World::create_this_player(Camera* camera) {
 
   dynamics_world->addRigidBody(body);
 
-  this_player = new ControlledPlayer(body, camera);
+  this_player = new ControlledPlayer(body, scene_manager, camera);
 }
 
 uint World::add_player() {
@@ -147,7 +151,7 @@ void World::add_player(uint id) {
 
   dynamics_world->addRigidBody(body);
 
-  Player* player = new Player(body);
+  Player* player = new Player(body, scene_manager);
   players->insert({id, player});
 }
 
@@ -240,21 +244,21 @@ void World::add_projectile(ShootEvent event) {
 }
 
 void World::add_projectile(uint id, ShootEvent event) {
-  btCollisionShape* shape = collision_shapes->at("tank");
-  btTransform start_transform;
-  start_transform.setIdentity();
+  // btCollisionShape* shape = collision_shapes->at("tank");
+  // btTransform start_transform;
+  // start_transform.setIdentity();
 
-  float mass = 1.f;
-  btVector3 local_inertia(0, 0, 0);
-  shape->calculateLocalInertia(mass, local_inertia);
+  // float mass = 1.f;
+  // btVector3 local_inertia(0, 0, 0);
+  // shape->calculateLocalInertia(mass, local_inertia);
 
-  btDefaultMotionState* motion_state = new btDefaultMotionState(start_transform);
-  btRigidBody::btRigidBodyConstructionInfo info(mass, motion_state, shape, local_inertia);
-  btRigidBody* body = new btRigidBody(info);
-  body->setFriction(0);
-  body->setSpinningFriction(0);
+  // btDefaultMotionState* motion_state = new btDefaultMotionState(start_transform);
+  // btRigidBody::btRigidBodyConstructionInfo info(mass, motion_state, shape, local_inertia);
+  // btRigidBody* body = new btRigidBody(info);
+  // body->setFriction(0);
+  // body->setSpinningFriction(0);
 
-  dynamics_world->addRigidBody(body);
+  // dynamics_world->addRigidBody(body);
 
-  projectiles->insert({ id, new Projectile(event, body) });
+  // projectiles->insert({ id, new Projectile(event, body) });
 }

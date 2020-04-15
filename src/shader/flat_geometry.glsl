@@ -32,9 +32,9 @@ void main() {
   // diffuse lighting
   vec3 normal = cross(gl_in[1].gl_Position.xyz - gl_in[0].gl_Position.xyz, gl_in[2].gl_Position.xyz - gl_in[0].gl_Position.xyz);
   vec3 surface_normal = normalize((model * vec4(normal, 1)).xyz);
-  vec3 to_light_lec = normalize(light_pos - world_pos);
+  vec3 to_light_vec = normalize(light_pos - world_pos);
   float brightness = dot(surface_normal, to_light_vec);
-  float diffuse = brightness * diffuseStrength;
+  float diffuse = brightness * diffuse_strength;
 
   // specular lighting
   vec3 cam_dir = normalize(cam - world_pos);

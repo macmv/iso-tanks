@@ -10,24 +10,24 @@
 
 using namespace std;
 
-ControlledPlayer::ControlledPlayer(btRigidBody* body, Camera* camera) : Player(body) {
+ControlledPlayer::ControlledPlayer(btRigidBody* body, SceneManager* scene_manager, Camera* camera) : Player(body, scene_manager) {
   for (ModelInstance* model : *scene->models) {
     if (model->model->name.compare("Turret") == 0) {
       turret_transform = model->transform;
     }
   }
-  camera->set_player_transform(&scene->transform);
+  camera->set_player_transform(transform);
 }
 
 void ControlledPlayer::update(float mouse_x_delta) {
-  btTransform transform;
-  body->getMotionState()->getWorldTransform(transform);
-  transform.getOpenGLMatrix(glm::value_ptr(scene->transform));
+  btTransform body_transform;
+  body->getMotionState()->getWorldTransform(body_transform);
+  body_transform.getOpenGLMatrix(glm::value_ptr(*transform));
 
   float torque_amount = 0;
   glm::vec3 force = glm::vec3(0, 0, 0);
-  glm::vec3 up = glm::normalize(glm::vec3(scene->transform[3]) * -1.f);
-  glm::vec3 forward = glm::vec3(scene->transform * glm::vec4(0, 0, 1, 0));
+  glm::vec3 up = glm::normalize(glm::vec3((*transform)[3]) * -1.f);
+  glm::vec3 forward = glm::vec3(*transform * glm::vec4(0, 0, 1, 0));
   // glm::vec3 left = cross(up, forward);
 
   glm::vec3 vel = glm::vec3(body->getLinearVelocity().x(), body->getLinearVelocity().y(), body->getLinearVelocity().z());

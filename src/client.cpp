@@ -15,6 +15,11 @@ int main() {
   render->add_shader("simple", new Shader("src/shader/simple", false));
   render->add_shader("line", new Shader("src/shader/line", false));
 
+  SceneManager* scene_manager = new SceneManager();
+  scene_manager->add("assets/player.glb");
+  scene_manager->add("assets/missile.glb");
+  scene_manager->load();
+
   Terrain* terrain = new Terrain(100);
   terrain->create_model();
   World* world = new World(terrain, true, scene_manager);

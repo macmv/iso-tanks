@@ -1,6 +1,6 @@
 #include "player.h"
 #include "opengl/loader.h"
-#include "models/model_instance.h"
+#include "models/scene_manager.h"
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 #include <glm/gtx/string_cast.hpp>
@@ -10,22 +10,26 @@
 
 using namespace std;
 
-Player::Player(btRigidBody* body) {
+Player::Player(btRigidBody* body, SceneManager* scene_manager) {
   this->body = body;
-  scene = new Scene();
-  Loader::load_scene("assets/player.glb", scene);
+  if (scene_manager != NULL) {
+    scene = scene_manager->new_instance("assets/player.glb");
+    transform = &scene->transform;
+  } else {
+    transform = new glm::mat4(1);
+  }
   turret_angle = 0;
   health = 100;
 }
 
 void Player::update() {
-  btTransform transform;
-  body->getMotionState()->getWorldTransform(transform);
-  transform.getOpenGLMatrix(glm::value_ptr(scene->transform));
+  btTransform body_transform;
+  body->getMotionState()->getWorldTransform(body_transform);
+  body_transform.getOpenGLMatrix(glm::value_ptr(*transform));
 }
 
 glm::mat4 Player::get_transform() {
-  return scene->transform;
+  return *transform;
 }
 
 void Player::set_transform(glm::mat4 trans) {

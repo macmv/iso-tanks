@@ -29,11 +29,13 @@ class World {
   public:
     std::unordered_map<uint, Player*>*       players;
     std::unordered_map<uint, Projectile*>*   projectiles;
-    ControlledPlayer*                        this_player;
+    ControlledPlayer*                        this_player = NULL;
     std::vector<ModelInstance*>*             models;
+    SceneManager*                            scene_manager = NULL;
 
   public:
-    World(Terrain* terrain, bool needs_terrain);
+    World(Terrain* terrain, bool needs_debug);
+    World(Terrain* terrain, bool needs_debug, SceneManager* scene_manager);
     ~World();
     void create_this_player(Camera* camera);
     uint add_player();

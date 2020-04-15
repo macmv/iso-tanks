@@ -8,7 +8,7 @@ uniform mat4 view;
 uniform mat4 model;
 
 out vec3 surface_normal;
-out vec3 to_light_lec;
+out vec3 to_light_vec;
 
 void main() {
   vec3 light_pos = vec3(0, 40, 0);
