@@ -23,8 +23,6 @@ World::World(Terrain* terrain, bool needs_debug) {
 
   dynamics_world = new btDiscreteDynamicsWorld(dispatcher, overlapping_pair_cache, solver, collision_configuration);
 
-  collision_shapes = new std::vector<btCollisionShape*>();
-
   btTriangleMesh* mesh = new btTriangleMesh();
   for (ulong i = 0; i < terrain->indices->size() / 3; i++) {
     glm::vec3 a = terrain->vertices->at(terrain->indices->at(i * 3 + 0));
@@ -34,7 +32,7 @@ World::World(Terrain* terrain, bool needs_debug) {
   }
 
   btCollisionShape* ground_shape = new btBvhTriangleMeshShape(mesh, true, true);
-  collision_shapes->push_back(ground_shape);
+  collision_shapes->insert({ "ground", ground_shape });
 
   btTransform t;
 
@@ -51,7 +49,7 @@ World::World(Terrain* terrain, bool needs_debug) {
   t.setIdentity();
   t.setOrigin(btVector3(0, 0, 1));
   shape->addChildShape(t, cylinder);
-  collision_shapes->push_back(shape);
+  collision_shapes->insert( {"tank", shape} );
 
   btTransform ground_transform;
   ground_transform.setIdentity();
@@ -73,7 +71,6 @@ World::World(Terrain* terrain, bool needs_debug) {
 
   players = new std::unordered_map<uint, Player*>();
   models = new std::vector<ModelInstance*>();
-
 
   if (needs_debug) {
     debug_draw = new DebugDraw();
@@ -100,7 +97,7 @@ void World::clean() {
 }
 
 void World::create_this_player(Camera* camera) {
-  btCollisionShape* shape = collision_shapes->at(1);
+  btCollisionShape* shape = collision_shapes->at("player");
 
   btTransform start_transform;
   start_transform.setIdentity();
@@ -131,7 +128,7 @@ uint World::add_player() {
 }
 
 void World::add_player(uint id) {
-  btCollisionShape* shape = collision_shapes->at(1);
+  btCollisionShape* shape = collision_shapes->at("player");
 
   btTransform start_transform;
   start_transform.setIdentity();
@@ -183,19 +180,17 @@ World::~World() {
     delete obj;
   }
 
-  for (ulong i = 0; i < collision_shapes->size(); i++) {
-    btCollisionShape* shape = collision_shapes->at(i);
-    collision_shapes->at(i) = 0;
+  for (pair<string, btCollisionShape*> items : *collision_shapes) {
+    btCollisionShape* shape = items.second;
     delete shape;
   }
+  collision_shapes->clear();
 
   delete dynamics_world;
   delete solver;
   delete overlapping_pair_cache;
   delete dispatcher;
   delete collision_configuration;
-
-  collision_shapes->clear();
 }
 
 void World::update_controls(float mouse_x_delta) {

@@ -20,9 +20,9 @@ class World {
     btBroadphaseInterface*                   overlapping_pair_cache;
     btSequentialImpulseConstraintSolver*     solver;
     btDiscreteDynamicsWorld*                 dynamics_world;
-    std::vector<btCollisionShape*>*          collision_shapes;
-    DebugDraw*                               debug_draw;
-    clock_t                                  prev_update;
+    std::unordered_map<std::string, btCollisionShape*>*   collision_shapes = new std::unordered_map<std::string, btCollisionShape*>();
+    DebugDraw*                                            debug_draw;
+    clock_t                                               prev_update;
   public:
     std::unordered_map<uint, Player*>*       players;
     ControlledPlayer*                        this_player;
