@@ -16,21 +16,21 @@ int main() {
   render->add_shader("line", new Shader("src/shader/line", false));
 
   Terrain* terrain = new Terrain(100);
-  terrain->createModel();
-  World* world = new World(terrain, true);
+  terrain->create_model();
+  World* world = new World(terrain, true, scene_manager);
   render->world = world;
 
-  world->createThisPlayer(render->camera);
+  world->create_this_player(render->camera);
 
   Client* client = new Client(world);
 
   while (true) {
-    client->processResponse();
-    world->updateControls(render->camera->getMouseDelta().x);
+    client->process_response();
+    world->update_controls(render->camera->get_mouse_delta().x);
     world->update();
-    client->updateEvents(world->getPlayer(), render->camera->getMousePressed());
+    client->update_events(world->get_this_player(), render->camera->get_mouse_pressed());
 
-    render->start(world->getPlayer());
+    render->start(world->get_this_player());
 
     render->use("flat");
     render->render(terrain->instance);
@@ -42,11 +42,11 @@ int main() {
       player = pair.second;
       render->render(player->scene);
     }
-    render->render(world->getPlayer()->scene);
+    render->render(world->get_this_player()->scene);
     render->end();
 
     // render->use("line");
-    // world->drawDebug();
+    // world->draw_debug();
     // render->end();
 
     render->update();
