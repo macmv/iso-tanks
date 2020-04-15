@@ -13,7 +13,7 @@ message PlayerUpdate {
 
 message PlayerUpdateResponse {
   repeated PlayerProto player = 1;
-  repeated ProjectileProto new_projectiles = 2;
+  repeated ProjectileProto projectile = 2;
 }
 
 message NewPlayerRequest {
@@ -35,7 +35,8 @@ message PlayerShootEvent {
 
 message ProjectileProto {
   Type type = 1;
-  Transform transform = 2;
+  uint32 id = 2;
+  Transform transform = 3;
 
   enum Type {
     UNDEFINED = 0;

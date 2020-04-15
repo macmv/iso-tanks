@@ -68,11 +68,16 @@ bool Server::move_player(const PlayerProto& player) {
 // id is the id of the player this res is being sent to
 void Server::create_res(uint id, bool needsPositionSet, PlayerUpdateResponse* res) {
   res->clear_player();
-  for (std::pair<uint, Player*> pair : *world->players) {
-    if (!(pair.first == id && !needsPositionSet)) {
+  for (std::pair<uint, Player*> item : *world->players) {
+    if (!(item.first == id && !needsPositionSet)) {
       PlayerProto* proto = res->add_player();
-      ProtoUtil::to_proto(proto, pair.first, pair.second);
+      ProtoUtil::to_proto(proto, item.first, item.second);
     }
+  }
+  res->clear_projectile();
+  for (std::pair<uint, Projectile*> item : *world->projectiles) {
+    ProjectileProto* proto = res->add_projectile();
+    ProtoUtil::to_proto(proto, item.first, item.second);
   }
 }
 

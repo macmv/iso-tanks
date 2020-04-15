@@ -4,6 +4,7 @@
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include "player/player.h"
+#include "player/projectile/projectile.h"
 
 using namespace std;
 
@@ -32,3 +33,8 @@ void ProtoUtil::to_proto(PlayerProto* proto, uint id, Player* player) {
   proto->set_id(id);
 }
 
+void ProtoUtil::to_proto(ProjectileProto* proto, uint id, Projectile* projectile) {
+  to_proto(projectile->get_transform(), proto->mutable_transform());
+  proto->set_id(id);
+  // set type here as well!
+}

@@ -44,8 +44,10 @@ void Client::process_response() {
   if (recent_response == NULL) {
     return;
   }
-  for (ProjectileProto proto : recent_response->new_projectiles()) {
-    world->add_projectile(proto);
+  for (ProjectileProto proto : recent_response->projectile()) {
+    if (!world->has_projectile(proto.id())) {
+      world->add_projectile(proto);
+    }
   }
   for (PlayerProto proto : recent_response->player()) {
     if (id == proto.id()) {

@@ -45,6 +45,7 @@ class World {
     bool move_this_player(glm::mat4 transform);
     void add_projectile(ProjectileProto proto);
     void add_projectile(uint id, ProjectileProto proto);
+    bool has_projectile(uint id);
     void update_controls(float mouse_x_delta);
     void update();
     void draw_debug();
