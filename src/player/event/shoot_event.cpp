@@ -5,14 +5,14 @@
 #include "network/proto_util.h"
 
 ShootEvent::ShootEvent(glm::mat4 transform) {
- this->transform = transform;
+  this->transform = transform;
 }
 
 ShootEvent::ShootEvent(PlayerShootEvent proto) {
- this->transform = ProtoUtil::to_glm(proto.transform());
+  this->transform = ProtoUtil::to_glm(proto.projectile().transform());
 }
 
 void ShootEvent::to_proto(PlayerShootEvent* proto) {
   proto->set_exists(true);
-  ProtoUtil::to_proto(transform, proto->mutable_transform());
+  ProtoUtil::to_proto(transform, proto->mutable_projectile()->mutable_transform());
 }

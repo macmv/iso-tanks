@@ -5,8 +5,8 @@
 
 class Missile : public Projectile {
   public:
-    Missile(ShootEvent event, btRigidBody* body, SceneManager* scene_manager);
-    Missile(ShootEvent event, btRigidBody* body);
+    Missile(ProjectileProto proto, btRigidBody* body, SceneManager* scene_manager);
+    Missile(ProjectileProto proto, btRigidBody* body);
 };
 
 #endif

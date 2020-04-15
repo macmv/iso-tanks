@@ -227,25 +227,26 @@ void World::update() {
     player->update();
   }
 
-  // for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--) {
-  //   btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[j];
-  //   btRigidBody* body = btRigidBody::upcast(obj);
-  //   btTransform trans;
-  //   if (body && body->getMotionState()) {
-  //     body->getMotionState()->getWorldTransform(trans);
-  //   } else {
-  //     trans = obj->getWorldTransform();
-  //   }
-  //   printf("world pos object %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
-  // }
+  for (int j = dynamics_world->getNumCollisionObjects() - 1; j >= 0; j--) {
+    btCollisionObject* obj = dynamics_world->getCollisionObjectArray()[j];
+    btRigidBody* body = btRigidBody::upcast(obj);
+    btTransform trans;
+    if (body && body->getMotionState()) {
+      body->getMotionState()->getWorldTransform(trans);
+    } else {
+      trans = obj->getWorldTransform();
+    }
+    printf("world pos object %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
+  }
 }
 
-void World::add_projectile(ShootEvent event) {
+void World::add_projectile(ProjectileProto proto) {
   uint id = (uint) rand();
-  add_projectile(id, event);
+  add_projectile(id, proto);
 }
 
-void World::add_projectile(uint id, ShootEvent event) {
+void World::add_projectile(uint id, ProjectileProto proto) {
+  cout << "Adding projectile!" << endl;
   btCollisionShape* shape = collision_shapes->at("missile");
   btTransform start_transform;
   start_transform.setIdentity();
@@ -263,8 +264,8 @@ void World::add_projectile(uint id, ShootEvent event) {
   dynamics_world->addRigidBody(body);
 
   if (scene_manager == NULL) {
-    projectiles->insert({ id, new Missile(event, body) });
+    projectiles->insert({ id, new Missile(proto, body) });
   } else {
-    projectiles->insert({ id, new Missile(event, body, scene_manager) });
+    projectiles->insert({ id, new Missile(proto, body, scene_manager) });
   }
 }

@@ -1,9 +1,9 @@
 #include "missile.h"
 
-Missile::Missile(ShootEvent event, btRigidBody* body, SceneManager* scene_manager) : Projectile(event, body, scene_manager, "assets/missile.glb") {
+Missile::Missile(ProjectileProto proto, btRigidBody* body, SceneManager* scene_manager) : Projectile(proto, body, scene_manager, "assets/missile.glb") {
 
 }
 
-Missile::Missile(ShootEvent event, btRigidBody* body) : Projectile(event, body) {
+Missile::Missile(ProjectileProto proto, btRigidBody* body) : Projectile(proto, body) {
 
 }

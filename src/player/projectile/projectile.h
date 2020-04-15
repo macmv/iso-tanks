@@ -3,8 +3,7 @@
 
 #include "world/world.h"
 #include "models/scene_manager.h"
-
-using namespace std;
+#include "src/proto/multiplayer.grpc.pb.h"
 
 class Projectile {
   protected:
@@ -13,8 +12,8 @@ class Projectile {
     Scene* scene = NULL;
 
   public:
-    Projectile(ShootEvent event, btRigidBody* body, SceneManager* scene_manager, string scene_name);
-    Projectile(ShootEvent event, btRigidBody* body);
+    Projectile(ProjectileProto proto, btRigidBody* body, SceneManager* scene_manager, std::string scene_name);
+    Projectile(ProjectileProto proto, btRigidBody* body);
     float get_speed();
     Scene* get_scene();
 };

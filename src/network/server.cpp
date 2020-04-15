@@ -46,7 +46,7 @@ uint Server::new_player(const NewPlayerRequest* req) {
 
 void Server::update_player_events(const PlayerEvents& events) {
   if (events.shoot().exists()) {
-    world->add_projectile(ShootEvent(events.shoot()));
+    world->add_projectile(events.shoot().projectile());
   }
 }
 

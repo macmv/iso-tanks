@@ -30,7 +30,7 @@ message PlayerEvents {
 
 message PlayerShootEvent {
   bool exists = 1;
-  Transform transform = 2;
+  ProjectileProto projectile = 2;
 }
 
 message ProjectileProto {

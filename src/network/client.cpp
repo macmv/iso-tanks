@@ -44,6 +44,9 @@ void Client::process_response() {
   if (recent_response == NULL) {
     return;
   }
+  for (ProjectileProto proto : recent_response->new_projectiles()) {
+    world->add_projectile(proto);
+  }
   for (PlayerProto proto : recent_response->player()) {
     if (id == proto.id()) {
       world->move_this_player(ProtoUtil::to_glm(proto.transform()));
