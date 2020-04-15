@@ -5,3 +5,7 @@ ModelInstance::ModelInstance(Model* model) {
   transform = glm::mat4(1);
 }
 
+ModelInstance* ModelInstance::new_instance() {
+  return new ModelInstance(model);
+}
+

@@ -12,6 +12,7 @@ class Scene {
   public:
     Scene();
     void add(ModelInstance* model);
+    Scene* new_instance();
 };
 
 #endif

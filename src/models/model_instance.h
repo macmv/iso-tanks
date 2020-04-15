@@ -11,6 +11,7 @@ class ModelInstance {
 
   public:
     ModelInstance(Model* model);
+    ModelInstance* new_instance();
 };
 
 #endif
