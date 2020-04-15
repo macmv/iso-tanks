@@ -251,7 +251,6 @@ void World::update() {
 }
 
 void World::add_projectile(ProjectileProto proto) {
-  cout << "Adding projectile!" << endl;
   btCollisionShape* shape = collision_shapes->at("missile");
   btTransform start_transform;
   start_transform.setIdentity();
@@ -269,12 +268,12 @@ void World::add_projectile(ProjectileProto proto) {
   dynamics_world->addRigidBody(body);
 
   if (scene_manager == NULL) {
+    // This is only run on the server, so we create the id
     uint id = (uint) rand();
     projectiles->insert({ id, new Missile(proto, body) });
   } else {
     projectiles->insert({ proto.id(), new Missile(proto, body, scene_manager) });
   }
-  cout << "Projectile list length: " << projectiles->size() << endl;
 }
 
 bool World::has_projectile(uint id) {

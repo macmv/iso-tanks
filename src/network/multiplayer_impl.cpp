@@ -11,6 +11,7 @@ MultiplayerImpl::MultiplayerImpl(Server* server) {
 grpc::Status MultiplayerImpl::UpdatePlayer(grpc::ServerContext* context, grpc::ServerReaderWriter<PlayerUpdateResponse, PlayerUpdate>* stream) {
   PlayerUpdateResponse res;
   PlayerUpdate update;
+  cout << "Connection with client opened" << endl;
   while (stream->Read(&update)) {
     server->update_player_events(update.events());
     bool validPlayer = server->move_player(update.player());

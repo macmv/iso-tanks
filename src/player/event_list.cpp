@@ -13,7 +13,6 @@ EventList::EventList() {
 
 void EventList::to_proto(PlayerEvents* proto) {
   if (shoot_event != NULL) {
-    cout << "Sending shoot event!" << endl;
     shoot_event->to_proto(proto->mutable_shoot());
     delete shoot_event;
     shoot_event = NULL;
