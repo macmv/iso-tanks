@@ -27,10 +27,10 @@ class World {
     DebugDraw*                                            debug_draw;
     clock_t                                               prev_update;
   public:
-    std::unordered_map<uint, Player*>*       players;
-    std::unordered_map<uint, Projectile*>*   projectiles;
+    std::unordered_map<uint, Player*>*       players = new std::unordered_map<uint, Player*>();
+    std::unordered_map<uint, Projectile*>*   projectiles = new std::unordered_map<uint, Projectile*>();
     ControlledPlayer*                        this_player = NULL;
-    std::vector<ModelInstance*>*             models;
+    std::vector<ModelInstance*>*             models = new std::vector<ModelInstance*>();
     SceneManager*                            scene_manager = NULL;
 
   public:

@@ -62,7 +62,6 @@ bool Server::move_player(const PlayerProto& player) {
   if (!success) {
     return false;
   }
-  cout << "Moving player" << endl << player.DebugString() << endl;
   return true;
 }
 

@@ -34,8 +34,8 @@ glm::mat4 Player::get_transform() {
 
 void Player::set_transform(glm::mat4 trans) {
   btTransform body_transform = btTransform(btMatrix3x3(trans[0][0], trans[1][0], trans[2][0],
-                                                      trans[0][1], trans[1][1], trans[2][1],
-                                                      trans[0][2], trans[1][2], trans[2][2]),
+                                                       trans[0][1], trans[1][1], trans[2][1],
+                                                       trans[0][2], trans[1][2], trans[2][2]),
                                            btVector3(trans[3][0], trans[3][1], trans[3][2]));
   body->activate();
   body->setWorldTransform(body_transform);

@@ -1,7 +1,7 @@
 #include "world.h"
 #include "opengl/camera.h"
 #include "player/player.h"
-#include "player/projectile/projectile.h"
+#include "player/projectile/missile.h"
 #include <bullet/btBulletDynamicsCommon.h>
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
@@ -52,6 +52,11 @@ World::World(Terrain* terrain, bool needs_debug) {
   shape->addChildShape(t, cylinder);
   collision_shapes->insert( {"player", shape} );
 
+  cylinder = new btCylinderShapeX(btVector3(1, 1, 1));
+  t.setIdentity();
+  t.setOrigin(btVector3(0, 0, 0));
+  collision_shapes->insert( {"missile", cylinder} );
+
   btTransform ground_transform;
   ground_transform.setIdentity();
   ground_transform.setOrigin(btVector3(0, 0, 0));
@@ -69,9 +74,6 @@ World::World(Terrain* terrain, bool needs_debug) {
 
   //add the body to the dynamics world
   dynamics_world->addRigidBody(body);
-
-  players = new std::unordered_map<uint, Player*>();
-  models = new std::vector<ModelInstance*>();
 
   if (needs_debug) {
     debug_draw = new DebugDraw();
@@ -244,21 +246,25 @@ void World::add_projectile(ShootEvent event) {
 }
 
 void World::add_projectile(uint id, ShootEvent event) {
-  // btCollisionShape* shape = collision_shapes->at("tank");
-  // btTransform start_transform;
-  // start_transform.setIdentity();
+  btCollisionShape* shape = collision_shapes->at("missile");
+  btTransform start_transform;
+  start_transform.setIdentity();
 
-  // float mass = 1.f;
-  // btVector3 local_inertia(0, 0, 0);
-  // shape->calculateLocalInertia(mass, local_inertia);
+  float mass = 1.f;
+  btVector3 local_inertia(0, 0, 0);
+  shape->calculateLocalInertia(mass, local_inertia);
 
-  // btDefaultMotionState* motion_state = new btDefaultMotionState(start_transform);
-  // btRigidBody::btRigidBodyConstructionInfo info(mass, motion_state, shape, local_inertia);
-  // btRigidBody* body = new btRigidBody(info);
-  // body->setFriction(0);
-  // body->setSpinningFriction(0);
+  btDefaultMotionState* motion_state = new btDefaultMotionState(start_transform);
+  btRigidBody::btRigidBodyConstructionInfo info(mass, motion_state, shape, local_inertia);
+  btRigidBody* body = new btRigidBody(info);
+  body->setFriction(0);
+  body->setSpinningFriction(0);
 
-  // dynamics_world->addRigidBody(body);
+  dynamics_world->addRigidBody(body);
 
-  // projectiles->insert({ id, new Projectile(event, body) });
+  if (scene_manager == NULL) {
+    projectiles->insert({ id, new Missile(event, body) });
+  } else {
+    projectiles->insert({ id, new Missile(event, body, scene_manager) });
+  }
 }

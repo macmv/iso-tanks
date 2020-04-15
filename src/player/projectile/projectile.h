@@ -13,12 +13,10 @@ class Projectile {
     Scene* scene = NULL;
 
   public:
-    Projectile(ShootEvent event, btRigidBody* body, SceneManager* scene_manager);
+    Projectile(ShootEvent event, btRigidBody* body, SceneManager* scene_manager, string scene_name);
     Projectile(ShootEvent event, btRigidBody* body);
     float get_speed();
     Scene* get_scene();
-  private:
-    virtual string get_scene_name();
 };
 
 #endif
