@@ -19,10 +19,10 @@ Render::Render() {
   shaders = new unordered_map<string, Shader*>();
   camera = new Camera();
 
-  currentShader = NULL;
+  current_shader = NULL;
 
-  uiRender = new UIRender(this, "assets/Hack-Regular.ttf", 24);
-  hud = new Hud(uiRender, display->get_window_size().y / 1080.0);
+  ui_render = new UIRender(this, "assets/Hack-Regular.ttf", 24);
+  hud = new Hud(ui_render, display->get_window_size().y / 1080.0);
 }
 
 void Render::add_shader(string name, Shader* shader) {
@@ -41,13 +41,13 @@ void Render::start(ControlledPlayer* player) {
 }
 
 void Render::use(string shader) {
-  currentShader = shaders->at(shader);
-  glUseProgram(currentShader->programID);
-  camera->loadMat(currentShader);
+  current_shader = shaders->at(shader);
+  glUseProgram(current_shader->program_id);
+  camera->load_mat(current_shader);
 }
 
 void Render::end() {
-  currentShader = NULL;
+  current_shader = NULL;
   glUseProgram(0);
 }
 
@@ -57,7 +57,7 @@ void Render::update() {
 }
 
 void Render::render(ModelInstance* instance) {
-  if (currentShader == NULL) {
+  if (current_shader == NULL) {
     cout << "Must call Render::start() before Render::render()!" << endl;
     exit(1);
   }
@@ -66,8 +66,8 @@ void Render::render(ModelInstance* instance) {
     exit(1);
   }
 
-  currentShader->loadModel(instance->transform);
-  currentShader->loadMaterial(instance->model->material);
+  current_shader->load_model(instance->transform);
+  current_shader->load_material(instance->model->material);
 
   glBindVertexArray(instance->model->vao);
   glEnableVertexAttribArray(0);
@@ -81,7 +81,7 @@ void Render::render(ModelInstance* instance) {
 }
 
 void Render::render(Scene* scene) {
-  if (currentShader == NULL) {
+  if (current_shader == NULL) {
     cout << "Must call Render::start() before Render::render()!" << endl;
     exit(1);
   }

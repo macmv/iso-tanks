@@ -8,11 +8,11 @@
 
 class EventList {
   private:
-    ShootEvent* shootEvent;
+    ShootEvent* shoot_event;
 
   public:
     EventList();
-    void toProto(PlayerEvents* proto);
+    void to_proto(PlayerEvents* proto);
     void shoot(ControlledPlayer* player);
 };
 

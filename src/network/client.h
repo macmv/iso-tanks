@@ -14,21 +14,21 @@ class Client {
   private:
     ControlledPlayer* player;
     std::unique_ptr<Multiplayer::Stub> stub;
-    std::thread clientThread;
+    std::thread client_thread;
     uint id;
     World* world;
-    PlayerUpdateResponse* recentResponse;
+    PlayerUpdateResponse* recent_response;
     EventList* events;
 
   public:
     Client(World* world);
-    void updateEvents(ControlledPlayer* player, bool didFire);
-    void processResponse();
+    void update_events(ControlledPlayer* player, bool didFire);
+    void process_response();
   private:
-    void sendUpdate(std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, PlayerUpdateResponse>> stream);
-    bool sendNewPlayer();
-    std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, PlayerUpdateResponse>> createStream();
-    static void startUpdateLoop(Client* client);
+    void send_update(std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, PlayerUpdateResponse>> stream);
+    bool send_new_player();
+    std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, PlayerUpdateResponse>> create_stream();
+    static void start_update_loop(Client* client);
 };
 
 #endif

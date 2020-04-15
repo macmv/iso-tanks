@@ -9,10 +9,10 @@
 class AngleBar : public Drawable {
   private:
     sf::Color color;
-    bool angleRight;
+    bool angle_right;
 
   public:
-    AngleBar(UIRender* render, sf::Color color, bool angleRight);
+    AngleBar(UIRender* render, sf::Color color, bool angle_right);
     void render(glm::vec2 position, glm::vec2 size);
 };
 

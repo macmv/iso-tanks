@@ -2,20 +2,20 @@
 #include <SFML/Graphics.hpp>
 
 Text::Text(Hud* hud, Position* position, string text) : Element(hud, position) {
-  uiRender = hud->uiRender;
-  this->text = uiRender->createText(text, scale);
+  ui_render = hud->ui_render;
+  this->text = ui_render->create_text(text, scale);
 }
 
-float Text::getMargin() {
+float Text::get_margin() {
   return 10;
 }
 
-glm::vec2 Text::getSize() {
+glm::vec2 Text::get_size() {
   return glm::vec2(text->getLocalBounds().width, text->getLocalBounds().height);
 }
 
 void Text::render(glm::vec2 position, glm::vec2 size) {
   text->setPosition(position.x, position.y);
-  uiRender->render(text);
+  ui_render->render(text);
 }
 

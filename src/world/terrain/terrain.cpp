@@ -64,8 +64,8 @@ Terrain::Terrain(int detail) {
   instance = NULL;
 }
 
-void Terrain::createModel() {
-  GLuint vao = createVAO(indices, vertices, uvs, normals);
+void Terrain::create_model() {
+  GLuint vao = create_vao(indices, vertices, uvs, normals);
   uint length = indices->size();
   Model* model = new Model("terrain", vao, length);
   instance = new ModelInstance(model);

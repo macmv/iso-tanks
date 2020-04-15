@@ -6,11 +6,11 @@
 
 class ControlledPlayer final : public Player {
   private:
-    glm::mat4 turretTransform;
+    glm::mat4 turret_transform;
 
   public:
     ControlledPlayer(btRigidBody* body, Camera* camera);
-    void update(float mouseXDelta);
+    void update(float mouse_x_delta);
 };
 
 #endif

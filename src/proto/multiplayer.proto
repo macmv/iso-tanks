@@ -13,7 +13,7 @@ message PlayerUpdate {
 
 message PlayerUpdateResponse {
   repeated PlayerProto player = 1;
-  repeated Projectile newProjectiles = 2;
+  repeated Projectile new_projectiles = 2;
 }
 
 message NewPlayerRequest {

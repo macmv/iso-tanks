@@ -6,5 +6,5 @@ Rectangle::Rectangle(UIRender* render, sf::Color color) : Drawable(render) {
 }
 
 void Rectangle::render(glm::vec2 position, glm::vec2 size) {
-  uiRender->rectangle(position, size, color);
+  ui_render->rectangle(position, size, color);
 }

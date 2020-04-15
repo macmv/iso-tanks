@@ -9,59 +9,59 @@
 using namespace std;
 
 Shader::Shader(string filename, bool has_geometry) {
-  GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-  GLuint geometryShader;
-  GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+  GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+  GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+  GLuint geometry_shader;
   if (has_geometry) {
-    geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+    geometry_shader = glCreateShader(GL_GEOMETRY_SHADER);
   }
 
-  bool res = loadShader(vertexShader, filename + "_vertex.glsl");
+  bool res = load_shader(vertex_shader, filename + "_vertex.glsl");
   if (!res) {
     exit(1);
   }
-  res = loadShader(fragmentShader, filename + "_fragment.glsl");
+  res = load_shader(fragment_shader, filename + "_fragment.glsl");
   if (!res) {
     exit(1);
   }
   if (has_geometry) {
-    res = loadShader(geometryShader, filename + "_geometry.glsl");
+    res = load_shader(geometry_shader, filename + "_geometry.glsl");
     if (!res) {
       exit(1);
     }
   }
 
-  programID = glCreateProgram();
+  program_id = glCreateProgram();
 
-  glAttachShader(programID, vertexShader);
-  glAttachShader(programID, fragmentShader);
+  glAttachShader(program_id, vertex_shader);
+  glAttachShader(program_id, fragment_shader);
   if (has_geometry) {
-    glAttachShader(programID, geometryShader);
+    glAttachShader(program_id, geometry_shader);
   }
 
-  glLinkProgram(programID);
+  glLinkProgram(program_id);
 
-  projectionID = glGetUniformLocation(programID, "projection");
-  viewID = glGetUniformLocation(programID, "view");
-  modelID = glGetUniformLocation(programID, "model");
-  colorID = glGetUniformLocation(programID, "color");
+  projection_id = glGetUniformLocation(program_id, "projection");
+  view_id       = glGetUniformLocation(program_id, "view");
+  model_id      = glGetUniformLocation(program_id, "model");
+  color_id      = glGetUniformLocation(program_id, "color");
 }
 
-void Shader::loadProjection(glm::mat4 projection) {
-  glUniformMatrix4fv(projectionID, 1, GL_FALSE, &projection[0][0]);
+void Shader::load_projection(glm::mat4 projection) {
+  glUniformMatrix4fv(projection_id, 1, GL_FALSE, &projection[0][0]);
 }
 
-void Shader::loadView(glm::mat4 view) {
-  glUniformMatrix4fv(viewID, 1, GL_FALSE, &view[0][0]);
+void Shader::load_view(glm::mat4 view) {
+  glUniformMatrix4fv(view_id, 1, GL_FALSE, &view[0][0]);
 }
 
-void Shader::loadModel(glm::mat4 model) {
-  glUniformMatrix4fv(modelID, 1, GL_FALSE, &model[0][0]);
+void Shader::load_model(glm::mat4 model) {
+  glUniformMatrix4fv(model_id, 1, GL_FALSE, &model[0][0]);
 }
 
-void Shader::loadMaterial(Material* material) {
+void Shader::load_material(Material* material) {
   if (material != NULL) {
-    glUniform3f(colorID, material->color.x, material->color.y, material->color.z);
+    glUniform3f(color_id, material->color.x, material->color.y, material->color.z);
   }
 }
 

@@ -17,8 +17,7 @@ class Terrain {
 
   public:
     Terrain(int detail);
-    void createModel();
-
+    void create_model();
   private:
     void gen_triangle(
       std::vector<uint>* indices,

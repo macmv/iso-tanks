@@ -20,10 +20,10 @@ class Render {
   public:
     World* world;
     std::unordered_map<std::string, Shader*>* shaders;
-    Shader* currentShader;
+    Shader* current_shader;
     Camera* camera;
     Display* display;
-    UIRender* uiRender;
+    UIRender* ui_render;
   private:
     Hud* hud;
 
@@ -38,7 +38,7 @@ class Render {
     void render(ModelInstance* instance); // renders model
 
   private:
-    void createPrograms();
+    void create_programs();
 };
 
 #endif

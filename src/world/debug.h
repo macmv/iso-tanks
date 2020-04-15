@@ -8,12 +8,10 @@
 
 class DebugDraw : public btIDebugDraw {
   private:
-    GLuint VBO, VAO;
+    GLuint vbo, vao;
     int mode;
-    std::vector<glm::vec3>* lineData;
+    std::vector<glm::vec3>* line_data;
 
-  private:
-    void renderLines();
   public:
     DebugDraw();
     void start();
@@ -24,6 +22,8 @@ class DebugDraw : public btIDebugDraw {
     void draw3dText(const btVector3& location, const char* textString);
     void setDebugMode(int debugMode);
     int getDebugMode() const;
+  private:
+    void render_lines();
 };
 
 #endif

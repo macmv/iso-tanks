@@ -3,11 +3,11 @@
 
 class Position {
   public:
-    bool leftShifted;
-    bool topShifted;
+    bool left_shifted;
+    bool top_shifted;
 
   public:
-    Position(bool isLeftShifted, bool isTopShifted);
+    Position(bool is_left_shifted, bool is_top_shifted);
 };
 
 #endif

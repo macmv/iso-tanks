@@ -8,19 +8,19 @@
 
 class Shader {
   private:
-    GLuint projectionID;
-    GLuint viewID;
-    GLuint modelID;
-    GLuint colorID;
+    GLuint projection_id;
+    GLuint view_id;
+    GLuint model_id;
+    GLuint color_id;
   public:
-    GLuint programID;
+    GLuint program_id;
 
   public:
     Shader(std::string filename, bool has_geometry);
-    void loadProjection(glm::mat4 projection);
-    void loadView(glm::mat4 view);
-    void loadModel(glm::mat4 model);
-    void loadMaterial(Material* material);
+    void load_projection(glm::mat4 projection);
+    void load_view(glm::mat4 view);
+    void load_model(glm::mat4 model);
+    void load_material(Material* material);
 };
 
 #endif

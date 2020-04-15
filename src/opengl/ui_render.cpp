@@ -4,11 +4,11 @@
 
 using namespace std;
 
-UIRender::UIRender(Render* render, string fontName, float fontSize) {
-  this->fontSize = fontSize;
+UIRender::UIRender(Render* render, string font_name, float font_size) {
+  this->font_size = font_size;
   font = new sf::Font();
-  if (!font->loadFromFile(fontName)) {
-    cout << "Could not load " << fontName << " font!" << endl;
+  if (!font->loadFromFile(font_name)) {
+    cout << "Could not load " << font_name << " font!" << endl;
     exit(1);
   }
   window = render->display->window;
@@ -26,17 +26,17 @@ void UIRender::render(sf::Text* text) {
   window->draw(*text);
 }
 
-sf::Text* UIRender::createText(string words, float scale) {
+sf::Text* UIRender::create_text(string words, float scale) {
   sf::Text* text = new sf::Text();
   text->setFont(*font);
   text->setString(words);
-  text->setCharacterSize(fontSize * scale);
+  text->setCharacterSize(font_size * scale);
   text->setFillColor(sf::Color::Red);
   text->setStyle(sf::Text::Bold);
   return text;
 }
 
-void UIRender::debugRectangle(glm::vec2 position, glm::vec2 size) {
+void UIRender::debug_rectangle(glm::vec2 position, glm::vec2 size) {
   sf::RectangleShape shape(sf::Vector2f(size.x, size.y));
   shape.setFillColor(sf::Color::Transparent);
   shape.setOutlineThickness(1);

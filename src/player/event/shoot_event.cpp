@@ -12,7 +12,7 @@ ShootEvent::ShootEvent(PlayerShootEvent proto) {
  this->transform = ProtoUtil::to_glm(proto.transform());
 }
 
-void ShootEvent::toProto(PlayerShootEvent* proto) {
+void ShootEvent::to_proto(PlayerShootEvent* proto) {
   proto->set_exists(true);
   ProtoUtil::to_proto(transform, proto->mutable_transform());
 }

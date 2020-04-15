@@ -16,18 +16,18 @@ class Camera {
     glm::vec3 pos;
     glm::vec3 dir;
     sf::Vector2i old_pos;
-    glm::vec2 mouseDelta = glm::vec2();
-    glm::mat4* playerTransform;
+    glm::vec2 mouse_delta = glm::vec2();
+    glm::mat4* player_transform;
 
   public:
     Camera();
-    void setPlayerTransform(glm::mat4* transform);
+    void set_player_transform(glm::mat4* transform);
     void update(Display* display, Player* player);
     void update_size(uint width, uint height);
     void set_mouse(uint x, uint y);
-    void loadMat(Shader* shader);
-    glm::vec2 getMouseDelta();
-    bool getMousePressed();
+    void load_mat(Shader* shader);
+    glm::vec2 get_mouse_delta();
+    bool get_mouse_pressed();
 };
 
 #endif

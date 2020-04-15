@@ -14,19 +14,19 @@ class World;
 class Server {
   private:
     int port;
-    std::thread worldThread;
+    std::thread world_thread;
     World* world;
 
   public:
     Server(int port);
     void start();
     void update();
-    void updatePlayerEvents(const PlayerEvents& events);
-    bool movePlayer(const PlayerProto& player);
-    uint newPlayer(const NewPlayerRequest* req);
-    void createRes(uint id, bool needsPositionSet, PlayerUpdateResponse* res);
+    void update_player_events(const PlayerEvents& events);
+    bool move_player(const PlayerProto& player);
+    uint new_player(const NewPlayerRequest* req);
+    void create_res(uint id, bool needs_position_set, PlayerUpdateResponse* res);
   private:
-    static void startUpdateLoop(Server* server);
+    static void start_update_loop(Server* server);
 };
 
 #endif

@@ -6,7 +6,7 @@
 
 class Drawable {
   protected:
-    UIRender* uiRender;
+    UIRender* ui_render;
 
   public:
     Drawable(UIRender* render);

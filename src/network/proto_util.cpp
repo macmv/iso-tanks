@@ -28,7 +28,7 @@ void ProtoUtil::to_proto(glm::mat4 transform, Transform* proto) {
 }
 
 void ProtoUtil::to_proto(PlayerProto* proto, uint id, Player* player) {
-  to_proto(player->getTransform(), proto->mutable_transform());
+  to_proto(player->get_transform(), proto->mutable_transform());
   proto->set_id(id);
 }
 

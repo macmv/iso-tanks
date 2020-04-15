@@ -13,17 +13,17 @@
 
 using namespace std;
 
-World::World(Terrain* terrain, bool needsDebug) {
+World::World(Terrain* terrain, bool needs_debug) {
   // init
 
-  collisionConfiguration = new btDefaultCollisionConfiguration();
-  dispatcher             = new btCollisionDispatcher(collisionConfiguration);
-  overlappingPairCache   = new btDbvtBroadphase();
-  solver                 = new btSequentialImpulseConstraintSolver;
+  collision_configuration = new btDefaultCollisionConfiguration();
+  dispatcher              = new btCollisionDispatcher(collision_configuration);
+  overlapping_pair_cache  = new btDbvtBroadphase();
+  solver                  = new btSequentialImpulseConstraintSolver();
 
-  dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
+  dynamics_world = new btDiscreteDynamicsWorld(dispatcher, overlapping_pair_cache, solver, collision_configuration);
 
-  collisionShapes = new std::vector<btCollisionShape*>();
+  collision_shapes = new std::vector<btCollisionShape*>();
 
   btTriangleMesh* mesh = new btTriangleMesh();
   for (ulong i = 0; i < terrain->indices->size() / 3; i++) {
@@ -33,8 +33,8 @@ World::World(Terrain* terrain, bool needsDebug) {
     mesh->addTriangle(btVector3(a.x, a.y, a.z), btVector3(b.x, b.y, b.z), btVector3(c.x, c.y, c.z));
   }
 
-  btCollisionShape* groundShape = new btBvhTriangleMeshShape(mesh, true, true);
-  collisionShapes->push_back(groundShape);
+  btCollisionShape* ground_shape = new btBvhTriangleMeshShape(mesh, true, true);
+  collision_shapes->push_back(ground_shape);
 
   btTransform t;
 
@@ -51,177 +51,176 @@ World::World(Terrain* terrain, bool needsDebug) {
   t.setIdentity();
   t.setOrigin(btVector3(0, 0, 1));
   shape->addChildShape(t, cylinder);
-  collisionShapes->push_back(shape);
+  collision_shapes->push_back(shape);
 
-  btTransform groundTransform;
-  groundTransform.setIdentity();
-  groundTransform.setOrigin(btVector3(0, 0, 0));
+  btTransform ground_transform;
+  ground_transform.setIdentity();
+  ground_transform.setOrigin(btVector3(0, 0, 0));
 
   float mass = 0.f;
 
-  btVector3 localInertia(0, 0, 0);
+  btVector3 local_inertia(0, 0, 0);
 
   //using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
-  btDefaultMotionState* myMotionState = new btDefaultMotionState(groundTransform);
-  btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, groundShape, localInertia);
-  btRigidBody* body = new btRigidBody(rbInfo);
+  btDefaultMotionState* motion_state = new btDefaultMotionState(ground_transform);
+  btRigidBody::btRigidBodyConstructionInfo info(mass, motion_state, ground_shape, local_inertia);
+  btRigidBody* body = new btRigidBody(info);
   body->setFriction(.8);
   body->setRollingFriction(.8);
 
   //add the body to the dynamics world
-  dynamicsWorld->addRigidBody(body);
+  dynamics_world->addRigidBody(body);
 
   players = new std::unordered_map<uint, Player*>();
   models = new std::vector<ModelInstance*>();
 
 
-  if (needsDebug) {
-    debugDraw = new DebugDraw();
-    debugDraw->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
-    dynamicsWorld->setDebugDrawer(debugDraw);
+  if (needs_debug) {
+    debug_draw = new DebugDraw();
+    debug_draw->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
+    dynamics_world->setDebugDrawer(debug_draw);
   }
 
   prev_update =
     std::chrono::system_clock::now().time_since_epoch() /
     std::chrono::milliseconds(1);
 
-  thisPlayer = NULL;
+  this_player = NULL;
 
   srand(time(0));
 }
 
-void World::drawDebug() {
-  debugDraw->start();
-  dynamicsWorld->debugDrawWorld();
-  debugDraw->end();
+void World::draw_debug() {
+  debug_draw->start();
+  dynamics_world->debugDrawWorld();
+  debug_draw->end();
 }
 
 void World::clean() {
 }
 
-void World::createThisPlayer(Camera* camera) {
-  btCollisionShape* shape = collisionShapes->at(1);
+void World::create_this_player(Camera* camera) {
+  btCollisionShape* shape = collision_shapes->at(1);
 
-  btTransform startTransform;
-  startTransform.setIdentity();
+  btTransform start_transform;
+  start_transform.setIdentity();
 
   float mass = 1.f;
-  btVector3 localInertia(0, 0, 0);
-  shape->calculateLocalInertia(mass, localInertia);
-  startTransform.setOrigin(btVector3(0, -970, 0));
+  btVector3 local_inertia(0, 0, 0);
+  shape->calculateLocalInertia(mass, local_inertia);
+  start_transform.setOrigin(btVector3(0, -970, 0));
   // startTransform.setOrigin(btVector3(0, 840, 0));
   // startTransform.getBasis().setEulerZYX(M_PI, 0, 0);
 
   //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-  btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
-  btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, shape, localInertia);
-  btRigidBody* body = new btRigidBody(rbInfo);
+  btDefaultMotionState* motion_state = new btDefaultMotionState(start_transform);
+  btRigidBody::btRigidBodyConstructionInfo info(mass, motion_state, shape, local_inertia);
+  btRigidBody* body = new btRigidBody(info);
   body->setFriction(.5);
   body->setSpinningFriction(.3);
 
-  dynamicsWorld->addRigidBody(body);
+  dynamics_world->addRigidBody(body);
 
-  thisPlayer = new ControlledPlayer(body, camera);
+  this_player = new ControlledPlayer(body, camera);
 }
 
-uint World::addPlayer() {
+uint World::add_player() {
   uint id = (uint) rand();
-  addPlayer(id);
+  add_player(id);
   return id;
 }
 
-void World::addPlayer(uint id) {
-  btCollisionShape* shape = collisionShapes->at(1);
+void World::add_player(uint id) {
+  btCollisionShape* shape = collision_shapes->at(1);
 
-  btTransform startTransform;
-  startTransform.setIdentity();
+  btTransform start_transform;
+  start_transform.setIdentity();
 
   float mass = 1.f;
-  btVector3 localInertia(0, 0, 0);
-  shape->calculateLocalInertia(mass, localInertia);
-  startTransform.setOrigin(btVector3(0, -900, 0));
+  btVector3 local_inertia(0, 0, 0);
+  shape->calculateLocalInertia(mass, local_inertia);
 
   //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-  btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
-  btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, shape, localInertia);
-  btRigidBody* body = new btRigidBody(rbInfo);
+  btDefaultMotionState* motion_state = new btDefaultMotionState(start_transform);
+  btRigidBody::btRigidBodyConstructionInfo info(mass, motion_state, shape, local_inertia);
+  btRigidBody* body = new btRigidBody(info);
   body->setFriction(.5);
   body->setSpinningFriction(.3);
 
-  dynamicsWorld->addRigidBody(body);
+  dynamics_world->addRigidBody(body);
 
   Player* player = new Player(body);
   players->insert({id, player});
 }
 
-bool World::hasPlayer(uint id) {
+bool World::has_player(uint id) {
   return players->find(id) != players->end();
 }
 
-ControlledPlayer* World::getPlayer() {
-  return thisPlayer;
+ControlledPlayer* World::get_this_player() {
+  return this_player;
 }
 
-bool World::moveThisPlayer(glm::mat4 transform) {
-  thisPlayer->setTransform(transform);
+bool World::move_this_player(glm::mat4 transform) {
+  this_player->set_transform(transform);
   return true;
 }
 
-bool World::movePlayer(uint id, glm::mat4 transform) {
+bool World::move_player(uint id, glm::mat4 transform) {
   Player* p = players->at(id);
-  p->setTransform(transform);
+  p->set_transform(transform);
   return true;
 }
 
 World::~World() {
-  for (int i = dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--) {
-    btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[i];
+  for (int i = dynamics_world->getNumCollisionObjects() - 1; i >= 0; i--) {
+    btCollisionObject* obj = dynamics_world->getCollisionObjectArray()[i];
     btRigidBody* body = btRigidBody::upcast(obj);
     if (body && body->getMotionState()) {
       delete body->getMotionState();
     }
-    dynamicsWorld->removeCollisionObject(obj);
+    dynamics_world->removeCollisionObject(obj);
     delete obj;
   }
 
-  for (ulong i = 0; i < collisionShapes->size(); i++) {
-    btCollisionShape* shape = collisionShapes->at(i);
-    collisionShapes->at(i) = 0;
+  for (ulong i = 0; i < collision_shapes->size(); i++) {
+    btCollisionShape* shape = collision_shapes->at(i);
+    collision_shapes->at(i) = 0;
     delete shape;
   }
 
-  delete dynamicsWorld;
+  delete dynamics_world;
   delete solver;
-  delete overlappingPairCache;
+  delete overlapping_pair_cache;
   delete dispatcher;
-  delete collisionConfiguration;
+  delete collision_configuration;
 
-  collisionShapes->clear();
+  collision_shapes->clear();
 }
 
-void World::updateControls(float mouseXDelta) {
-  glm::vec3 pos = glm::vec3(thisPlayer->getTransform()[3]);
+void World::update_controls(float mouse_x_delta) {
+  glm::vec3 pos = glm::vec3(this_player->get_transform()[3]);
   pos = glm::normalize(pos) * 20.f;
   if (!isnan(pos.x) && !isnan(pos.y) && !isnan(pos.z)) {
-    thisPlayer->setGravity(pos);
+    this_player->set_gravity(pos);
   }
-  thisPlayer->update(mouseXDelta);
+  this_player->update(mouse_x_delta);
 }
 
 void World::update() {
   ulong update_time =
     std::chrono::system_clock::now().time_since_epoch() /
     std::chrono::milliseconds(1);
-  dynamicsWorld->stepSimulation((double) (update_time - prev_update) / 1000, 10);
+  dynamics_world->stepSimulation((double) (update_time - prev_update) / 1000, 10);
   prev_update = update_time;
 
   Player* player;
   for (std::pair<int, Player*> pair : *players) {
     player = pair.second;
-    glm::vec3 pos = glm::vec3(player->getTransform()[3]);
+    glm::vec3 pos = glm::vec3(player->get_transform()[3]);
     pos = glm::normalize(pos) * 20.f;
     if (!isnan(pos.x) && !isnan(pos.y) && !isnan(pos.z)) {
-      player->setGravity(pos);
+      player->set_gravity(pos);
     }
     player->update();
   }
@@ -239,6 +238,6 @@ void World::update() {
   // }
 }
 
-void World::addProjectile(ShootEvent event) {
+void World::add_projectile(ShootEvent event) {
 
 }

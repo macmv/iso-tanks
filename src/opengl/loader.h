@@ -10,12 +10,12 @@
 
 using namespace std;
 
-bool loadShader(GLuint shader, string filename);
+bool load_shader(GLuint shader, string filename);
 
-bool loadModel(string path, Model* model);
-bool loadScene(string path, Scene* scene);
+bool load_model(string path, Model* model);
+bool load_scene(string path, Scene* scene);
 
-GLuint createVAO(
+GLuint create_vao(
   std::vector<unsigned int>* indices,
   std::vector<glm::vec3>* vertices,
   std::vector<glm::vec2>* uvs,

@@ -19,7 +19,7 @@
 
 using namespace std;
 
-unsigned long getFileLength(ifstream& file) {
+unsigned long get_file_length(ifstream& file) {
   if(!file.good()) return 0;
 
   file.seekg(0, ios::end);
@@ -29,7 +29,7 @@ unsigned long getFileLength(ifstream& file) {
   return len;
 }
 
-int readFile(string filename, string* file) {
+int read_file(string filename, string* file) {
   string line;
   ifstream stream(filename);
   if (stream.is_open()) {
@@ -46,99 +46,99 @@ int readFile(string filename, string* file) {
   return 0;
 }
 
-bool loadShader(GLuint shader, string filename) {
+bool load_shader(GLuint shader, string filename) {
   string data;
-  readFile(filename, &data);
+  read_file(filename, &data);
   const char *source[] = {data.c_str()};
   glShaderSource(shader, 1, source, NULL);
 
   glCompileShader(shader);
 
-  GLint vShaderCompiled = GL_FALSE;
-  glGetShaderiv(shader, GL_COMPILE_STATUS, &vShaderCompiled );
-  if (vShaderCompiled != GL_TRUE) {
-    GLint maxLength = 0;
-    glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
+  GLint did_shader_compile = GL_FALSE;
+  glGetShaderiv(shader, GL_COMPILE_STATUS, &did_shader_compile );
+  if (did_shader_compile != GL_TRUE) {
+    GLint max_length = 0;
+    glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &max_length);
 
     // The maxLength includes the NULL character
-    std::vector<GLchar> errorLog(maxLength);
-    glGetShaderInfoLog(shader, maxLength, &maxLength, &errorLog[0]);
+    std::vector<GLchar> error_log(max_length);
+    glGetShaderInfoLog(shader, max_length, &max_length, &error_log[0]);
 
     cout << "Unable to compile shader!" << endl;
     cout << "At " << filename << ":" << endl;
-    cout << errorLog.data();
+    cout << error_log.data();
     return false;
   }
   return true;
 }
 
-GLuint loadShaderProgram(string vertexFilename, string fragmentFilename) {
-  GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-  GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+GLuint load_shader_program(string vertex_filename, string fragment_filename) {
+  GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+  GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 
-  bool res = loadShader(vertexShader, vertexFilename);
+  bool res = load_shader(vertex_shader, vertex_filename);
   if (!res) {
     exit(1);
   }
-  res = loadShader(fragmentShader, fragmentFilename);
+  res = load_shader(fragment_shader, fragment_filename);
   if (!res) {
     exit(1);
   }
 
-  GLuint programID = glCreateProgram();
+  GLuint program_id = glCreateProgram();
 
-  glAttachShader(programID, vertexShader);
-  glAttachShader(programID, fragmentShader);
+  glAttachShader(program_id, vertex_shader);
+  glAttachShader(program_id, fragment_shader);
 
-  glLinkProgram(programID);
+  glLinkProgram(program_id);
 
-  return programID;
+  return program_id;
 }
 
-bool loadGLTF(std::string path, Scene* scene) {
-  tinygltf::Model loadedModel;
+bool load_gltf(std::string path, Scene* scene) {
+  tinygltf::Model loaded_model;
   tinygltf::TinyGLTF ctx;
   std::string err;
   std::string warn;
-  bool ret = ctx.LoadBinaryFromFile(&loadedModel, &err, &warn, path.c_str());
+  bool ret = ctx.LoadBinaryFromFile(&loaded_model, &err, &warn, path.c_str());
   if (!ret) {
     cout << "Failed to load gltf file " << path << endl;
     return false;
   }
 
-  tinygltf::Material loadedMaterial;
+  tinygltf::Material loaded_material;
   Material* material;
   std::vector<Material*> materials = std::vector<Material*>();
-  for (ulong i = 0; i < loadedModel.materials.size(); i++) {
-    loadedMaterial = loadedModel.materials.at(i);
+  for (ulong i = 0; i < loaded_model.materials.size(); i++) {
+    loaded_material = loaded_model.materials.at(i);
     material = new Material();
-    std::vector<double> baseColor = loadedMaterial.pbrMetallicRoughness.baseColorFactor;
-    material->color = glm::vec3(baseColor.at(0), baseColor.at(1), baseColor.at(2));
+    std::vector<double> base_color = loaded_material.pbrMetallicRoughness.baseColorFactor;
+    material->color = glm::vec3(base_color.at(0), base_color.at(1), base_color.at(2));
     materials.push_back(material);
   }
 
-  for (ulong i = 0; i < loadedModel.nodes.size(); i++) {
-    tinygltf::Node& node = loadedModel.nodes.at(i);
+  for (ulong i = 0; i < loaded_model.nodes.size(); i++) {
+    tinygltf::Node& node = loaded_model.nodes.at(i);
     if (node.mesh != -1) {
-      tinygltf::Mesh& mesh = loadedModel.meshes.at(node.mesh);
+      tinygltf::Mesh& mesh = loaded_model.meshes.at(node.mesh);
       tinygltf::Primitive& primitive = mesh.primitives.at(0);
 
       std::vector<uint>*      vec_indices   = new std::vector<uint>();
       std::vector<glm::vec3>* vec_positions = new std::vector<glm::vec3>();
       std::vector<glm::vec2>* vec_uvs       = new std::vector<glm::vec2>();
       std::vector<glm::vec3>* vec_normals   = new std::vector<glm::vec3>();
-      tinygltf::Accessor&     indices_accessor    = loadedModel.accessors[primitive.indices];
-      tinygltf::BufferView&   indices_bufferView  = loadedModel.bufferViews[indices_accessor.bufferView];
-      const tinygltf::Buffer& indices_buffer      = loadedModel.buffers[indices_bufferView.buffer];
-      tinygltf::Accessor&     position_accessor   = loadedModel.accessors[primitive.attributes["POSITION"]];
-      tinygltf::BufferView&   position_bufferView = loadedModel.bufferViews[position_accessor.bufferView];
-      const tinygltf::Buffer& position_buffer     = loadedModel.buffers[position_bufferView.buffer];
-      // tinygltf::Accessor&     uv_accessor         = loadedModel.accessors[primitive.attributes["TEXCOORD_0"]];
-      // tinygltf::BufferView&   uv_bufferView       = loadedModel.bufferViews[uv_accessor.bufferView];
-      // const tinygltf::Buffer& uv_buffer           = loadedModel.buffers[uv_bufferView.buffer];
-      tinygltf::Accessor&     normal_accessor     = loadedModel.accessors[primitive.attributes["NORMAL"]];
-      tinygltf::BufferView&   normal_bufferView   = loadedModel.bufferViews[normal_accessor.bufferView];
-      const tinygltf::Buffer& normal_buffer       = loadedModel.buffers[normal_bufferView.buffer];
+      tinygltf::Accessor&     indices_accessor    = loaded_model.accessors[primitive.indices];
+      tinygltf::BufferView&   indices_bufferView  = loaded_model.bufferViews[indices_accessor.bufferView];
+      const tinygltf::Buffer& indices_buffer      = loaded_model.buffers[indices_bufferView.buffer];
+      tinygltf::Accessor&     position_accessor   = loaded_model.accessors[primitive.attributes["POSITION"]];
+      tinygltf::BufferView&   position_bufferView = loaded_model.bufferViews[position_accessor.bufferView];
+      const tinygltf::Buffer& position_buffer     = loaded_model.buffers[position_bufferView.buffer];
+      // tinygltf::Accessor&     uv_accessor         = loaded_model.accessors[primitive.attributes["TEXCOORD_0"]];
+      // tinygltf::BufferView&   uv_bufferView       = loaded_model.bufferViews[uv_accessor.bufferView];
+      // const tinygltf::Buffer& uv_buffer           = loaded_model.buffers[uv_bufferView.buffer];
+      tinygltf::Accessor&     normal_accessor     = loaded_model.accessors[primitive.attributes["NORMAL"]];
+      tinygltf::BufferView&   normal_bufferView   = loaded_model.bufferViews[normal_accessor.bufferView];
+      const tinygltf::Buffer& normal_buffer       = loaded_model.buffers[normal_bufferView.buffer];
 
       // bufferView byteoffset + accessor byteoffset tells you where the actual position data is within the buffer. From there
       // you should already know how the data needs to be interpreted.
@@ -158,7 +158,7 @@ bool loadGLTF(std::string path, Scene* scene) {
         vec_normals  ->push_back(glm::vec3(normals[i * 3 + 0],   normals[i * 3 + 1],   normals[i * 3 + 2]));
       }
 
-      uint vao = createVAO(vec_indices, vec_positions, vec_uvs, vec_normals);
+      uint vao = create_vao(vec_indices, vec_positions, vec_uvs, vec_normals);
       Model* model = new Model(node.name, vao, vec_indices->size());
       if (primitive.material >= 0) {
         model->material = materials.at(primitive.material);
@@ -191,14 +191,14 @@ bool loadGLTF(std::string path, Scene* scene) {
   return true;
 }
 
-bool loadOBJ (
+bool load_obj(
     string path,
     std::vector<uint>& out_indices,
     std::vector<glm::vec3>& out_vertices,
     std::vector<glm::vec2>& out_uvs,
     std::vector<glm::vec3>& out_normals
 ) {
-  std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
+  std::vector<unsigned int> vertex_indices, uv_indices, normal_indices;
   std::vector<glm::vec3> vertices;
   std::vector<glm::vec2> uvs;
   std::vector<glm::vec3> normals;
@@ -226,44 +226,44 @@ bool loadOBJ (
       fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z );
       normals.push_back(normal);
     } else if (strcmp(lineHeader, "f") == 0) {
-      unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
+      unsigned int vertex_index[3], uv_index[3], normal_index[3];
       int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n",
-          &vertexIndex[0], &uvIndex[0], &normalIndex[0],
-          &vertexIndex[1], &uvIndex[1], &normalIndex[1],
-          &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
+          &vertex_index[0], &uv_index[0], &normal_index[0],
+          &vertex_index[1], &uv_index[1], &normal_index[1],
+          &vertex_index[2], &uv_index[2], &normal_index[2]);
       if (matches != 9) {
         cout << "Found face that is not a triangle when loading " << path << " (obj loader)" << endl;
         return false;
       }
-      vertexIndices.push_back(vertexIndex[0]);
-      vertexIndices.push_back(vertexIndex[1]);
-      vertexIndices.push_back(vertexIndex[2]);
-      uvIndices    .push_back(uvIndex[0]);
-      uvIndices    .push_back(uvIndex[1]);
-      uvIndices    .push_back(uvIndex[2]);
-      normalIndices.push_back(normalIndex[0]);
-      normalIndices.push_back(normalIndex[1]);
-      normalIndices.push_back(normalIndex[2]);
+      vertex_indices.push_back(vertex_index[0]);
+      vertex_indices.push_back(vertex_index[1]);
+      vertex_indices.push_back(vertex_index[2]);
+      uv_indices    .push_back(uv_index[0]);
+      uv_indices    .push_back(uv_index[1]);
+      uv_indices    .push_back(uv_index[2]);
+      normal_indices.push_back(normal_index[0]);
+      normal_indices.push_back(normal_index[1]);
+      normal_indices.push_back(normal_index[2]);
     }
   }
-  out_indices  = vector<uint>(vertexIndices.size());
+  out_indices  = vector<uint>(vertex_indices.size());
   out_vertices = vector<glm::vec3>(vertices.size());
   out_uvs      = vector<glm::vec2>(vertices.size());
   out_normals  = vector<glm::vec3>(vertices.size());
-  for (uint i = 0; i < vertexIndices.size(); i++) {
-    uint vertexIndex = vertexIndices[i] - 1;
-    uint uvIndex     = uvIndices[i] - 1;
-    uint normalIndex = normalIndices[i] - 1;
+  for (uint i = 0; i < vertex_indices.size(); i++) {
+    uint vertex_index = vertex_indices[i] - 1;
+    uint uv_index     = uv_indices[i] - 1;
+    uint normal_index = normal_indices[i] - 1;
 
-    out_indices[i] = vertexIndex;
-    out_vertices[vertexIndex] = vertices.at(vertexIndex);
-    out_uvs[vertexIndex]      = uvs.at(uvIndex);
-    out_normals[vertexIndex]  = normals.at(normalIndex);
+    out_indices[i] = vertex_index;
+    out_vertices[vertex_index] = vertices.at(vertex_index);
+    out_uvs[vertex_index]      =      uvs.at(uv_index);
+    out_normals[vertex_index]  =  normals.at(normal_index);
   }
   return true;
 }
 
-GLuint createVAO(
+GLuint create_vao(
   std::vector <unsigned int>* indices,
   std::vector <glm::vec3>* vertices,
   std::vector <glm::vec2>* uvs,
@@ -303,9 +303,9 @@ GLuint createVAO(
   return vao;
 }
 
-bool loadScene(string path, Scene* scene) {
+bool load_scene(string path, Scene* scene) {
   if (path.rfind(".glb") == (path.size() - string(".glb").size())) {
-    if (!loadGLTF(path, scene)) {
+    if (!load_gltf(path, scene)) {
       return false;
     }
   } else {
@@ -315,16 +315,16 @@ bool loadScene(string path, Scene* scene) {
   return true;
 }
 
-bool loadModel(string path, Model* model) {
+bool load_model(string path, Model* model) {
   if (path.rfind(".obj") == (path.size() - string(".obj").size())) {
     std::vector<uint> indices;
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec2> uvs;
     std::vector<glm::vec3> normals;
-    if (!loadOBJ(path, indices, vertices, uvs, normals)) {
+    if (!load_obj(path, indices, vertices, uvs, normals)) {
       return false;
     }
-    GLuint vao = createVAO(&indices, &vertices, &uvs, &normals);
+    GLuint vao = create_vao(&indices, &vertices, &uvs, &normals);
     uint length = indices.size();
     model->vao = vao;
     model->length = length;

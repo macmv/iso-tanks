@@ -7,7 +7,7 @@ using namespace sf;
 using namespace std;
 
 Display::Display() {
-  createWindow();
+  create_window();
   init();
 }
 
@@ -18,7 +18,7 @@ void Display::init() {
   }
 }
 
-void Display::createWindow() {
+void Display::create_window() {
   glEnable(GL_TEXTURE_2D);
 
   sf::ContextSettings settings;

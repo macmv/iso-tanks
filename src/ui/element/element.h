@@ -15,10 +15,10 @@ class Element {
 
   public:
     Element(Hud* container, Position* position);
-    virtual glm::vec2 getSize() = 0;
-    virtual float getMargin() = 0;
+    virtual glm::vec2 get_size() = 0;
+    virtual float get_margin() = 0;
     virtual void render(glm::vec2 position, glm::vec2 size) = 0;
-    Position getPosition();
+    Position get_position();
 };
 
 #endif

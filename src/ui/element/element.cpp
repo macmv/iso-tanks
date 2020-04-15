@@ -11,7 +11,7 @@ Element::Element(Hud* container, Position* position) : hud(container) {
   this->scale = container->scale;
 }
 
-Position Element::getPosition() {
+Position Element::get_position() {
   return *position;
 }
 

@@ -20,9 +20,9 @@ void set_pos(int i) {
 }
 
 void main() {
-  vec3 lightPos = vec3(0, 0, 0);
-  float specularStrength = 0.5;
-  float diffuseStrength = 1;
+  vec3 light_pos = vec3(0, 0, 0);
+  float specular_strength = 0.5;
+  float diffuse_strength = 1;
   vec3 cam = vec3(0, 0, 10);
 
   // matrix maths
@@ -31,16 +31,16 @@ void main() {
 
   // diffuse lighting
   vec3 normal = cross(gl_in[1].gl_Position.xyz - gl_in[0].gl_Position.xyz, gl_in[2].gl_Position.xyz - gl_in[0].gl_Position.xyz);
-  vec3 surfaceNormal = normalize((model * vec4(normal, 1)).xyz);
-  vec3 toLightVec = normalize(lightPos - world_pos);
-  float brightness = dot(surfaceNormal, toLightVec);
+  vec3 surface_normal = normalize((model * vec4(normal, 1)).xyz);
+  vec3 to_light_lec = normalize(light_pos - world_pos);
+  float brightness = dot(surface_normal, to_light_vec);
   float diffuse = brightness * diffuseStrength;
 
   // specular lighting
-  vec3 camDir = normalize(cam - world_pos);
-  vec3 reflectDir = reflect(-toLightVec, surfaceNormal);
-  float spec = pow(max(dot(camDir, reflectDir), 0.0), 32);
-  float specular = specularStrength * spec;
+  vec3 cam_dir = normalize(cam - world_pos);
+  vec3 reflect_dir = reflect(-to_light_vec, surface_normal);
+  float spec = pow(max(dot(cam_dir, reflect_dir), 0.0), 32);
+  float specular = specular_strength * spec;
 
   // final color
   pass_color = vec4(diffuse * color[0], 1);

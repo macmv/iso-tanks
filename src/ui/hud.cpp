@@ -10,26 +10,26 @@
 
 Hud::Hud(UIRender* render, float scale) {
   this->scale = scale;
-  uiRender = render;
+  ui_render = render;
   Section* health = new Section(this, new Position(true, false), true);
   health->add(new Text(this, new Position(true, false), "Health"));
   health->add(new Slider(this, new Position(true, false),
         0, 100, 75, true,
-        new AngleBar(uiRender, sf::Color::Red, true),
-        new AngleBar(uiRender, sf::Color::Black, true)));
+        new AngleBar(ui_render, sf::Color::Red, true),
+        new AngleBar(ui_render, sf::Color::Black, true)));
   Section* ammo = new Section(this, new Position(false, false), true);
   ammo->add(new Text(this, new Position(false, false), "Ammo"));
   ammo->add(new Slider(this, new Position(false, false),
         0, 100, 75, false,
-        new AngleBar(uiRender, sf::Color::Yellow, false),
-        new AngleBar(uiRender, sf::Color::Black, false)));
+        new AngleBar(ui_render, sf::Color::Yellow, false),
+        new AngleBar(ui_render, sf::Color::Black, false)));
   container = new Section(this, new Position(true, true), false);
   container->add(health);
   container->add(ammo);
 }
 
 void Hud::render(ControlledPlayer* player) {
-  uiRender->start();
-  container->render(glm::vec2(0, 0), uiRender->size());
-  uiRender->end();
+  ui_render->start();
+  container->render(glm::vec2(0, 0), ui_render->size());
+  ui_render->end();
 }

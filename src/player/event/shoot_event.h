@@ -12,7 +12,7 @@ class ShootEvent {
   public:
     ShootEvent(glm::mat4 transform);
     ShootEvent(PlayerShootEvent proto);
-    void toProto(PlayerShootEvent* proto);
+    void to_proto(PlayerShootEvent* proto);
 };
 
 #endif

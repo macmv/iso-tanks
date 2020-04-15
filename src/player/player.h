@@ -7,7 +7,7 @@
 class Player {
   protected:
     btRigidBody* body;
-    float turretAngle = 0;
+    float turret_angle = 0;
     int health;
   public:
     Scene* scene;
@@ -15,9 +15,9 @@ class Player {
   public:
     Player(btRigidBody* body);
     void update();
-    glm::mat4 getTransform();
-    void setTransform(glm::mat4 transform);
-    void setGravity(glm::vec3 gravity);
+    glm::mat4 get_transform();
+    void set_transform(glm::mat4 transform);
+    void set_gravity(glm::vec3 gravity);
 };
 
 #endif

@@ -8,20 +8,20 @@
 using namespace std;
 
 EventList::EventList() {
-  shootEvent = NULL;
+  shoot_event = NULL;
 }
 
-void EventList::toProto(PlayerEvents* proto) {
-  if (shootEvent != NULL) {
+void EventList::to_proto(PlayerEvents* proto) {
+  if (shoot_event != NULL) {
     cout << "Sending shoot event!" << endl;
-    shootEvent->toProto(proto->mutable_shoot());
-    delete shootEvent;
-    shootEvent = NULL;
+    shoot_event->to_proto(proto->mutable_shoot());
+    delete shoot_event;
+    shoot_event = NULL;
   }
 }
 
 void EventList::shoot(ControlledPlayer* player) {
-  delete shootEvent;
-  shootEvent = new ShootEvent(player->getTransform());
+  delete shoot_event;
+  shoot_event = new ShootEvent(player->get_transform());
 }
 

@@ -7,17 +7,17 @@ uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
 
-out vec3 surfaceNormal;
-out vec3 toLightVec;
+out vec3 surface_normal;
+out vec3 to_light_lec;
 
 void main() {
-  vec3 lightPos = vec3(0, 40, 0);
+  vec3 light_pos = vec3(0, 40, 0);
 
   vec3 world_pos = (model * vec4(pos, 1)).xyz;
 
   vec4 screen_pos = projection * view * vec4(world_pos, 1);
   gl_Position = screen_pos;
 
-  surfaceNormal = (model * vec4(normal, 0)).xyz;
-  toLightVec = lightPos - world_pos;
+  surface_normal = (model * vec4(normal, 0)).xyz;
+  to_light_vec = light_pos - world_pos;
 }

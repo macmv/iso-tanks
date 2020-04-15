@@ -10,7 +10,7 @@ class Display {
   public:
     Display();
     void init();
-    void createWindow();
+    void create_window();
     bool update();
     void reset_mouse();
     sf::Vector2u get_window_size();

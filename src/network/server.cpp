@@ -29,8 +29,8 @@ void Server::start() {
   builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
   builder.RegisterService(&service);
 
-  worldThread = thread(startUpdateLoop, this);
-  worldThread.detach();
+  world_thread = thread(start_update_loop, this);
+  world_thread.detach();
 
   unique_ptr<grpc::Server> server = builder.BuildAndStart();
   cout << "Listening on " << server_address << endl;
@@ -39,26 +39,26 @@ void Server::start() {
   cout << "Server stopped" << endl;
 }
 
-uint Server::newPlayer(const NewPlayerRequest* req) {
-  uint id = world->addPlayer();
+uint Server::new_player(const NewPlayerRequest* req) {
+  uint id = world->add_player();
   return id;
 }
 
-void Server::updatePlayerEvents(const PlayerEvents& events) {
+void Server::update_player_events(const PlayerEvents& events) {
   if (events.shoot().exists()) {
-    world->addProjectile(ShootEvent(events.shoot()));
+    world->add_projectile(ShootEvent(events.shoot()));
   }
 }
 
-bool Server::movePlayer(const PlayerProto& player) {
+bool Server::move_player(const PlayerProto& player) {
   uint id = player.id();
-  bool playerExists = world->hasPlayer(id);
+  bool playerExists = world->has_player(id);
   if (!playerExists) {
     cout << "Player with invalid id " << id << " tried to move!" << endl;
     return false;
   }
   glm::mat4 transform = ProtoUtil::to_glm(player.transform());
-  bool success = world->movePlayer(id, transform);
+  bool success = world->move_player(id, transform);
   if (!success) {
     return false;
   }
@@ -67,7 +67,7 @@ bool Server::movePlayer(const PlayerProto& player) {
 }
 
 // id is the id of the player this res is being sent to
-void Server::createRes(uint id, bool needsPositionSet, PlayerUpdateResponse* res) {
+void Server::create_res(uint id, bool needsPositionSet, PlayerUpdateResponse* res) {
   res->clear_player();
   for (std::pair<uint, Player*> pair : *world->players) {
     if (!(pair.first == id && !needsPositionSet)) {
@@ -81,7 +81,7 @@ void Server::update() {
   world->update();
 }
 
-void Server::startUpdateLoop(Server* server) {
+void Server::start_update_loop(Server* server) {
   cout << "World update loop started" << endl;
   struct timespec tim, tim2;
   tim.tv_sec = 0;

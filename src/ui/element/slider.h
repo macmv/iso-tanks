@@ -11,12 +11,12 @@ class Slider : public Element {
     int max;
     int min;
     int value;
-    bool onLeftSide;
+    bool on_left_side;
 
   public:
-    Slider(Hud* hud, Position* position, int min, int max, int value, bool onLeftSide, Drawable* foreground, Drawable* background);
-    glm::vec2 getSize();
-    float getMargin();
+    Slider(Hud* hud, Position* position, int min, int max, int value, bool on_left_side, Drawable* foreground, Drawable* background);
+    glm::vec2 get_size();
+    float get_margin();
     void render(glm::vec2 position, glm::vec2 size);
 };
 

@@ -12,52 +12,52 @@
 using namespace std;
 
 Client::Client(World* world) {
-  this->player = world->thisPlayer;
+  this->player = world->this_player;
   this->world = world;
   stub = Multiplayer::NewStub(
     grpc::CreateChannel("localhost:8001",
                         grpc::InsecureChannelCredentials()));
   id = 0;
-  clientThread = thread(startUpdateLoop, this);
-  clientThread.detach();
-  recentResponse = NULL;
+  client_thread = thread(start_update_loop, this);
+  client_thread.detach();
+  recent_response = NULL;
   events = new EventList();
 }
 
-void Client::updateEvents(ControlledPlayer* player, bool didFire) {
+void Client::update_events(ControlledPlayer* player, bool didFire) {
   if (didFire) {
     events->shoot(player);
   }
 }
 
-void Client::sendUpdate(std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, PlayerUpdateResponse>> stream) {
+void Client::send_update(std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, PlayerUpdateResponse>> stream) {
   PlayerUpdate update;
   ProtoUtil::to_proto(update.mutable_player(), id, player);
-  events->toProto(update.mutable_events());
+  events->to_proto(update.mutable_events());
   PlayerUpdateResponse* res = new PlayerUpdateResponse();
   stream->Write(update);
   stream->Read(res);
-  this->recentResponse = res;
+  this->recent_response = res;
 }
 
-void Client::processResponse() {
-  if (recentResponse == NULL) {
+void Client::process_response() {
+  if (recent_response == NULL) {
     return;
   }
-  for (PlayerProto proto : recentResponse->player()) {
+  for (PlayerProto proto : recent_response->player()) {
     if (id == proto.id()) {
-      world->moveThisPlayer(ProtoUtil::to_glm(proto.transform()));
+      world->move_this_player(ProtoUtil::to_glm(proto.transform()));
     } else {
-      if (!world->hasPlayer(proto.id())) {
-        world->addPlayer(proto.id());
+      if (!world->has_player(proto.id())) {
+        world->add_player(proto.id());
       }
-      world->movePlayer(proto.id(), ProtoUtil::to_glm(proto.transform()));
+      world->move_player(proto.id(), ProtoUtil::to_glm(proto.transform()));
     }
   }
-  recentResponse = NULL;
+  recent_response = NULL;
 }
 
-bool Client::sendNewPlayer() {
+bool Client::send_new_player() {
   grpc::ClientContext* context = new grpc::ClientContext();
   NewPlayerRequest req;
   NewPlayerResponse res;
@@ -71,25 +71,25 @@ bool Client::sendNewPlayer() {
   return true;
 }
 
-std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, PlayerUpdateResponse>> Client::createStream() {
+std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, PlayerUpdateResponse>> Client::create_stream() {
   grpc::ClientContext* context = new grpc::ClientContext();
   return stub->UpdatePlayer(context);
 }
 
-void Client::startUpdateLoop(Client* client) {
+void Client::start_update_loop(Client* client) {
   struct timespec tim, tim2;
   tim.tv_sec = 0;
   // 20 updates per second
   tim.tv_nsec = 50000000;
-  bool success = client->sendNewPlayer();
+  bool success = client->send_new_player();
   if (!success) {
     cout << "Could not join server" << endl;
     return;
   }
-  std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, PlayerUpdateResponse>> stream = client->createStream();
+  std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, PlayerUpdateResponse>> stream = client->create_stream();
   while(1) {
     nanosleep(&tim, &tim2);
-    client->sendUpdate(stream);
+    client->send_update(stream);
   }
 }
 

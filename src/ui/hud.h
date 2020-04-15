@@ -11,7 +11,7 @@ class Hud {
     Section* container;
   public:
     float scale;
-    UIRender* uiRender;
+    UIRender* ui_render;
 
   public:
     Hud(UIRender* render, float scale);
