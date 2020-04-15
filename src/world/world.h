@@ -5,13 +5,16 @@
 #include "player/controlled_player.h"
 #include "player/player.h"
 #include "player/event/shoot_event.h"
+#include "player/projectile/projectile.h"
 #include "opengl/camera.h"
 #include "debug.h"
+#include "models/scene_manager.h"
 #include <bullet/btBulletDynamicsCommon.h>
 #include <time.h>
 #include <unordered_map>
 
 class ControlledPlayer;
+class Projectile;
 
 class World {
   private:
@@ -25,6 +28,7 @@ class World {
     clock_t                                               prev_update;
   public:
     std::unordered_map<uint, Player*>*       players;
+    std::unordered_map<uint, Projectile*>*   projectiles;
     ControlledPlayer*                        this_player;
     std::vector<ModelInstance*>*             models;
 
@@ -38,6 +42,7 @@ class World {
     bool move_player(uint id, glm::mat4 transform);
     bool move_this_player(glm::mat4 transform);
     void add_projectile(ShootEvent event);
+    void add_projectile(uint id, ShootEvent event);
     void update_controls(float mouse_x_delta);
     void update();
     void draw_debug();

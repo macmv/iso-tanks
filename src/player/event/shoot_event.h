@@ -6,7 +6,7 @@
 #include "src/proto/multiplayer.grpc.pb.h"
 
 class ShootEvent {
-  private:
+  public:
     glm::mat4 transform;
 
   public:

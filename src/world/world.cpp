@@ -1,6 +1,7 @@
 #include "world.h"
 #include "opengl/camera.h"
 #include "player/player.h"
+#include "player/projectile/projectile.h"
 #include <bullet/btBulletDynamicsCommon.h>
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
@@ -234,5 +235,26 @@ void World::update() {
 }
 
 void World::add_projectile(ShootEvent event) {
+  uint id = (uint) rand();
+  add_projectile(id, event);
+}
 
+void World::add_projectile(uint id, ShootEvent event) {
+  btCollisionShape* shape = collision_shapes->at("tank");
+  btTransform start_transform;
+  start_transform.setIdentity();
+
+  float mass = 1.f;
+  btVector3 local_inertia(0, 0, 0);
+  shape->calculateLocalInertia(mass, local_inertia);
+
+  btDefaultMotionState* motion_state = new btDefaultMotionState(start_transform);
+  btRigidBody::btRigidBodyConstructionInfo info(mass, motion_state, shape, local_inertia);
+  btRigidBody* body = new btRigidBody(info);
+  body->setFriction(0);
+  body->setSpinningFriction(0);
+
+  dynamics_world->addRigidBody(body);
+
+  projectiles->insert({ id, new Projectile(event, body) });
 }

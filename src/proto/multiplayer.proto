@@ -13,7 +13,7 @@ message PlayerUpdate {
 
 message PlayerUpdateResponse {
   repeated PlayerProto player = 1;
-  repeated Projectile new_projectiles = 2;
+  repeated ProjectileProto new_projectiles = 2;
 }
 
 message NewPlayerRequest {
@@ -33,7 +33,7 @@ message PlayerShootEvent {
   Transform transform = 2;
 }
 
-message Projectile {
+message ProjectileProto {
   Type type = 1;
   Transform transform = 2;
 
