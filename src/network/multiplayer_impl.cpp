@@ -13,7 +13,7 @@ grpc::Status MultiplayerImpl::UpdatePlayer(grpc::ServerContext* context, grpc::S
   PlayerUpdate update;
   cout << "Connection with client opened" << endl;
   while (stream->Read(&update)) {
-    server->update_player_events(update.events());
+    server->update_player_events(update.player(), update.events());
     bool validPlayer = server->move_player(update.player());
     if (!validPlayer) {
       return grpc::Status(grpc::StatusCode::UNAUTHENTICATED, "Invalid player id");

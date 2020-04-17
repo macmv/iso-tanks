@@ -16,6 +16,7 @@ Projectile::Projectile(ProjectileProto proto, btRigidBody* body) {
                                                        transform[0][2], transform[1][2], transform[2][2]),
                                              btVector3(transform[3][0], transform[3][1], transform[3][2]));
   body->setWorldTransform(body_transform);
+  body->setLinearVelocity(btVector3(proto.velocity().x(), proto.velocity().y(), proto.velocity().z()));
   this->body = body;
 }
 

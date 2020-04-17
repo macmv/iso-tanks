@@ -44,8 +44,10 @@ class World {
     bool has_player(uint id);
     bool move_player(uint id, glm::mat4 transform);
     bool move_this_player(glm::mat4 transform);
+    // client function
     void add_projectile(ProjectileProto proto);
-    void add_projectile(uint id, ProjectileProto proto);
+    // server function
+    void add_projectile(uint player_id, ProjectileProto proto);
     bool has_projectile(uint id);
     void update_controls(float mouse_x_delta);
     void update();

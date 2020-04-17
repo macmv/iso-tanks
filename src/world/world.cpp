@@ -169,20 +169,20 @@ void World::update() {
     std::chrono::system_clock::now().time_since_epoch() /
     std::chrono::milliseconds(1);
 
-  cout << "----------------------------------------------" << endl;
-  for (int j = dynamics_world->getNumCollisionObjects() - 1; j >= 0; j--) {
-    btCollisionObject* obj = dynamics_world->getCollisionObjectArray()[j];
-    btRigidBody* body = btRigidBody::upcast(obj);
-    btTransform trans;
-    if (body && body->getMotionState()) {
-      body->getMotionState()->getWorldTransform(trans);
-    } else {
-      trans = obj->getWorldTransform();
-    }
-    printf("Object: %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
-  }
-  cout << "There are " << dynamics_world->getNumCollisionObjects() << " objects in the world" << endl;
-  cout << "----------------------------------------------" << endl;
+  // cout << "----------------------------------------------" << endl;
+  // for (int j = dynamics_world->getNumCollisionObjects() - 1; j >= 0; j--) {
+  //   btCollisionObject* obj = dynamics_world->getCollisionObjectArray()[j];
+  //   btRigidBody* body = btRigidBody::upcast(obj);
+  //   btTransform trans;
+  //   if (body && body->getMotionState()) {
+  //     body->getMotionState()->getWorldTransform(trans);
+  //   } else {
+  //     trans = obj->getWorldTransform();
+  //   }
+  //   printf("Object: %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
+  // }
+  // cout << "There are " << dynamics_world->getNumCollisionObjects() << " objects in the world" << endl;
+  // cout << "----------------------------------------------" << endl;
 
   // makes sure no one touches the world while stepping the simulation
   world_mutex.lock();
@@ -213,16 +213,29 @@ void World::update() {
   }
 }
 
+// client function
 void World::add_projectile(ProjectileProto proto) {
   btRigidBody* body = add_body(glm::mat4(1), "missile", .1f);
 
   if (scene_manager == NULL) {
-    // This is only run on the server, so we create the id
-    uint id = (uint) rand();
-    projectiles->insert({ id, new Missile(proto, body) });
-  } else {
-    projectiles->insert({ proto.id(), new Missile(proto, body, scene_manager) });
+    cerr << "Cannot add_projectile without player_id on server!" << endl;
+    cerr << "Force exiting server" << endl;
+    exit(1);
   }
+  projectiles->insert({ proto.id(), new Missile(proto, body, scene_manager) });
+}
+
+// server function
+void World::add_projectile(uint player_id, ProjectileProto proto) {
+  btRigidBody* body = add_body(glm::mat4(1), "missile", .1f);
+
+  if (scene_manager != NULL) {
+    cerr << "Cannot add_projectile with player_id on client!" << endl;
+    cerr << "Force exiting client" << endl;
+    exit(1);
+  }
+  uint id = (uint) rand();
+  projectiles->insert({ id, new Missile(proto, body) });
 }
 
 bool World::has_projectile(uint id) {

@@ -37,6 +37,7 @@ message ProjectileProto {
   Type type = 1;
   uint32 id = 2;
   Transform transform = 3;
+  Transform.Vector3 velocity = 4;
 
   enum Type {
     UNDEFINED = 0;
