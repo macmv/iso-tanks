@@ -151,7 +151,10 @@ void World::add_player(uint id) {
   body->setFriction(.5);
   body->setSpinningFriction(.3);
 
+  // makes sure no one is editing the world while we add a body
+  world_mutex.lock();
   dynamics_world->addRigidBody(body);
+  world_mutex.unlock();
 
   Player* player = new Player(body, scene_manager);
   players->insert({id, player});
@@ -229,7 +232,10 @@ void World::update() {
   cout << "There are " << dynamics_world->getNumCollisionObjects() << " objects in the world" << endl;
   cout << "----------------------------------------------" << endl;
 
+  // makes sure no one touches the world while stepping the simulation
+  world_mutex.lock();
   dynamics_world->stepSimulation((double) (update_time - prev_update) / 1000, 10);
+  world_mutex.unlock();
   prev_update = update_time;
 
   Player* player;
@@ -271,7 +277,10 @@ void World::add_projectile(ProjectileProto proto) {
   body->setFriction(0);
   body->setSpinningFriction(0);
 
+  // makes sure no one is editing the world while we add a body
+  world_mutex.lock();
   dynamics_world->addRigidBody(body);
+  world_mutex.unlock();
 
   if (scene_manager == NULL) {
     // This is only run on the server, so we create the id

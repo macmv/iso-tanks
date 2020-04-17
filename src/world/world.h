@@ -32,6 +32,7 @@ class World {
     ControlledPlayer*                        this_player = NULL;
     std::vector<ModelInstance*>*             models = new std::vector<ModelInstance*>();
     SceneManager*                            scene_manager = NULL;
+    std::mutex                               world_mutex;
 
   public:
     World(Terrain* terrain, bool needs_debug);
