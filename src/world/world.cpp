@@ -50,30 +50,16 @@ World::World(Terrain* terrain, bool needs_debug) {
   t.setIdentity();
   t.setOrigin(btVector3(0, 0, 1));
   shape->addChildShape(t, cylinder);
-  collision_shapes->insert( {"player", shape} );
+  collision_shapes->insert({ "player", shape });
 
   cylinder = new btCylinderShape(btVector3(1, 1, 1));
   t.setIdentity();
   t.setOrigin(btVector3(0, 0, 0));
-  collision_shapes->insert( {"missile", cylinder} );
+  collision_shapes->insert({ "missile", cylinder });
 
-  btTransform ground_transform;
-  ground_transform.setIdentity();
-  ground_transform.setOrigin(btVector3(0, 0, 0));
-
-  float mass = 0.f;
-
-  btVector3 local_inertia(0, 0, 0);
-
-  //using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
-  btDefaultMotionState* motion_state = new btDefaultMotionState(ground_transform);
-  btRigidBody::btRigidBodyConstructionInfo info(mass, motion_state, ground_shape, local_inertia);
-  btRigidBody* body = new btRigidBody(info);
+  btRigidBody* body = add_body(glm::mat4(1), "ground", 0);
   body->setFriction(.8);
   body->setRollingFriction(.8);
-
-  //add the body to the dynamics world
-  dynamics_world->addRigidBody(body);
 
   if (needs_debug) {
     debug_draw = new DebugDraw();
@@ -104,26 +90,9 @@ void World::clean() {
 }
 
 void World::create_this_player(Camera* camera) {
-  btCollisionShape* shape = collision_shapes->at("player");
-
-  btTransform start_transform;
-  start_transform.setIdentity();
-  start_transform.setOrigin(btVector3(0, -970, 0));
-  // startTransform.setOrigin(btVector3(0, 840, 0));
-  // startTransform.getBasis().setEulerZYX(M_PI, 0, 0);
-
-  float mass = 1.f;
-  btVector3 local_inertia(0, 0, 0);
-  shape->calculateLocalInertia(mass, local_inertia);
-
-  //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-  btDefaultMotionState* motion_state = new btDefaultMotionState(start_transform);
-  btRigidBody::btRigidBodyConstructionInfo info(mass, motion_state, shape, local_inertia);
-  btRigidBody* body = new btRigidBody(info);
+  btRigidBody* body = add_body(glm::translate(glm::mat4(1), glm::vec3(0, -970, 0)), "player", 1);
   body->setFriction(.5);
   body->setSpinningFriction(.3);
-
-  dynamics_world->addRigidBody(body);
 
   this_player = new ControlledPlayer(body, scene_manager, camera);
 }
@@ -135,26 +104,9 @@ uint World::add_player() {
 }
 
 void World::add_player(uint id) {
-  btCollisionShape* shape = collision_shapes->at("player");
-
-  btTransform start_transform;
-  start_transform.setIdentity();
-
-  float mass = 1.f;
-  btVector3 local_inertia(0, 0, 0);
-  shape->calculateLocalInertia(mass, local_inertia);
-
-  //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-  btDefaultMotionState* motion_state = new btDefaultMotionState(start_transform);
-  btRigidBody::btRigidBodyConstructionInfo info(mass, motion_state, shape, local_inertia);
-  btRigidBody* body = new btRigidBody(info);
+  btRigidBody* body = add_body(glm::mat4(1), "player", 1);
   body->setFriction(.5);
   body->setSpinningFriction(.3);
-
-  // makes sure no one is editing the world while we add a body
-  world_mutex.lock();
-  dynamics_world->addRigidBody(body);
-  world_mutex.unlock();
 
   Player* player = new Player(body, scene_manager);
   players->insert({id, player});
@@ -262,25 +214,7 @@ void World::update() {
 }
 
 void World::add_projectile(ProjectileProto proto) {
-  btCollisionShape* shape = collision_shapes->at("missile");
-
-  btTransform start_transform;
-  start_transform.setIdentity();
-
-  float mass = 1.f;
-  btVector3 local_inertia(0, 0, 0);
-  shape->calculateLocalInertia(mass, local_inertia);
-
-  btDefaultMotionState* motion_state = new btDefaultMotionState(start_transform);
-  btRigidBody::btRigidBodyConstructionInfo info(mass, motion_state, shape, local_inertia);
-  btRigidBody* body = new btRigidBody(info);
-  body->setFriction(0);
-  body->setSpinningFriction(0);
-
-  // makes sure no one is editing the world while we add a body
-  world_mutex.lock();
-  dynamics_world->addRigidBody(body);
-  world_mutex.unlock();
+  btRigidBody* body = add_body(glm::mat4(1), "missile", .1f);
 
   if (scene_manager == NULL) {
     // This is only run on the server, so we create the id
@@ -293,4 +227,27 @@ void World::add_projectile(ProjectileProto proto) {
 
 bool World::has_projectile(uint id) {
   return projectiles->find(id) != projectiles->end();
+}
+
+btRigidBody* World::add_body(glm::mat4 trans, string shape_name, float mass) {
+  btCollisionShape* shape = collision_shapes->at(shape_name);
+
+  btTransform start_transform = btTransform(btMatrix3x3(trans[0][0], trans[1][0], trans[2][0],
+                                                        trans[0][1], trans[1][1], trans[2][1],
+                                                        trans[0][2], trans[1][2], trans[2][2]),
+                                            btVector3(trans[3][0], trans[3][1], trans[3][2]));
+
+  btVector3 local_inertia(0, 0, 0);
+  shape->calculateLocalInertia(mass, local_inertia);
+
+  btDefaultMotionState* motion_state = new btDefaultMotionState(start_transform);
+  btRigidBody::btRigidBodyConstructionInfo info(mass, motion_state, shape, local_inertia);
+  btRigidBody* body = new btRigidBody(info);
+
+  // makes sure no one is editing the world while we add a body
+  world_mutex.lock();
+  dynamics_world->addRigidBody(body);
+  world_mutex.unlock();
+
+  return body;
 }

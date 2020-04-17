@@ -52,6 +52,8 @@ class World {
     void draw_debug();
     void clean();
     ControlledPlayer* get_this_player();
+  private:
+    btRigidBody* add_body(glm::mat4 transform, string shape_name, float mass);
 };
 
 #endif
