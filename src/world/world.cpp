@@ -52,7 +52,7 @@ World::World(Terrain* terrain, bool needs_debug) {
   shape->addChildShape(t, cylinder);
   collision_shapes->insert( {"player", shape} );
 
-  cylinder = new btCylinderShapeX(btVector3(1, 1, 1));
+  cylinder = new btCylinderShape(btVector3(1, 1, 1));
   t.setIdentity();
   t.setOrigin(btVector3(0, 0, 0));
   collision_shapes->insert( {"missile", cylinder} );
@@ -108,13 +108,13 @@ void World::create_this_player(Camera* camera) {
 
   btTransform start_transform;
   start_transform.setIdentity();
+  start_transform.setOrigin(btVector3(0, -970, 0));
+  // startTransform.setOrigin(btVector3(0, 840, 0));
+  // startTransform.getBasis().setEulerZYX(M_PI, 0, 0);
 
   float mass = 1.f;
   btVector3 local_inertia(0, 0, 0);
   shape->calculateLocalInertia(mass, local_inertia);
-  start_transform.setOrigin(btVector3(0, -970, 0));
-  // startTransform.setOrigin(btVector3(0, 840, 0));
-  // startTransform.getBasis().setEulerZYX(M_PI, 0, 0);
 
   //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
   btDefaultMotionState* motion_state = new btDefaultMotionState(start_transform);
@@ -213,6 +213,22 @@ void World::update() {
   ulong update_time =
     std::chrono::system_clock::now().time_since_epoch() /
     std::chrono::milliseconds(1);
+
+  cout << "----------------------------------------------" << endl;
+  for (int j = dynamics_world->getNumCollisionObjects() - 1; j >= 0; j--) {
+    btCollisionObject* obj = dynamics_world->getCollisionObjectArray()[j];
+    btRigidBody* body = btRigidBody::upcast(obj);
+    btTransform trans;
+    if (body && body->getMotionState()) {
+      body->getMotionState()->getWorldTransform(trans);
+    } else {
+      trans = obj->getWorldTransform();
+    }
+    printf("Object: %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
+  }
+  cout << "There are " << dynamics_world->getNumCollisionObjects() << " objects in the world" << endl;
+  cout << "----------------------------------------------" << endl;
+
   dynamics_world->stepSimulation((double) (update_time - prev_update) / 1000, 10);
   prev_update = update_time;
 
@@ -237,21 +253,11 @@ void World::update() {
     }
     projectile->update();
   }
-  // for (int j = dynamics_world->getNumCollisionObjects() - 1; j >= 0; j--) {
-  //   btCollisionObject* obj = dynamics_world->getCollisionObjectArray()[j];
-  //   btRigidBody* body = btRigidBody::upcast(obj);
-  //   btTransform trans;
-  //   if (body && body->getMotionState()) {
-  //     body->getMotionState()->getWorldTransform(trans);
-  //   } else {
-  //     trans = obj->getWorldTransform();
-  //   }
-  //   printf("world pos object %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
-  // }
 }
 
 void World::add_projectile(ProjectileProto proto) {
   btCollisionShape* shape = collision_shapes->at("missile");
+
   btTransform start_transform;
   start_transform.setIdentity();
 
