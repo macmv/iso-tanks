@@ -17,6 +17,7 @@ DebugDraw::DebugDraw() {
   glEnableVertexAttribArray(1);
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
   glBindVertexArray(0);
+  line_data = new std::vector<glm::vec3>();
 }
 
 void DebugDraw::render_lines() {
