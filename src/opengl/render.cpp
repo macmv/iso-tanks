@@ -105,6 +105,8 @@ void Render::render(Particle* particle) {
     exit(1);
   }
   Shader* shader = particle->get_shader();
+  glUseProgram(shader->program_id);
+  camera->load_mat(shader);
 
   shader->load_model(particle->get_transform());
   shader->load_material(particle->get_material());
@@ -118,4 +120,12 @@ void Render::render(Particle* particle) {
   glDisableVertexAttribArray(1);
   glDisableVertexAttribArray(2);
   glBindVertexArray(0);
+  GLenum err = glGetError();
+  if (err != 0) {
+    cerr << "Opengl error code: " << err << endl;
+    cerr << "Program exiting" << endl;
+    exit(1);
+  }
+
+  glUseProgram(0);
 }

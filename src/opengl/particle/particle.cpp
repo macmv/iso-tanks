@@ -3,6 +3,8 @@
 #include <GL/glew.h>
 #include <vector>
 #include "opengl/loader.h"
+#include <iostream>
+#include <glm/gtx/string_cast.hpp>
 
 using namespace std;
 
@@ -19,8 +21,9 @@ Particle::Particle(int count, float size, float area, Material* material, string
   for (int i = 0; i < count; i++) {
     indices->push_back(i);
     vertices->push_back(glm::vec3(rand() % 10000 / 10000.0 * area, rand() % 10000 / 10000.0 * area, rand() % 10000 / 10000.0 * area));
-    uvs->push_back(glm::vec2(0, 0));
-    normals->push_back(glm::vec3(0, 0, 0));
+    uvs->push_back(glm::vec2(size, size));
+    normals->push_back(glm::vec3(1, 0, 0));
+    cout << glm::to_string(vertices->at(i)) << endl;
   }
   vao = Loader::create_vao(indices, vertices, uvs, normals);
 }
