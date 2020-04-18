@@ -4,8 +4,8 @@
 #include "src/proto/multiplayer.grpc.pb.h"
 #include "network/proto_util.h"
 
-ShootEvent::ShootEvent(glm::mat4 transform) {
-  this->transform = transform;
+ShootEvent::ShootEvent(ControlledPlayer* player) {
+  transform = player->get_transform() * glm::rotate(glm::mat4(1), player->turret_angle, glm::vec3(0, 1, 0));
 }
 
 ShootEvent::ShootEvent(PlayerShootEvent proto) {

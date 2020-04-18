@@ -242,7 +242,9 @@ void World::add_projectile(uint player_id, ProjectileProto proto) {
 
   glm::mat4 transform = ProtoUtil::to_glm(proto.transform());
   // rotate upward vector to face the corrrect direction
-  glm::vec3 vel = glm::vec3(transform * glm::vec4(0, 1, 0, 0));
+  glm::vec3 vel = glm::vec3(transform * glm::vec4(0, 0, 1, 0));
+  // make the projectile spawn in front of the player, not inside
+  transform[3] = transform[3] + glm::vec4(vel * 1.5f, 0);
   // gotta go fast
   vel = vel * 200.f;
 

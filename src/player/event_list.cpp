@@ -21,6 +21,6 @@ void EventList::to_proto(PlayerEvents* proto) {
 
 void EventList::shoot(ControlledPlayer* player) {
   delete shoot_event;
-  shoot_event = new ShootEvent(player->get_transform());
+  shoot_event = new ShootEvent(player);
 }
 

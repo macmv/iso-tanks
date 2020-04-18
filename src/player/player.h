@@ -7,10 +7,10 @@
 class Player {
   protected:
     btRigidBody* body;
-    float turret_angle = 0;
     int health;
     glm::mat4* transform;
   public:
+    float turret_angle = 0;
     Scene* scene;
 
   public:
