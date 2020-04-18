@@ -19,6 +19,7 @@ class Client {
     World* world;
     PlayerUpdateResponse* recent_response;
     EventList* events;
+    std::mutex recent_response_mutex;
 
   public:
     Client(World* world);

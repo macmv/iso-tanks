@@ -37,19 +37,25 @@ void Client::send_update(std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, 
   PlayerUpdateResponse* res = new PlayerUpdateResponse();
   stream->Write(update);
   stream->Read(res);
+  recent_response_mutex.lock();
   this->recent_response = res;
+  recent_response_mutex.unlock();
 }
 
 void Client::process_response() {
+  recent_response_mutex.lock();
   if (recent_response == NULL) {
+    recent_response_mutex.unlock();
     return;
   }
-  for (ProjectileProto proto : recent_response->projectile()) {
+  PlayerUpdateResponse res = *recent_response;
+  recent_response_mutex.unlock();
+  for (ProjectileProto proto : res.projectile()) {
     if (!world->has_projectile(proto.id())) {
       world->add_projectile(proto);
     }
   }
-  for (PlayerProto proto : recent_response->player()) {
+  for (PlayerProto proto : res.player()) {
     if (id == proto.id()) {
       world->move_this_player(ProtoUtil::to_glm(proto.transform()));
     } else {
@@ -59,7 +65,10 @@ void Client::process_response() {
       world->move_player(proto.id(), ProtoUtil::to_glm(proto.transform()));
     }
   }
+  recent_response_mutex.lock();
+  delete recent_response;
   recent_response = NULL;
+  recent_response_mutex.unlock();
 }
 
 bool Client::send_new_player() {
