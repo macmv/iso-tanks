@@ -9,6 +9,7 @@
 #include <SFML/Graphics/Font.hpp>
 #include "ui_render.h"
 #include "ui/hud.h"
+#include "particle/particle.h"
 
 class UIRender;
 class Hud;
@@ -36,6 +37,7 @@ class Render {
     void update();                // updates display
     void render(Scene* scene);    // renders scene
     void render(ModelInstance* instance); // renders model
+    void render(Particle* particle); // renders particle cloud
 
   private:
     void create_programs();

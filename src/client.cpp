@@ -30,6 +30,9 @@ int main() {
 
   Client* client = new Client(world);
 
+  Particle* test_particle = new CircleParticle(10, 0.1f, 1, glm::vec3(0.2, 0.8, 0.1));
+  test_particle.set_position(glm::vec3(0, -970, 0));
+
   while (true) {
     client->process_response();
     world->update_controls(render->camera->get_mouse_delta().x);
@@ -56,6 +59,8 @@ int main() {
     }
     render->render(world->get_this_player()->scene);
     render->end();
+
+    render->render(test_particle);
 
     // render->use("line");
     // world->draw_debug();
