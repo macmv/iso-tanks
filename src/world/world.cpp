@@ -225,7 +225,6 @@ void World::add_projectile(ProjectileProto proto) {
   btRigidBody* body = add_body(glm::mat4(1), "missile", .1f);
 
   glm::mat4 transform = ProtoUtil::to_glm(proto.transform());
-  // rotate upward vector to face the corrrect direction
   glm::vec3 vel = ProtoUtil::to_glm(proto.velocity());
 
   projectiles->insert({ proto.id(), new Missile(transform, vel, body, scene_manager) });
@@ -245,7 +244,7 @@ void World::add_projectile(uint player_id, ProjectileProto proto) {
   // rotate upward vector to face the corrrect direction
   glm::vec3 vel = glm::vec3(transform * glm::vec4(0, 1, 0, 0));
   // gotta go fast
-  vel = vel * 2.f;
+  vel = vel * 200.f;
 
   uint id = (uint) rand();
   projectiles->insert({ id, new Missile(transform, vel, body) });
