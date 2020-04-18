@@ -2,6 +2,7 @@
 #include "opengl/camera.h"
 #include "player/player.h"
 #include "player/projectile/missile.h"
+#include "network/proto_util.h"
 #include <bullet/btBulletDynamicsCommon.h>
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
@@ -215,27 +216,39 @@ void World::update() {
 
 // client function
 void World::add_projectile(ProjectileProto proto) {
-  btRigidBody* body = add_body(glm::mat4(1), "missile", .1f);
-
   if (scene_manager == NULL) {
     cerr << "Cannot add_projectile without player_id on server!" << endl;
     cerr << "Force exiting server" << endl;
     exit(1);
   }
-  projectiles->insert({ proto.id(), new Missile(proto, body, scene_manager) });
+
+  btRigidBody* body = add_body(glm::mat4(1), "missile", .1f);
+
+  glm::mat4 transform = ProtoUtil::to_glm(proto.transform());
+  // rotate upward vector to face the corrrect direction
+  glm::vec3 vel = ProtoUtil::to_glm(proto.velocity());
+
+  projectiles->insert({ proto.id(), new Missile(transform, vel, body, scene_manager) });
 }
 
 // server function
 void World::add_projectile(uint player_id, ProjectileProto proto) {
-  btRigidBody* body = add_body(glm::mat4(1), "missile", .1f);
-
   if (scene_manager != NULL) {
     cerr << "Cannot add_projectile with player_id on client!" << endl;
     cerr << "Force exiting client" << endl;
     exit(1);
   }
+
+  btRigidBody* body = add_body(glm::mat4(1), "missile", .1f);
+
+  glm::mat4 transform = ProtoUtil::to_glm(proto.transform());
+  // rotate upward vector to face the corrrect direction
+  glm::vec3 vel = glm::vec3(transform * glm::vec4(0, 1, 0, 0));
+  // gotta go fast
+  vel = vel * 2.f;
+
   uint id = (uint) rand();
-  projectiles->insert({ id, new Missile(proto, body) });
+  projectiles->insert({ id, new Missile(transform, vel, body) });
 }
 
 bool World::has_projectile(uint id) {

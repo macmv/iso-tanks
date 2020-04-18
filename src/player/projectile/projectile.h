@@ -11,15 +11,17 @@ class Projectile {
   private:
     Scene* scene = NULL;
     glm::mat4 transform;
+    glm::vec3 velocity;
     btRigidBody* body;
 
   public:
-    Projectile(ProjectileProto proto, btRigidBody* body, SceneManager* scene_manager, std::string scene_name);
-    Projectile(ProjectileProto proto, btRigidBody* body);
+    Projectile(glm::mat4 transform, glm::vec3 velocity, btRigidBody* body, SceneManager* scene_manager, std::string scene_name);
+    Projectile(glm::mat4 transform, glm::vec3 velocity, btRigidBody* body);
     void update();
     float get_speed();
     Scene* get_scene();
     glm::mat4 get_transform();
+    glm::vec3 get_velocity();
 };
 
 #endif

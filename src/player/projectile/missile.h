@@ -5,8 +5,8 @@
 
 class Missile : public Projectile {
   public:
-    Missile(ProjectileProto proto, btRigidBody* body, SceneManager* scene_manager);
-    Missile(ProjectileProto proto, btRigidBody* body);
+    Missile(glm::mat4 transform, glm::vec3 velocity, btRigidBody* body, SceneManager* scene_manager);
+    Missile(glm::mat4 transform, glm::vec3 velocity, btRigidBody* body);
 };
 
 #endif
