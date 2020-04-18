@@ -10,20 +10,25 @@ class Particle {
     // number of particles to render
     int count;
     // size of each particle
-    int size;
+    float size;
+    // range of randomness of size
+    float size_range;
     // area to spread out all the particles
     float area;
   private:
     glm::vec3 position;
     Material* material;
+    Shader* shader;
+    GLuint vao;
 
   public:
-    Particle();
+    Particle(int count, float size, float area, Material* material, std::string shader_name);
+    void set_position(glm::vec3 position);
     glm::mat4 get_transform();
     Material* get_material();
-    virtual Shader* get_shader() = 0;
-    virtual GLuint get_vao() = 0;
-    virtual GLuint get_length() = 0;
+    Shader* get_shader();
+    GLuint get_vao();
+    GLuint get_length();
 };
 
 #endif
