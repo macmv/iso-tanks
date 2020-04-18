@@ -79,6 +79,12 @@ void Render::render(ModelInstance* instance) {
   glDisableVertexAttribArray(1);
   glDisableVertexAttribArray(2);
   glBindVertexArray(0);
+  GLenum err = glGetError();
+  if (err != 0) {
+    cerr << "Opengl error code: " << err << endl;
+    cerr << "Program exiting" << endl;
+    exit(1);
+  }
 }
 
 void Render::render(Scene* scene) {
@@ -106,10 +112,12 @@ void Render::render(Particle* particle) {
   }
   Shader* shader = particle->get_shader();
   glUseProgram(shader->program_id);
-  camera->load_mat(shader);
 
+  camera->load_mat(shader);
   shader->load_model(particle->get_transform());
   shader->load_material(particle->get_material());
+  sf::Vector2u size = display->get_window_size();
+  shader->load_aspect((float) size.x / size.y);
 
   glBindVertexArray(particle->get_vao());
   glEnableVertexAttribArray(0);

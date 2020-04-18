@@ -45,6 +45,7 @@ Shader::Shader(string filename, bool has_geometry) {
   view_id       = glGetUniformLocation(program_id, "view");
   model_id      = glGetUniformLocation(program_id, "model");
   color_id      = glGetUniformLocation(program_id, "color");
+  aspect_id     = glGetUniformLocation(program_id, "aspect");
 }
 
 void Shader::load_projection(glm::mat4 projection) {
@@ -57,6 +58,10 @@ void Shader::load_view(glm::mat4 view) {
 
 void Shader::load_model(glm::mat4 model) {
   glUniformMatrix4fv(model_id, 1, GL_FALSE, &model[0][0]);
+}
+
+void Shader::load_aspect(float aspect) {
+  glUniform1f(aspect_id, aspect);
 }
 
 void Shader::load_material(Material* material) {

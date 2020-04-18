@@ -12,6 +12,7 @@ class Shader {
     GLuint view_id;
     GLuint model_id;
     GLuint color_id;
+    GLuint aspect_id;
   public:
     GLuint program_id;
 
@@ -21,6 +22,7 @@ class Shader {
     void load_view(glm::mat4 view);
     void load_model(glm::mat4 model);
     void load_material(Material* material);
+    void load_aspect(float aspect);
 };
 
 #endif
