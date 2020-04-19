@@ -9,6 +9,7 @@ class Material {
 
   public:
     Material();
+    Material(glm::vec3 color);
 };
 
 #endif
