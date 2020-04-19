@@ -6,7 +6,6 @@ layout (triangle_strip, max_vertices = 24) out; // (num_verts - 2) * 3
 
 uniform mat4 projection;
 uniform mat4 view;
-uniform mat4 model;
 uniform float aspect;
 
 in vec3 color[];
@@ -24,7 +23,7 @@ void add_point(vec2 offset) {
 };
 
 void main() {
-  pos = projection * view * model * gl_in[0].gl_Position;
+  pos = projection * view * gl_in[0].gl_Position;
 
   float w = uv[0].x / 2;
   float h = uv[0].y / 2 * aspect;

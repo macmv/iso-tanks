@@ -25,6 +25,6 @@ glm::vec3 Particle::get_color() {
 }
 
 bool Particle::alive() {
-  return (float) (clock() - time_created) / CLOCKS_PER_SEC < .5;
+  return (float) (clock() - time_created) / CLOCKS_PER_SEC < .1;
 }
 

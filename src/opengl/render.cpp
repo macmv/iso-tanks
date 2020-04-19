@@ -114,7 +114,6 @@ void Render::render(ParticleCloud* cloud) {
   glUseProgram(shader->program_id);
 
   camera->load_mat(shader);
-  shader->load_model(cloud->get_transform());
   shader->load_material(cloud->get_material());
   sf::Vector2u size = display->get_window_size();
   shader->load_aspect((float) size.x / size.y);
