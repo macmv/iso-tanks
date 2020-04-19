@@ -19,8 +19,6 @@ void Display::init() {
 }
 
 void Display::create_window() {
-  glEnable(GL_TEXTURE_2D);
-
   sf::ContextSettings settings;
   settings.depthBits = 24;
   settings.stencilBits = 8;
@@ -36,6 +34,9 @@ void Display::create_window() {
 
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
+  glEnable(GL_TEXTURE_2D);
+  // glEnable(GL_BLEND);
+  // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 bool Display::update() {

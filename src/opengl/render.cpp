@@ -128,6 +128,7 @@ void Render::render(ParticleCloud* cloud) {
   glDisableVertexAttribArray(1);
   glDisableVertexAttribArray(2);
   glBindVertexArray(0);
+
   GLenum err = glGetError();
   if (err != 0) {
     cerr << "Opengl error code: " << err << endl;
