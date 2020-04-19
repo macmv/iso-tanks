@@ -30,11 +30,7 @@ int main() {
 
   Client* client = new Client(world);
 
-  ParticleCloud* test_particle = new ParticleCloud(10, 0.1f, 1, new Material(), "src/shader/circle_particle");
-  test_particle->set_position(glm::vec3(0, -975, 0));
-
   while (true) {
-    test_particle->update();
     client->process_response();
     world->update_controls(render->camera->get_mouse_delta().x);
     world->update();
@@ -55,13 +51,15 @@ int main() {
     Projectile* projectile;
     for (pair<uint, Projectile*> item : *world->projectiles) {
       projectile = item.second;
-      // cout << "Rendering projectile at " << glm::to_string(projectile->get_scene()->transform) << endl;
       render->render(projectile->get_scene());
     }
     render->render(world->get_this_player()->scene);
     render->end();
 
-    render->render(test_particle);
+    for (pair<uint, Projectile*> item : *world->projectiles) {
+      projectile = item.second;
+      projectile->render(render);
+    }
 
     // render->use("line");
     // world->draw_debug();

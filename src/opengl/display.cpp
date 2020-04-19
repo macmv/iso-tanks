@@ -26,7 +26,7 @@ void Display::create_window() {
   settings.majorVersion = 4;
   settings.minorVersion = 6;
 
-  window = new RenderWindow(sf::VideoMode(800, 600), "Iso Tanks", sf::Style::Default, settings);
+  window = new RenderWindow(sf::VideoMode(1920, 1080), "Iso Tanks", sf::Style::Default, settings);
 
   window->setVerticalSyncEnabled(true);
   window->setActive(true);

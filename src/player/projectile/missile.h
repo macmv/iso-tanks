@@ -2,6 +2,7 @@
 #define _MISSILE_H
 
 #include "projectile.h"
+#include "opengl/particle/particle_cloud.h"
 
 class Missile : public Projectile {
   public:

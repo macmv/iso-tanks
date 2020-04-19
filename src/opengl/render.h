@@ -13,6 +13,7 @@
 
 class UIRender;
 class Hud;
+class World;
 
 #ifndef _RENDER_H
 #define _RENDER_H

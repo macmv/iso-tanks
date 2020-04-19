@@ -64,7 +64,7 @@ void ParticleCloud::add() {
                                              rand() % 10000 / 10000.0 * area,
                                              rand() % 10000 / 10000.0 * area),
                                    glm::vec2(size),
-                                   glm::vec3(0, 0, 1)));
+                                   material->color));
 
   update_vbos();
 }
