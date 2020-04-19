@@ -1,55 +1,21 @@
 #include "particle.h"
 #include <glm/glm.hpp>
-#include <GL/glew.h>
-#include <vector>
-#include "opengl/loader.h"
-#include <iostream>
-#include <glm/gtx/string_cast.hpp>
 
-using namespace std;
-
-Particle::Particle(int count, float size, float area, Material* material, string shader_name) {
-  this->count = count;
-  this->size = size;
-  this->area = area;
-  this->material = material;
-  this->shader = new Shader(shader_name, true);
-  std::vector<unsigned int>* indices = new std::vector<unsigned int>();
-  std::vector<glm::vec3>* vertices = new std::vector<glm::vec3>();
-  std::vector<glm::vec2>* uvs = new std::vector<glm::vec2>();
-  std::vector<glm::vec3>* normals = new std::vector<glm::vec3>();
-  for (int i = 0; i < count; i++) {
-    indices->push_back(i);
-    vertices->push_back(glm::vec3(rand() % 10000 / 10000.0 * area, rand() % 10000 / 10000.0 * area, rand() % 10000 / 10000.0 * area));
-    uvs->push_back(glm::vec2(size, size));
-    normals->push_back(glm::vec3(1, 0, 0));
-    cout << glm::to_string(vertices->at(i)) << endl;
-  }
-  vao = Loader::create_vao(indices, vertices, uvs, normals);
-}
-
-void Particle::set_position(glm::vec3 position) {
+Particle::Particle(glm::vec3 position, glm::vec2 size, glm::vec3 color) {
   this->position = position;
+  this->size = size;
+  this->color = color;
 }
 
-glm::mat4 Particle::get_transform() {
-  glm::mat4 transform = glm::mat4(1);
-  transform[3] = transform[3] + glm::vec4(position, 0);
-  return transform;
+glm::vec3 Particle::get_position() {
+  return position;
 }
 
-Material* Particle::get_material() {
-  return material;
+glm::vec2 Particle::get_size() {
+  return size;
 }
 
-Shader* Particle::get_shader() {
-  return shader;
+glm::vec3 Particle::get_color() {
+  return color;
 }
 
-GLuint Particle::get_vao() {
-  return vao;
-}
-
-GLuint Particle::get_length() {
-  return count;
-}

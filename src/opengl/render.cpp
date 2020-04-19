@@ -11,7 +11,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include "ui/hud.h"
-#include "particle/particle.h"
+#include "particle/particle_cloud.h"
 
 using namespace std;
 
@@ -105,25 +105,25 @@ void Render::render(Scene* scene) {
   }
 }
 
-void Render::render(Particle* particle) {
+void Render::render(ParticleCloud* cloud) {
   if (current_shader != NULL) {
     cout << "Must call Render::render(Particle*) without calling Render::start()!" << endl;
     exit(1);
   }
-  Shader* shader = particle->get_shader();
+  Shader* shader = cloud->get_shader();
   glUseProgram(shader->program_id);
 
   camera->load_mat(shader);
-  shader->load_model(particle->get_transform());
-  shader->load_material(particle->get_material());
+  shader->load_model(cloud->get_transform());
+  shader->load_material(cloud->get_material());
   sf::Vector2u size = display->get_window_size();
   shader->load_aspect((float) size.x / size.y);
 
-  glBindVertexArray(particle->get_vao());
+  glBindVertexArray(cloud->get_vao());
   glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
   glEnableVertexAttribArray(2);
-  glDrawElements(GL_POINTS, particle->get_length(), GL_UNSIGNED_INT, 0);
+  glDrawArrays(GL_POINTS, 0, cloud->get_length());
   glDisableVertexAttribArray(0);
   glDisableVertexAttribArray(1);
   glDisableVertexAttribArray(2);

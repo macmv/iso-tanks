@@ -30,10 +30,11 @@ int main() {
 
   Client* client = new Client(world);
 
-  Particle* test_particle = new Particle(10, 0.1f, 1, new Material(), "src/shader/circle_particle");
+  ParticleCloud* test_particle = new ParticleCloud(10, 0.1f, 1, new Material(), "src/shader/circle_particle");
   test_particle->set_position(glm::vec3(0, -970, 0));
 
   while (true) {
+    test_particle->add();
     client->process_response();
     world->update_controls(render->camera->get_mouse_delta().x);
     world->update();
