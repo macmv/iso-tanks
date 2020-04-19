@@ -34,7 +34,7 @@ int main() {
   test_particle->set_position(glm::vec3(0, -970, 0));
 
   while (true) {
-    test_particle->add();
+    test_particle->update();
     client->process_response();
     world->update_controls(render->camera->get_mouse_delta().x);
     world->update();

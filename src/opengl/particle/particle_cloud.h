@@ -30,6 +30,7 @@ class ParticleCloud {
   public:
     ParticleCloud(int count, float size, float area, Material* material, std::string shader_name);
     void set_position(glm::vec3 position);
+    void update();
     glm::mat4 get_transform();
     Material* get_material();
     Shader* get_shader();

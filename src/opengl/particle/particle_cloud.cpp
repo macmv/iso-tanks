@@ -41,6 +41,24 @@ ParticleCloud::ParticleCloud(int count, float size, float area, Material* materi
   glBindVertexArray(0);
 }
 
+void ParticleCloud::update() {
+  bool needs_update = false;
+  if (rand() % 10 < 2) {
+    add();
+    needs_update = true;
+  }
+  Particle* particle;
+  for (size_t i = 0; i < particles.size(); i++) {
+    particle = particles.at(i);
+    if (!particle->alive()) {
+      particles.erase(particles.begin() + i--);
+      delete particle;
+      needs_update = true;
+    }
+  }
+  if (needs_update) { update_vbos(); };
+}
+
 void ParticleCloud::add() {
   particles.push_back(new Particle(glm::vec3(rand() % 10000 / 10000.0 * area,
                                              rand() % 10000 / 10000.0 * area,
