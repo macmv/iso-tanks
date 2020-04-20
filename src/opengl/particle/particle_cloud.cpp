@@ -10,11 +10,11 @@
 
 using namespace std;
 
-ParticleCloud::ParticleCloud(int count, float size, float area, Material* material, string shader_name) {
-  this->count = count;
-  this->size = size;
+ParticleCloud::ParticleCloud(float chance_to_spawn, int num_to_spawn, float area, Particle* base_particle, string shader_name) {
+  this->chance_to_spawn = chance_to_spawn;
+  this->num_to_spawn = num_to_spawn;
   this->area = area;
-  this->material = material;
+  this->base_particle = base_particle;
   this->shader = new Shader(shader_name, true);
 
   glGenVertexArrays(1, &vao);
@@ -42,26 +42,23 @@ ParticleCloud::ParticleCloud(int count, float size, float area, Material* materi
 }
 
 void ParticleCloud::update() {
-  add();
-  add();
-  add();
+  if (rand() % 100 / 100.0 <= chance_to_spawn) {
+    for(int i = 0; i < num_to_spawn; i++) {
+      particles.push_back(base_particle->duplicate(glm::vec3(rand() % 10000 / 10000.0 * area,
+                                                             rand() % 10000 / 10000.0 * area,
+                                                             rand() % 10000 / 10000.0 * area) + position));
+    }
+  }
   Particle* particle;
   for (size_t i = 0; i < particles.size(); i++) {
     particle = particles.at(i);
+    particle->update();
     if (!particle->alive()) {
       particles.erase(particles.begin() + i--);
       delete particle;
     }
   }
   update_vbos();
-}
-
-void ParticleCloud::add() {
-  particles.push_back(new Particle(glm::vec3(rand() % 10000 / 10000.0 * area,
-                                             rand() % 10000 / 10000.0 * area,
-                                             rand() % 10000 / 10000.0 * area) + position,
-                                   glm::vec2(size),
-                                   material->color));
 }
 
 void ParticleCloud::update_vbos() {
@@ -72,7 +69,7 @@ void ParticleCloud::update_vbos() {
   for (Particle* particle : particles) {
     vertices.push_back(particle->get_position());
     sizes.push_back(particle->get_size());
-    colors.push_back(particle->get_color());
+    colors.push_back(particle->get_material()->color);
   }
 
   glBindBuffer(GL_ARRAY_BUFFER, vertices_vbo);
@@ -95,7 +92,7 @@ glm::mat4 ParticleCloud::get_transform() {
 }
 
 Material* ParticleCloud::get_material() {
-  return material;
+  return base_particle->get_material();
 }
 
 Shader* ParticleCloud::get_shader() {

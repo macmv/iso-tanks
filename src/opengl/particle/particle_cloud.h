@@ -9,12 +9,10 @@
 
 class ParticleCloud {
   protected:
-    // number of particles to render
-    int count;
-    // size of each particle
-    float size;
-    // range of randomness of size
-    float size_range;
+    // chance (0-1) that a particle will spawn each frame
+    float chance_to_spawn;
+    // number of particles to spawn each time chance_to_spawn is hit
+    int num_to_spawn;
     // area to spread out all the particles
     float area;
   private:
@@ -25,10 +23,10 @@ class ParticleCloud {
     Shader* shader;
     std::vector<Particle*> particles;
     glm::vec3 position;
-    Material* material;
+    Particle* base_particle;
 
   public:
-    ParticleCloud(int count, float size, float area, Material* material, std::string shader_name);
+    ParticleCloud(float chance_to_spawn, int num_to_spawn, float area, Particle* base_particle, std::string shader_name);
     void set_position(glm::vec3 position);
     void update();
     glm::mat4 get_transform();
@@ -36,7 +34,6 @@ class ParticleCloud {
     Shader* get_shader();
     GLuint get_vao();
     GLuint get_length();
-    void add();
   private:
     void update_vbos();
 };
