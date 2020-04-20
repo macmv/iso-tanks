@@ -208,7 +208,7 @@ void World::update() {
     glm::vec3 pos = glm::vec3(projectile->get_transform()[3]);
     pos = glm::normalize(pos) * 20.f;
     if (!isnan(pos.x) && !isnan(pos.y) && !isnan(pos.z)) {
-      // projectile->set_gravity(pos);
+      projectile->set_gravity(pos);
     }
     projectile->update();
   }

@@ -25,6 +25,7 @@ class Projectile {
     Scene* get_scene();
     glm::mat4 get_transform();
     glm::vec3 get_velocity();
+    void set_gravity(glm::vec3 gravity);
 };
 
 #endif

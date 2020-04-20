@@ -65,3 +65,7 @@ glm::mat4 Projectile::get_transform() {
 glm::vec3 Projectile::get_velocity() {
   return velocity;
 }
+
+void Projectile::set_gravity(glm::vec3 gravity) {
+  body->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
+}
