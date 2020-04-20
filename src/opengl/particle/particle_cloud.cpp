@@ -29,7 +29,7 @@ ParticleCloud::ParticleCloud(float chance_to_spawn, int num_to_spawn, float area
   glGenBuffers(1, &sizes_vbo);
   glBindBuffer(GL_ARRAY_BUFFER, sizes_vbo);
   glBufferData(GL_ARRAY_BUFFER, 0, NULL, GL_DYNAMIC_DRAW);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+  glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, 0, 0);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
   glGenBuffers(1, &colors_vbo);
@@ -63,7 +63,7 @@ void ParticleCloud::update() {
 
 void ParticleCloud::update_vbos() {
   std::vector<glm::vec3> vertices;
-  std::vector<glm::vec2> sizes;
+  std::vector<float> sizes;
   std::vector<glm::vec3> colors;
 
   for (Particle* particle : particles) {
@@ -75,7 +75,7 @@ void ParticleCloud::update_vbos() {
   glBindBuffer(GL_ARRAY_BUFFER, vertices_vbo);
   glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), vertices.data(), GL_DYNAMIC_DRAW);
   glBindBuffer(GL_ARRAY_BUFFER, sizes_vbo);
-  glBufferData(GL_ARRAY_BUFFER, sizes.size() * sizeof(glm::vec2), sizes.data(), GL_DYNAMIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizes.size() * sizeof(float), sizes.data(), GL_DYNAMIC_DRAW);
   glBindBuffer(GL_ARRAY_BUFFER, colors_vbo);
   glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(glm::vec3), colors.data(), GL_DYNAMIC_DRAW);
   glBindBuffer(GL_ARRAY_BUFFER, 0);

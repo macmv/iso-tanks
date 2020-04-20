@@ -9,7 +9,7 @@ uniform mat4 view;
 uniform float aspect;
 
 in vec3 color[];
-in vec2 uv[];
+in float size[];
 
 out vec4 pass_color;
 out vec2 pass_uv;
@@ -25,8 +25,8 @@ void add_point(vec2 offset) {
 void main() {
   pos = projection * view * gl_in[0].gl_Position;
 
-  float w = uv[0].x / 2;
-  float h = uv[0].y / 2 * aspect;
+  float w = size[0] / 2;
+  float h = size[0] / 2 * aspect;
 
   pass_color = vec4(color[0], 1);
   int num_verts = 10;

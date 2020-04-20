@@ -7,15 +7,17 @@
 class Particle {
   private:
     glm::vec3 position;
-    glm::vec2 size;
+    float size;
+    float decay_time;
+    float decay_rate;
     Material* material;
     clock_t last_update;
 
   public:
-    Particle(glm::vec3 position, glm::vec2 size, Material* material);
-    Particle(glm::vec2 size, Material* material);
+    Particle(glm::vec3 position, float size, float decay_time, Material* material);
+    Particle(float size, float decay_time, Material* material);
     glm::vec3 get_position();
-    glm::vec2 get_size();
+    float get_size();
     Material* get_material();
     void update();
     bool alive();

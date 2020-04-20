@@ -7,7 +7,7 @@ Missile::Missile(glm::mat4 transform,
       velocity,
       body,
       scene_manager,
-      new ParticleCloud(1, 3, 1, new Particle(glm::vec2(0.5), new Material(glm::vec3(1, 1, 0))), "src/shader/circle_particle"),
+      new ParticleCloud(1, 3, 1, new Particle(.5, .5, new Material(glm::vec3(1, 1, 0))), "src/shader/circle_particle"),
       "assets/missile.glb") {
 
 }
