@@ -6,7 +6,7 @@
 
 class Missile : public Projectile {
   private:
-    ParticleCloud* cloud;
+    ParticleCloud* cloud = NULL;
 
   public:
     Missile(glm::mat4 transform, glm::vec3 velocity, btRigidBody* body, SceneManager* scene_manager, ParticleManager* particle_manager);

@@ -21,5 +21,7 @@ Missile::Missile(glm::mat4 transform, glm::vec3 velocity, btRigidBody* body) : P
 
 void Missile::update() {
   Projectile::update();
-  cloud->set_position(glm::vec3(transform[3]));
+  if (cloud != NULL) {
+    cloud->set_position(glm::vec3(transform[3]));
+  }
 }
