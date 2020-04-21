@@ -23,7 +23,7 @@ int main() {
 
   Terrain* terrain = new Terrain(100);
   terrain->create_model();
-  World* world = new World(terrain, true, scene_manager);
+  World* world = new World(terrain, true, scene_manager, render->particle_manager);
   render->world = world;
 
   world->create_this_player(render->camera);
@@ -55,11 +55,6 @@ int main() {
     }
     render->render(world->get_this_player()->scene);
     render->end();
-
-    for (pair<uint, Projectile*> item : *world->projectiles) {
-      projectile = item.second;
-      projectile->render(render);
-    }
 
     // render->use("line");
     // world->draw_debug();

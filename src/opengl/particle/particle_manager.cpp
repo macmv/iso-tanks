@@ -1,11 +1,13 @@
 #include "particle_manager.h"
 
+using namespace std;
+
 ParticleManager::ParticleManager(Render* render) {
   this->m_render = render;
 }
 
 void ParticleManager::add(ParticleCloud* cloud) {
-
+  clouds.push_back(cloud);
 }
 
 void ParticleManager::update() {

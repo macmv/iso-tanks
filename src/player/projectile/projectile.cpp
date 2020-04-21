@@ -9,12 +9,10 @@ Projectile::Projectile(glm::mat4 transform,
     glm::vec3 velocity,
     btRigidBody* body,
     SceneManager* scene_manager,
-    ParticleCloud* cloud,
     string scene_name) : Projectile(transform,
       velocity,
       body) {
   scene = scene_manager->new_instance(scene_name);
-  this->cloud = cloud;
   update();
 }
 
@@ -26,7 +24,6 @@ Projectile::Projectile(glm::mat4 transform, glm::vec3 velocity, btRigidBody* bod
   body->setWorldTransform(body_transform);
   body->setLinearVelocity(btVector3(velocity.x, velocity.y, velocity.z));
   this->body = body;
-  cloud = NULL;
   update();
 }
 
@@ -36,18 +33,12 @@ void Projectile::update() {
 
   if (scene != NULL) {
     scene->transform = transform;
-    cloud->set_position(glm::vec3(get_transform()[3]));
-    cloud->update();
   }
 
   btVector3 body_velocity = body->getLinearVelocity();
   velocity.x = body_velocity.x();
   velocity.y = body_velocity.y();
   velocity.z = body_velocity.z();
-}
-
-void Projectile::render(Render* render) {
-  render->render(cloud);
 }
 
 float Projectile::get_speed() {

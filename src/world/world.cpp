@@ -77,8 +77,9 @@ World::World(Terrain* terrain, bool needs_debug) {
   srand(time(0));
 }
 
-World::World(Terrain* terrain, bool needs_debug, SceneManager* scene_manager) : World(terrain, needs_debug) {
+World::World(Terrain* terrain, bool needs_debug, SceneManager* scene_manager, ParticleManager* particle_manager) : World(terrain, needs_debug) {
   this->scene_manager = scene_manager;
+  this->particle_manager = particle_manager;
 }
 
 void World::draw_debug() {
@@ -227,7 +228,7 @@ void World::add_projectile(ProjectileProto proto) {
   glm::mat4 transform = ProtoUtil::to_glm(proto.transform());
   glm::vec3 vel = ProtoUtil::to_glm(proto.velocity());
 
-  projectiles->insert({ proto.id(), new Missile(transform, vel, body, scene_manager) });
+  projectiles->insert({ proto.id(), new Missile(transform, vel, body, scene_manager, particle_manager) });
 }
 
 // server function

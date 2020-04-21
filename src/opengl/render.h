@@ -28,9 +28,9 @@ class Render {
     Camera* camera;
     Display* display;
     UIRender* ui_render;
+    ParticleManager* particle_manager;
   private:
     Hud* hud;
-    ParticleManager* particle_manager;
 
   public:
     Render();

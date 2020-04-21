@@ -15,6 +15,7 @@
 
 class ControlledPlayer;
 class Projectile;
+class ParticleManager;
 
 class World {
   private:
@@ -32,11 +33,12 @@ class World {
     ControlledPlayer*                        this_player = NULL;
     std::vector<ModelInstance*>*             models = new std::vector<ModelInstance*>();
     SceneManager*                            scene_manager = NULL;
+    ParticleManager*                         particle_manager = NULL;
     std::mutex                               world_mutex;
 
   public:
     World(Terrain* terrain, bool needs_debug);
-    World(Terrain* terrain, bool needs_debug, SceneManager* scene_manager);
+    World(Terrain* terrain, bool needs_debug, SceneManager* scene_manager, ParticleManager* particle_manager);
     ~World();
     void create_this_player(Camera* camera);
     uint add_player();
