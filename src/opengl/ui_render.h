@@ -1,8 +1,11 @@
 #ifndef _TEXT_RENDER_H
 #define _TEXT_RENDER_H
+
 #include "render.h"
 #include <iostream>
 #include <SFML/Graphics.hpp>
+
+class Render;
 
 using namespace std;
 

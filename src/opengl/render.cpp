@@ -12,6 +12,7 @@
 #include <SFML/Graphics/Font.hpp>
 #include "ui/hud.h"
 #include "particle/particle_cloud.h"
+#include "particle/particle_manager.h"
 
 using namespace std;
 
@@ -24,6 +25,8 @@ Render::Render() {
 
   ui_render = new UIRender(this, "assets/Hack-Regular.ttf", 24);
   hud = new Hud(ui_render, display->get_window_size().y / 1080.0);
+
+  particle_manager = new ParticleManager(this);
 }
 
 void Render::add_shader(string name, Shader* shader) {
@@ -39,6 +42,8 @@ void Render::start(ControlledPlayer* player) {
   }
 
   camera->update(display, player);
+
+  particle_manager->update();
 }
 
 void Render::use(string shader) {
@@ -52,14 +57,16 @@ void Render::end() {
   glUseProgram(0);
 }
 
-void Render::update() {
+void Render::finish() {
+  particle_manager->render();
   hud->render(NULL);
+
   display->render();
 }
 
 void Render::render(ModelInstance* instance) {
   if (current_shader == NULL) {
-    cout << "Must call Render::start() before Render::render()!" << endl;
+    cout << "Must call Render::use() before Render::render()!" << endl;
     exit(1);
   }
   if (instance == NULL) {
@@ -89,7 +96,7 @@ void Render::render(ModelInstance* instance) {
 
 void Render::render(Scene* scene) {
   if (current_shader == NULL) {
-    cout << "Must call Render::start() before Render::render()!" << endl;
+    cout << "Must call Render::use() before Render::render()!" << endl;
     exit(1);
   }
 
@@ -107,7 +114,7 @@ void Render::render(Scene* scene) {
 
 void Render::render(ParticleCloud* cloud) {
   if (current_shader != NULL) {
-    cout << "Must call Render::render(Particle*) without calling Render::start()!" << endl;
+    cout << "Must call Render::end() before calling Render::render(ParticleCloud*)!" << endl;
     exit(1);
   }
   Shader* shader = cloud->get_shader();

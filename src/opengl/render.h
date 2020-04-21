@@ -1,3 +1,6 @@
+#ifndef _RENDER_H
+#define _RENDER_H
+
 #include <GL/glew.h>
 #include <SDL2/SDL.h>
 #include "world/world.h"
@@ -10,13 +13,12 @@
 #include "ui_render.h"
 #include "ui/hud.h"
 #include "particle/particle_cloud.h"
+#include "particle/particle_manager.h"
 
 class UIRender;
 class Hud;
 class World;
-
-#ifndef _RENDER_H
-#define _RENDER_H
+class ParticleManager;
 
 class Render {
   public:
@@ -28,6 +30,7 @@ class Render {
     UIRender* ui_render;
   private:
     Hud* hud;
+    ParticleManager* particle_manager;
 
   public:
     Render();
@@ -35,7 +38,7 @@ class Render {
     void start(ControlledPlayer* player);   // updates camera and checks window events
     void use(std::string shader); // starts using a shader program, and loads varius matrices
     void end();                   // resets shader program
-    void update();                // updates display
+    void finish();                // updates display and renders hud
     void render(Scene* scene);    // renders scene
     void render(ModelInstance* instance); // renders model
     void render(ParticleCloud* cloud); // renders particle cloud

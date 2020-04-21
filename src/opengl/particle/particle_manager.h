@@ -5,6 +5,8 @@
 #include "opengl/render.h"
 #include <vector>
 
+class Render;
+
 class ParticleManager {
   private:
     std::vector<ParticleCloud*> clouds;

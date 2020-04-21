@@ -1,12 +1,12 @@
+#ifndef _LOADER_H
+#define _LOADER_H
+
 #include <GL/glew.h>
 #include <vector>
 #include <glm/glm.hpp>
 #include <string>
 #include "models/model.h"
 #include "models/scene.h"
-
-#ifndef _LOADER_H
-#define _LOADER_H
 
 using namespace std;
 

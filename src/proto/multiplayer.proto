@@ -46,6 +46,12 @@ message ProjectileProto {
   }
 }
 
+message ExplosionProto {
+  uint32 id = 1;
+  float damage = 2;
+  float radius = 3;
+}
+
 message PlayerProto {
   uint32 id = 1;
   Transform transform = 2;

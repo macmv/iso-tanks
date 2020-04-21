@@ -65,7 +65,7 @@ int main() {
     // world->draw_debug();
     // render->end();
 
-    render->update();
+    render->finish();
   }
   world->clean();
 }

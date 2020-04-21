@@ -5,6 +5,7 @@
 #include "opengl/render.h"
 
 class Section;
+class UIRender;
 
 class Hud {
   private:

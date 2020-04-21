@@ -6,6 +6,9 @@
 #include "src/proto/multiplayer.grpc.pb.h"
 #include "opengl/render.h"
 
+class ParticleCloud;
+class Render;
+
 class Projectile {
   protected:
     float speed;
