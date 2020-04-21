@@ -19,6 +19,7 @@ class Player {
     glm::mat4 get_transform();
     void set_transform(glm::mat4 transform);
     void set_gravity(glm::vec3 gravity);
+    void damage(int amount);
 };
 
 #endif
