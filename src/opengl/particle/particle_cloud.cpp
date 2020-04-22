@@ -10,10 +10,12 @@
 
 using namespace std;
 
-ParticleCloud::ParticleCloud(float chance_to_spawn, int num_to_spawn, float area, Particle* base_particle, string shader_name) {
+ParticleCloud::ParticleCloud(float chance_to_spawn, int num_to_spawn, float area, float lifetime, Particle* base_particle, string shader_name) {
   this->chance_to_spawn = chance_to_spawn;
   this->num_to_spawn = num_to_spawn;
   this->area = area;
+  this->lifetime = lifetime;
+  this->time_spawned = clock() / CLOCKS_PER_SEC;
   this->base_particle = base_particle;
   this->shader = new Shader(shader_name, true);
 
@@ -42,11 +44,13 @@ ParticleCloud::ParticleCloud(float chance_to_spawn, int num_to_spawn, float area
 }
 
 void ParticleCloud::update() {
-  if (rand() % 100 / 100.0 <= chance_to_spawn) {
-    for(int i = 0; i < num_to_spawn; i++) {
-      particles.push_back(base_particle->duplicate(glm::vec3(rand() % 10000 / 10000.0 * area,
-                                                             rand() % 10000 / 10000.0 * area,
-                                                             rand() % 10000 / 10000.0 * area) + position));
+  if (lifetime < 0 || clock() / CLOCKS_PER_SEC - time_spawned < lifetime) {
+    if (rand() % 10000 / 10000.0 <= chance_to_spawn) {
+      for(int i = 0; i < num_to_spawn; i++) {
+        particles.push_back(base_particle->duplicate(glm::vec3(rand() % 10000 / 10000.0 * area,
+                                                               rand() % 10000 / 10000.0 * area,
+                                                               rand() % 10000 / 10000.0 * area) + position));
+      }
     }
   }
   Particle* particle;

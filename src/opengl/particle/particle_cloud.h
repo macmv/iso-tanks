@@ -15,6 +15,8 @@ class ParticleCloud {
     int num_to_spawn;
     // area to spread out all the particles
     float area;
+    // number of seconds to keep the cloud alive (negative means forever)
+    float lifetime;
   private:
     GLuint vao;
     GLuint vertices_vbo;
@@ -24,9 +26,10 @@ class ParticleCloud {
     std::vector<Particle*> particles;
     glm::vec3 position;
     Particle* base_particle;
+    clock_t time_spawned;
 
   public:
-    ParticleCloud(float chance_to_spawn, int num_to_spawn, float area, Particle* base_particle, std::string shader_name);
+    ParticleCloud(float chance_to_spawn, int num_to_spawn, float area, float lifetime, Particle* base_particle, std::string shader_name);
     void set_position(glm::vec3 position);
     void update();
     glm::mat4 get_transform();
