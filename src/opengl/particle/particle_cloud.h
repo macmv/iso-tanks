@@ -33,11 +33,13 @@ class ParticleCloud {
     ~ParticleCloud();
     void set_position(glm::vec3 position);
     void update();
+    bool alive();
     glm::mat4 get_transform();
     Material* get_material();
     Shader* get_shader();
     GLuint get_vao();
     GLuint get_length();
+    friend std::ostream& operator << (std::ostream& os, const ParticleCloud& p);
   private:
     void update_vbos();
 };

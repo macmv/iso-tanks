@@ -43,6 +43,18 @@ ParticleCloud::ParticleCloud(float chance_to_spawn, int num_to_spawn, float area
   glBindVertexArray(0);
 }
 
+ParticleCloud::~ParticleCloud() {
+  for (size_t i = 0; i < particles.size(); i++) {
+    delete particles.at(i);
+  }
+  particles.clear();
+  delete base_particle->get_material();
+  delete base_particle;
+  glDeleteBuffers(1, &vertices_vbo);
+  glDeleteBuffers(1, &sizes_vbo);
+  glDeleteBuffers(1, &colors_vbo);
+}
+
 void ParticleCloud::update() {
   if (lifetime < 0 || clock() / CLOCKS_PER_SEC - time_spawned < lifetime) {
     if (rand() % 10000 / 10000.0 <= chance_to_spawn) {
@@ -63,6 +75,10 @@ void ParticleCloud::update() {
     }
   }
   update_vbos();
+}
+
+bool ParticleCloud::alive() {
+  return lifetime < 0 || clock() / CLOCKS_PER_SEC - time_spawned < lifetime || particles.size() > 0;
 }
 
 void ParticleCloud::update_vbos() {
@@ -109,4 +125,10 @@ GLuint ParticleCloud::get_vao() {
 
 GLuint ParticleCloud::get_length() {
   return particles.size();
+}
+
+ostream& operator << (ostream& os, const ParticleCloud& p) {
+  return os << "ParticleCloud("
+    << "position: " << glm::to_string(p.position) << ", "
+    << "length: " << p.particles.size() << ")";
 }
