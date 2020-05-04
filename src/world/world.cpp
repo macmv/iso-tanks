@@ -167,9 +167,6 @@ void World::update_controls(float mouse_x_delta) {
 }
 
 void World::update() {
-  ulong update_time =
-    std::chrono::system_clock::now().time_since_epoch() /
-    std::chrono::milliseconds(1);
 
   // cout << "----------------------------------------------" << endl;
   // for (int j = dynamics_world->getNumCollisionObjects() - 1; j >= 0; j--) {
@@ -188,9 +185,14 @@ void World::update() {
 
   // makes sure no one touches the world while stepping the simulation
   world_mutex.lock();
+
+  ulong update_time =
+    std::chrono::system_clock::now().time_since_epoch() /
+    std::chrono::milliseconds(1);
   dynamics_world->stepSimulation((double) (update_time - prev_update) / 1000, 10);
-  world_mutex.unlock();
   prev_update = update_time;
+
+  world_mutex.unlock();
 
   Player* player;
   for (pair<int, Player*> item : *players) {
