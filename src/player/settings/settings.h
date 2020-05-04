@@ -22,6 +22,8 @@ class Settings {
     RangeOption* get_range(std::string name);
     KeyOption* get_key(std::string name);
     ButtonOption* get_button(std::string name);
+  private:
+    void read_settings(std::string contents);
 };
 
 #endif

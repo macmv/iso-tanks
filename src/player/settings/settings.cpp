@@ -1,6 +1,7 @@
 #include "settings.h"
 #include <iostream>
 #include <string>
+#include <fstream>
 #include "options.h"
 #include "system/file_utils.h"
 
@@ -10,15 +11,25 @@ Settings::Settings() {
 }
 
 void Settings::load_defaults() {
-  cout << FileUtils::get_game_dir() / "default_settings.json" << endl;
+  filesystem::path default_settings = FileUtils::get_game_dir() / "default_settings.json";
+  if (filesystem::exists(default_settings)) {
+    ifstream in(default_settings);
+    stringstream sstr;
+    sstr << in.rdbuf();
+    read_settings(sstr.str());
+  }
 }
 
 void Settings::load() {
-  cout << FileUtils::get_game_dir() / "settings.json" << endl;
+  filesystem::path settings = FileUtils::get_game_dir() / "settings.json";
 }
 
 void Settings::save() {
   throw "Cannot save settings yet!";
+}
+
+void Settings::read_settings(string contents) {
+  cout << contents << endl;
 }
 
 void Settings::add_range(std::string name, RangeOption* option) {
