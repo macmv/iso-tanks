@@ -75,7 +75,7 @@ cc_grpc_library(
 cc_library(
   name = "client_lib",
   srcs = glob(["src/**/*.cpp"],
-              exclude = ["src/server.cpp"]),
+              exclude = ["src/server.cpp", "src/test.cpp"]),
   hdrs = glob(["src/**/*.h",
                "libs/tinygltf/*.h",
                "libs/tinygltf/*.hpp",
@@ -114,9 +114,50 @@ genrule(
 )
 
 cc_library(
+  name = "test_lib",
+  srcs = glob(["src/**/*.cpp"],
+              exclude = ["src/server.cpp", "src/client.cpp"]),
+  hdrs = glob(["src/**/*.h",
+               "libs/tinygltf/*.h",
+               "libs/tinygltf/*.hpp",
+               "@sfml/include/**/*"]),
+  copts = ["-Ilibs/tinygltf/",
+#           "-Ibazel-out/k8-fastbuild/bin/bullet/include/bullet/",
+           "-Ibazel-out/k8-dbg/bin/bullet/include/bullet/",
+           "-Isrc/"],
+  deps = [":proto_cc_grpc",
+          ":sfml",
+          ":bullet",
+          "@grpc//:grpc++",
+          "@com_google_protobuf//:protobuf"],
+)
+
+cc_binary(
+  name = "test",
+  deps = [":test_lib",
+          ":sfml",
+          ":bullet"],
+  linkopts = ["-lGLEW",
+              "-lGL",
+              "-lpthread"],
+  data = [
+    ":shaders",
+    ":fonts",
+    ":assets"],
+)
+
+genrule(
+  name = "test_zip",
+  srcs = glob(["bazel-out/k8-fastbuild/bin/test.runfiles/__main__/**/*"]),
+  tools = ["@bazel_tools//tools/zip:zipper"],
+  outs = ["test.zip"],
+  cmd = "$(location @bazel_tools//tools/zip:zipper) c $@ $(SRCS)",
+)
+
+cc_library(
   name = "server_lib",
   srcs = glob(["src/**/*.cpp"],
-              exclude = ["src/client.cpp"]),
+              exclude = ["src/client.cpp", "src/test.cpp"]),
   hdrs = glob(["src/**/*.h",
                "libs/tinygltf/*.h",
                "libs/tinygltf/*.hpp",
