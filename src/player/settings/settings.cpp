@@ -22,6 +22,12 @@ void Settings::load_defaults() {
 
 void Settings::load() {
   filesystem::path settings = FileUtils::get_game_dir() / "settings.json";
+  if (filesystem::exists(settings)) {
+    ifstream in(settings);
+    stringstream sstr;
+    sstr << in.rdbuf();
+    read_settings(sstr.str());
+  }
 }
 
 void Settings::save() {
