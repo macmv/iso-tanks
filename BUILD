@@ -96,7 +96,8 @@ cc_binary(
   deps = [":client_lib",
           ":sfml",
           ":bullet"],
-  linkopts = ["-lGLEW",
+  linkopts = ["-lstdc++fs",
+              "-lGLEW",
               "-lGL",
               "-lpthread"],
   data = [
@@ -137,7 +138,8 @@ cc_binary(
   deps = [":test_lib",
           ":sfml",
           ":bullet"],
-  linkopts = ["-lGLEW",
+  linkopts = ["-lstdc++fs",
+              "-lGLEW",
               "-lGL",
               "-lpthread"],
   data = [
@@ -178,7 +180,8 @@ cc_binary(
   deps = [":server_lib",
           ":sfml",
           ":bullet"],
-  linkopts = ["-lGLEW",
+  linkopts = ["-lstdc++fs",
+              "-lGLEW",
               "-lGL",
               "-lpthread"],
 )
