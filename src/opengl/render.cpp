@@ -27,6 +27,7 @@ Render::Render() {
   hud = new Hud(ui_render, display->get_window_size().y / 1080.0);
 
   particle_manager = new ParticleManager(this);
+  particle_manager->add("src/shader/circle_particle");
 }
 
 void Render::add_shader(string name, Shader* shader) {
