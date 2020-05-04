@@ -9,9 +9,9 @@
 using namespace std;
 
 Shader::Shader(string filename, bool has_geometry) {
-  GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-  GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-  GLuint geometry_shader;
+  vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+  fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+  geometry_shader = 0;
   if (has_geometry) {
     geometry_shader = glCreateShader(GL_GEOMETRY_SHADER);
   }
@@ -24,7 +24,7 @@ Shader::Shader(string filename, bool has_geometry) {
   if (!res) {
     exit(1);
   }
-  if (has_geometry) {
+  if (geometry_shader != 0) {
     res = Loader::load_shader(geometry_shader, filename + "_geometry.glsl");
     if (!res) {
       exit(1);
@@ -35,7 +35,7 @@ Shader::Shader(string filename, bool has_geometry) {
 
   glAttachShader(program_id, vertex_shader);
   glAttachShader(program_id, fragment_shader);
-  if (has_geometry) {
+  if (geometry_shader != 0) {
     glAttachShader(program_id, geometry_shader);
   }
 
@@ -46,6 +46,20 @@ Shader::Shader(string filename, bool has_geometry) {
   model_id      = glGetUniformLocation(program_id, "model");
   color_id      = glGetUniformLocation(program_id, "color");
   aspect_id     = glGetUniformLocation(program_id, "aspect");
+}
+
+Shader::~Shader() {
+  glDetachShader(program_id, vertex_shader);
+  glDetachShader(program_id, fragment_shader);
+  if (geometry_shader != 0) {
+    glDetachShader(program_id, geometry_shader);
+  }
+  glDeleteProgram(program_id);
+  glDeleteShader(vertex_shader);
+  glDeleteShader(fragment_shader);
+  if (geometry_shader != 0) {
+    glDeleteShader(geometry_shader);
+  }
 }
 
 void Shader::load_projection(glm::mat4 projection) {

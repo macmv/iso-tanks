@@ -13,11 +13,15 @@ class Shader {
     GLuint model_id;
     GLuint color_id;
     GLuint aspect_id;
+    GLuint vertex_shader;
+    GLuint fragment_shader;
+    GLuint geometry_shader;
   public:
     GLuint program_id;
 
   public:
     Shader(std::string filename, bool has_geometry);
+    ~Shader();
     void load_projection(glm::mat4 projection);
     void load_view(glm::mat4 view);
     void load_model(glm::mat4 model);
