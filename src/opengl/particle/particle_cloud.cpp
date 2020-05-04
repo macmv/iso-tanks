@@ -10,14 +10,14 @@
 
 using namespace std;
 
-ParticleCloud::ParticleCloud(float chance_to_spawn, int num_to_spawn, float area, float lifetime, Particle* base_particle, string shader_name) {
+ParticleCloud::ParticleCloud(float chance_to_spawn, int num_to_spawn, float area, float lifetime, Particle* base_particle, Shader* shader) {
   this->chance_to_spawn = chance_to_spawn;
   this->num_to_spawn = num_to_spawn;
   this->area = area;
   this->lifetime = lifetime;
   this->time_spawned = clock() / CLOCKS_PER_SEC;
   this->base_particle = base_particle;
-  this->shader = new Shader(shader_name, true);
+  this->shader = shader;
 
   glGenVertexArrays(1, &vao);
   glBindVertexArray(vao);

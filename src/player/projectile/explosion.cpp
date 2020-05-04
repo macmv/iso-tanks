@@ -19,5 +19,7 @@ void Explosion::explode(glm::vec3 position,
 
 void Explosion::explode(ExplosionProto proto,
     ParticleManager* particle_manager) {
-  particle_manager->add(new ParticleCloud(1, 1, 1, 0, new Particle(5, .5, new Material(glm::vec3(.5, .5, .5))), "src/shader/circle_particle"));
+  particle_manager->add(new ParticleCloud(1, 1, 1, 0,
+        new Particle(5, .5, new Material(glm::vec3(.5, .5, .5))),
+        particle_manager->get_shader("src/shader/circle_particle")));
 }
