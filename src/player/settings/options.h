@@ -19,6 +19,9 @@ class RangeOption : public Option {
 class KeyOption : public Option {
   private:
     sf::Keyboard::Key key;
+
+  public:
+    KeyOption(sf::Keyboard::Key key);
 };
 
 class ButtonOption : public Option {
