@@ -43,11 +43,19 @@ http_archive(
 )
 
 http_archive(
-  name = "grpc",
-  strip_prefix = "grpc-1.27.3",
-  urls = ["https://github.com/grpc/grpc/archive/v1.27.3.tar.gz"],
-  sha256 = "c2ab8a42a0d673c1acb596d276055adcc074c1116e427f118415da3e79e52969"
-)
+    name = "jsoncpp",
+    build_file_content = all_content,
+    strip_prefix = "jsoncpp-00.11.0",
+    urls = ["https://github.com/open-source-parsers/jsoncpp/archive/00.11.0.zip"],
+    sha256 = "275514510cedc679f5c2275aad7de498eaa5d1a4c0aaf15b03993b1f9c365e8a"
+    )
+
+http_archive(
+    name = "grpc",
+    strip_prefix = "grpc-1.27.3",
+    urls = ["https://github.com/grpc/grpc/archive/v1.27.3.tar.gz"],
+    sha256 = "c2ab8a42a0d673c1acb596d276055adcc074c1116e427f118415da3e79e52969"
+    )
 
 load("@grpc//bazel:grpc_deps.bzl", "grpc_deps")
 grpc_deps()
