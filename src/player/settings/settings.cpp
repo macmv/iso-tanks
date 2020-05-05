@@ -36,14 +36,8 @@ void Settings::save() {
 }
 
 void Settings::read_settings(Json::Value contents) {
-  for (Json::Value setting : contents["settings"]) {
-    if (setting["type"] == "key") {
-      keys.insert({setting["name"].asString(), new KeyOption(static_cast<sf::Keyboard::Key>(setting["value"].asInt()))});
-    } else if (setting["type"] == "button") {
-
-    } else if (setting["type"] == "range") {
-
-    }
+  for (Json::Value setting : contents["settings"]["keys"]) {
+    keys.insert({setting["name"].asString(), new KeyOption(static_cast<sf::Keyboard::Key>(setting["value"].asInt()))});
   }
 }
 
