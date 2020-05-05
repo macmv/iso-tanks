@@ -12,32 +12,27 @@ Settings::Settings() {
 }
 
 void Settings::load_defaults() {
-  filesystem::path default_settings = FileUtils::get_game_dir() / "default_settings.json";
-  if (filesystem::exists(default_settings)) {
-    ifstream file(default_settings);
-    Json::Value data;
-    file >> data;
-    read_settings(data);
-  }
+  read_settings(FileUtils::get_game_dir() / "default_settings.json");
 }
 
 void Settings::load() {
-  filesystem::path settings = FileUtils::get_game_dir() / "settings.json";
-  if (filesystem::exists(settings)) {
-    ifstream file(settings);
-    Json::Value data;
-    file >> data;
-    read_settings(data);
-  }
+  read_settings(FileUtils::get_game_dir() / "settings.json");
 }
 
 void Settings::save() {
   throw "Cannot save settings yet!";
 }
 
-void Settings::read_settings(Json::Value contents) {
-  for (Json::Value setting : contents["settings"]["keys"]) {
-    keys.insert({setting["name"].asString(), new KeyOption(static_cast<sf::Keyboard::Key>(setting["value"].asInt()))});
+void Settings::read_settings(filesystem::path filename) {
+  if (filesystem::exists(filename)) {
+    ifstream file(filename);
+    Json::Value data;
+    file >> data;
+    for (Json::Value setting : data["settings"]["keys"]) {
+      keys.insert({setting["name"].asString(), new KeyOption(static_cast<sf::Keyboard::Key>(setting["value"].asInt()))});
+    }
+  } else {
+    throw filename.string() + " does not exist!";
   }
 }
 

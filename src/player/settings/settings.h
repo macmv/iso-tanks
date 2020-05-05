@@ -2,6 +2,7 @@
 #define _SETTINGS_H
 
 #include "options.h"
+#include <filesystem>
 #include <json/json.h>
 #include <unordered_map>
 #include <string>
@@ -24,7 +25,7 @@ class Settings {
     KeyOption* get_key(std::string name);
     ButtonOption* get_button(std::string name);
   private:
-    void read_settings(Json::Value contents);
+    void read_settings(std::filesystem::path filename);
 };
 
 #endif
