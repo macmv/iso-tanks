@@ -20,7 +20,7 @@ void Settings::load() {
 }
 
 void Settings::save() {
-  throw "Cannot save settings yet!";
+  write_settings(FileUtils::get_game_dir() / "settings.json");
 }
 
 void Settings::read_settings(filesystem::path filename) {
@@ -28,12 +28,56 @@ void Settings::read_settings(filesystem::path filename) {
     ifstream file(filename);
     Json::Value data;
     file >> data;
+    file.close();
     for (Json::Value setting : data["settings"]["keys"]) {
-      keys.insert({setting["name"].asString(), new KeyOption(static_cast<sf::Keyboard::Key>(setting["value"].asInt()))});
+      keys.insert({setting["name"].asString(), new KeyOption(setting["value"])});
+    }
+    for (Json::Value setting : data["settings"]["buttons"]) {
+      buttons.insert({setting["name"].asString(), new ButtonOption(setting["value"])});
+    }
+    for (Json::Value setting : data["settings"]["ranges"]) {
+      ranges.insert({setting["name"].asString(), new RangeOption(setting["value"])});
     }
   } else {
     throw filename.string() + " does not exist!";
   }
+}
+
+void Settings::write_settings(filesystem::path filename) {
+  Json::Value keys;
+  for (pair<string, KeyOption*> option : this->keys) {
+    Json::Value obj;
+    obj["name"] = option.first;
+    obj["value"] = option.second->to_json();
+    keys.append(obj);
+  }
+  Json::Value buttons;
+  for (pair<string, ButtonOption*> option : this->buttons) {
+    Json::Value obj;
+    obj["name"] = option.first;
+    obj["value"] = option.second->to_json();
+    buttons.append(obj);
+  }
+  Json::Value ranges;
+  for (pair<string, RangeOption*> option : this->ranges) {
+    Json::Value obj;
+    obj["name"] = option.first;
+    obj["value"] = option.second->to_json();
+    ranges.append(obj);
+  }
+  Json::Value settings;
+  settings["keys"] = keys;
+  settings["buttons"] = buttons;
+  settings["ranges"] = ranges;
+  Json::Value data;
+  data["settings"] = settings;
+  Json::StreamWriterBuilder builder;
+  builder["commentStyle"] = "None";
+  builder["indentation"] = "";
+  std::unique_ptr<Json::StreamWriter> writer(builder.newStreamWriter());
+  ofstream file(filename);
+  writer->write(data, &file);
+  file.close();
 }
 
 void Settings::add_range(std::string name, RangeOption* option) {

@@ -3,17 +3,14 @@
 
 #include <string>
 #include <SFML/Window.hpp>
+#include <json/json.h>
 
 class Option {
   private:
     std::string name;
-};
 
-class RangeOption : public Option {
-  private:
-    float min;
-    float max;
-    float value;
+  public:
+    virtual Json::Value to_json() = 0;
 };
 
 class KeyOption : public Option {
@@ -21,12 +18,28 @@ class KeyOption : public Option {
     sf::Keyboard::Key key;
 
   public:
-    KeyOption(sf::Keyboard::Key key);
+    KeyOption(Json::Value json);
+    Json::Value to_json();
 };
 
 class ButtonOption : public Option {
   private:
     sf::Mouse::Button button;
+
+  public:
+    ButtonOption(Json::Value json);
+    Json::Value to_json();
+};
+
+class RangeOption : public Option {
+  private:
+    float min;
+    float max;
+    float value;
+
+  public:
+    RangeOption(Json::Value json);
+    Json::Value to_json();
 };
 
 #endif

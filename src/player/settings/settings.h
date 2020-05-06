@@ -26,6 +26,7 @@ class Settings {
     ButtonOption* get_button(std::string name);
   private:
     void read_settings(std::filesystem::path filename);
+    void write_settings(std::filesystem::path filename);
 };
 
 #endif
