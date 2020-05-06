@@ -10,6 +10,13 @@
 using namespace std;
 
 Settings::Settings() {
+  try {
+    cout << "Loading settings from settings.cfg" << endl;
+    load();
+  } catch (string e) {
+    cout << "Could not load settings, loading defaults" << endl;
+    load_defaults();
+  }
 }
 
 void Settings::load_defaults() {
@@ -48,8 +55,8 @@ void Settings::read_settings(filesystem::path filename) {
       ranges.insert({range.name(), new RangeOption(range)});
     }
   } else {
-    cerr << filename.string() + " does not exist!";
-    throw filename.string() + " does not exist!";
+    cerr << filename.string() + " does not exist!" << endl;
+    throw filename.string() + " does not exist!" << endl;
   }
 }
 
