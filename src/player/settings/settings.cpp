@@ -13,14 +13,6 @@ Settings::Settings() {
 }
 
 void Settings::load_defaults() {
-  read_settings(FileUtils::get_game_dir() / "default_settings.cfg");
-}
-
-void Settings::load() {
-  read_settings(FileUtils::get_game_dir() / "settings.cfg");
-}
-
-void Settings::save_defaults() {
   keys.clear();
   keys.insert({"up", new KeyOption(sf::Keyboard::Key::W)});
   keys.insert({"down", new KeyOption(sf::Keyboard::Key::S)});
@@ -29,7 +21,10 @@ void Settings::save_defaults() {
   buttons.clear();
   buttons.insert({"fire", new ButtonOption(sf::Mouse::Button::Left)});
   ranges.clear();
-  write_settings(FileUtils::get_game_dir() / "default_settings.cfg");
+}
+
+void Settings::load() {
+  read_settings(FileUtils::get_game_dir() / "settings.cfg");
 }
 
 void Settings::save() {
