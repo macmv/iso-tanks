@@ -6,6 +6,6 @@ using namespace std;
 int main() {
   cout << "Test stuff here!" << endl;
   Settings* settings = new Settings();
-  settings->load_defaults();
-  settings->save();
+  settings->load();
+  settings->save_defaults();
 }

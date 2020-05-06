@@ -1,36 +1,51 @@
 #include "options.h"
-#include <json/json.h>
+#include "src/proto/settings.pb.h"
 
-KeyOption::KeyOption(Json::Value json) {
-  this->key = static_cast<sf::Keyboard::Key>(json["key"].asInt());
+KeyOption::KeyOption(sf::Keyboard::Key key) {
+  this->key = key;
 }
 
-Json::Value KeyOption::to_json() {
-  Json::Value obj;
-  obj["key"] = key;
-  return obj;
+KeyOption::KeyOption(SettingsProto::Key proto) {
 }
 
-ButtonOption::ButtonOption(Json::Value json) {
-  this->button = static_cast<sf::Mouse::Button>(json["button"].asInt());
+void KeyOption::to_proto(SettingsProto::Key* proto) {
+  proto->set_key(key);
 }
 
-Json::Value ButtonOption::to_json() {
-  Json::Value obj;
-  obj["button"] = button;
-  return obj;
+sf::Keyboard::Key KeyOption::get_key() {
+  return key;
 }
 
-RangeOption::RangeOption(Json::Value json) {
-  this->min = json["min"].asFloat();
-  this->max = json["max"].asFloat();
-  this->value = json["value"].asFloat();
+ButtonOption::ButtonOption(sf::Mouse::Button button) {
+  this->button = button;
 }
 
-Json::Value RangeOption::to_json() {
-  Json::Value obj;
-  obj["min"] = min;
-  obj["max"] = max;
-  obj["value"] = value;
-  return obj;
+ButtonOption::ButtonOption(SettingsProto::Button proto) {
+}
+
+void ButtonOption::to_proto(SettingsProto::Button* proto) {
+  proto->set_button(button);
+}
+
+sf::Mouse::Button ButtonOption::get_button() {
+  return button;
+}
+
+RangeOption::RangeOption(float min, float max, float value) {
+  this->min = min;
+  this->max = max;
+  this->value = value;
+}
+
+RangeOption::RangeOption(SettingsProto::Range proto) {
+}
+
+void RangeOption::to_proto(SettingsProto::Range* proto) {
+  proto->set_min(min);
+  proto->set_max(max);
+  proto->set_value(value);
+}
+
+float RangeOption::get_value() {
+  return value;
 }

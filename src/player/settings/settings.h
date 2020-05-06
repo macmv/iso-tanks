@@ -16,6 +16,7 @@ class Settings {
   public:
     Settings();
     void load_defaults();
+    void save_defaults();
     void load();
     void save();
     void add_range(std::string name, RangeOption* option);

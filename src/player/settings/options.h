@@ -3,14 +3,9 @@
 
 #include <string>
 #include <SFML/Window.hpp>
-#include <json/json.h>
+#include "src/proto/settings.pb.h"
 
 class Option {
-  private:
-    std::string name;
-
-  public:
-    virtual Json::Value to_json() = 0;
 };
 
 class KeyOption : public Option {
@@ -18,8 +13,10 @@ class KeyOption : public Option {
     sf::Keyboard::Key key;
 
   public:
-    KeyOption(Json::Value json);
-    Json::Value to_json();
+    KeyOption(sf::Keyboard::Key key);
+    KeyOption(SettingsProto::Key proto);
+    void to_proto(SettingsProto::Key* proto);
+    sf::Keyboard::Key get_key();
 };
 
 class ButtonOption : public Option {
@@ -27,8 +24,10 @@ class ButtonOption : public Option {
     sf::Mouse::Button button;
 
   public:
-    ButtonOption(Json::Value json);
-    Json::Value to_json();
+    ButtonOption(sf::Mouse::Button button);
+    ButtonOption(SettingsProto::Button proto);
+    void to_proto(SettingsProto::Button* proto);
+    sf::Mouse::Button get_button();
 };
 
 class RangeOption : public Option {
@@ -38,8 +37,10 @@ class RangeOption : public Option {
     float value;
 
   public:
-    RangeOption(Json::Value json);
-    Json::Value to_json();
+    RangeOption(float min, float max, float value);
+    RangeOption(SettingsProto::Range proto);
+    void to_proto(SettingsProto::Range* proto);
+    float get_value();
 };
 
 #endif

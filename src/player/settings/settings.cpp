@@ -5,6 +5,7 @@
 #include <fstream>
 #include "options.h"
 #include "system/file_utils.h"
+#include "src/proto/settings.pb.h"
 
 using namespace std;
 
@@ -19,64 +20,51 @@ void Settings::load() {
   read_settings(FileUtils::get_game_dir() / "settings.json");
 }
 
+void Settings::save_defaults() {
+  keys.clear();
+  keys.insert({"up", new KeyOption(sf::Keyboard::Key::W)});
+  keys.insert({"down", new KeyOption(sf::Keyboard::Key::S)});
+  keys.insert({"left", new KeyOption(sf::Keyboard::Key::A)});
+  keys.insert({"right", new KeyOption(sf::Keyboard::Key::D)});
+  buttons.clear();
+  buttons.insert({"fire", new ButtonOption(sf::Mouse::Button::Left)});
+  ranges.clear();
+  write_settings(FileUtils::get_game_dir() / "default_settings.json");
+}
+
 void Settings::save() {
   write_settings(FileUtils::get_game_dir() / "settings.json");
 }
 
 void Settings::read_settings(filesystem::path filename) {
   if (filesystem::exists(filename)) {
+    SettingsProto proto;
     ifstream file(filename);
-    Json::Value data;
-    file >> data;
+    proto.ParseFromIstream(&file);
     file.close();
-    for (Json::Value setting : data["settings"]["keys"]) {
-      keys.insert({setting["name"].asString(), new KeyOption(setting["value"])});
-    }
-    for (Json::Value setting : data["settings"]["buttons"]) {
-      buttons.insert({setting["name"].asString(), new ButtonOption(setting["value"])});
-    }
-    for (Json::Value setting : data["settings"]["ranges"]) {
-      ranges.insert({setting["name"].asString(), new RangeOption(setting["value"])});
-    }
+    cout << "Loaded settings" << endl << proto.DebugString() << endl;
   } else {
     throw filename.string() + " does not exist!";
   }
 }
 
 void Settings::write_settings(filesystem::path filename) {
-  Json::Value keys;
-  for (pair<string, KeyOption*> option : this->keys) {
-    Json::Value obj;
-    obj["name"] = option.first;
-    obj["value"] = option.second->to_json();
-    keys.append(obj);
+  SettingsProto proto;
+  SettingsProto::Key* key;
+  for (pair<string, KeyOption*> option : keys) {
+    key = proto.add_keys();
+    key->set_name(option.first);
+    option.second->to_proto(key);
   }
-  Json::Value buttons;
-  for (pair<string, ButtonOption*> option : this->buttons) {
-    Json::Value obj;
-    obj["name"] = option.first;
-    obj["value"] = option.second->to_json();
-    buttons.append(obj);
+  SettingsProto::Button* button;
+  for (pair<string, ButtonOption*> option : buttons) {
+    button = proto.add_buttons();
+    button->set_name(option.first);
+    option.second->to_proto(button);
   }
-  Json::Value ranges;
-  for (pair<string, RangeOption*> option : this->ranges) {
-    Json::Value obj;
-    obj["name"] = option.first;
-    obj["value"] = option.second->to_json();
-    ranges.append(obj);
-  }
-  Json::Value settings;
-  settings["keys"] = keys;
-  settings["buttons"] = buttons;
-  settings["ranges"] = ranges;
-  Json::Value data;
-  data["settings"] = settings;
-  Json::StreamWriterBuilder builder;
-  builder["commentStyle"] = "None";
-  builder["indentation"] = "";
-  std::unique_ptr<Json::StreamWriter> writer(builder.newStreamWriter());
+  cout << "Writing protobuf: " << endl << proto.DebugString() << endl;
   ofstream file(filename);
-  writer->write(data, &file);
+  proto.SerializeToOstream(&file);
   file.close();
 }
 

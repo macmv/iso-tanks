@@ -3,8 +3,6 @@ def cc_grpc_library(
   name,
   srcs,
   **kwargs):
-  if len(srcs) > 1:
-    fail("Only one srcs value supported", "srcs")
 
   extra_deps = []
   proto_targets = []

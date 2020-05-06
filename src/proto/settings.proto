@@ -1,0 +1,25 @@
+
+syntax = "proto3";
+
+message SettingsProto {
+  repeated Key keys = 1;
+  repeated Button buttons = 2;
+  repeated Range ranges = 3;
+
+  message Key {
+    string name = 1;
+    int32 key = 2;
+  }
+
+  message Button {
+    string name = 1;
+    int32 button = 2;
+  }
+
+  message Range {
+    string name = 1;
+    float min = 2;
+    float max = 3;
+    float value = 4;
+  }
+}
