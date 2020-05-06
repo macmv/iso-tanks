@@ -13,11 +13,11 @@ Settings::Settings() {
 }
 
 void Settings::load_defaults() {
-  read_settings(FileUtils::get_game_dir() / "default_settings.json");
+  read_settings(FileUtils::get_game_dir() / "default_settings.cfg");
 }
 
 void Settings::load() {
-  read_settings(FileUtils::get_game_dir() / "settings.json");
+  read_settings(FileUtils::get_game_dir() / "settings.cfg");
 }
 
 void Settings::save_defaults() {
@@ -29,11 +29,11 @@ void Settings::save_defaults() {
   buttons.clear();
   buttons.insert({"fire", new ButtonOption(sf::Mouse::Button::Left)});
   ranges.clear();
-  write_settings(FileUtils::get_game_dir() / "default_settings.json");
+  write_settings(FileUtils::get_game_dir() / "default_settings.cfg");
 }
 
 void Settings::save() {
-  write_settings(FileUtils::get_game_dir() / "settings.json");
+  write_settings(FileUtils::get_game_dir() / "settings.cfg");
 }
 
 void Settings::read_settings(filesystem::path filename) {
@@ -43,7 +43,17 @@ void Settings::read_settings(filesystem::path filename) {
     proto.ParseFromIstream(&file);
     file.close();
     cout << "Loaded settings" << endl << proto.DebugString() << endl;
+    for (SettingsProto::Key key : proto.keys()) {
+      keys.insert({key.name(), new KeyOption(key)});
+    }
+    for (SettingsProto::Button button : proto.buttons()) {
+      buttons.insert({button.name(), new ButtonOption(button)});
+    }
+    for (SettingsProto::Range range : proto.ranges()) {
+      ranges.insert({range.name(), new RangeOption(range)});
+    }
   } else {
+    cerr << filename.string() + " does not exist!";
     throw filename.string() + " does not exist!";
   }
 }

@@ -6,6 +6,7 @@ KeyOption::KeyOption(sf::Keyboard::Key key) {
 }
 
 KeyOption::KeyOption(SettingsProto::Key proto) {
+  this->key = static_cast<sf::Keyboard::Key>(proto.key());
 }
 
 void KeyOption::to_proto(SettingsProto::Key* proto) {
@@ -21,6 +22,7 @@ ButtonOption::ButtonOption(sf::Mouse::Button button) {
 }
 
 ButtonOption::ButtonOption(SettingsProto::Button proto) {
+  this->button = static_cast<sf::Mouse::Button>(proto.button());
 }
 
 void ButtonOption::to_proto(SettingsProto::Button* proto) {
@@ -38,6 +40,9 @@ RangeOption::RangeOption(float min, float max, float value) {
 }
 
 RangeOption::RangeOption(SettingsProto::Range proto) {
+  this->min = proto.min();
+  this->max = proto.max();
+  this->value = proto.value();
 }
 
 void RangeOption::to_proto(SettingsProto::Range* proto) {
