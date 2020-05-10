@@ -1,7 +1,6 @@
 #ifndef _OPTION_H
 #define _OPTION_H
 
-#include <string>
 #include <SFML/Window.hpp>
 #include "src/proto/settings.pb.h"
 

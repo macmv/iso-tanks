@@ -21,8 +21,8 @@ Settings::Settings() {
 
 void Settings::load_defaults() {
   keys.clear();
-  keys.insert({"up", new KeyOption(sf::Keyboard::Key::W)});
-  keys.insert({"down", new KeyOption(sf::Keyboard::Key::S)});
+  keys.insert({"forward", new KeyOption(sf::Keyboard::Key::W)});
+  keys.insert({"backward", new KeyOption(sf::Keyboard::Key::S)});
   keys.insert({"left", new KeyOption(sf::Keyboard::Key::A)});
   keys.insert({"right", new KeyOption(sf::Keyboard::Key::D)});
   buttons.clear();
@@ -56,7 +56,7 @@ void Settings::read_settings(filesystem::path filename) {
     }
   } else {
     cerr << filename.string() + " does not exist!" << endl;
-    throw filename.string() + " does not exist!" << endl;
+    throw filename.string() + " does not exist!";
   }
 }
 
@@ -78,6 +78,13 @@ void Settings::write_settings(filesystem::path filename) {
   ofstream file(filename);
   proto.SerializeToOstream(&file);
   file.close();
+}
+
+void Settings::setup_controller(Controller* controller) {
+  controller->add("forward", keys.at("forward"));
+  controller->add("backward", keys.at("backward"));
+  controller->add("right", keys.at("right"));
+  controller->add("left", keys.at("left"));
 }
 
 void Settings::add_range(std::string name, RangeOption* option) {

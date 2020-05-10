@@ -2,10 +2,10 @@
 #define _SETTINGS_H
 
 #include "options.h"
+#include "controller.h"
 #include <filesystem>
 #include <json/json.h>
 #include <unordered_map>
-#include <string>
 
 class Settings {
   private:
@@ -18,6 +18,7 @@ class Settings {
     void load_defaults();
     void load();
     void save();
+    void setup_controller(Controller* controller);
     void add_range(std::string name, RangeOption* option);
     void add_key(std::string name, KeyOption* option);
     void add_button(std::string name, ButtonOption* option);
