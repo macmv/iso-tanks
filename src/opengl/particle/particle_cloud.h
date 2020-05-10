@@ -24,7 +24,7 @@ class ParticleCloud {
     GLuint colors_vbo;
     Shader* shader;
     std::vector<Particle*> particles;
-    glm::vec3 position;
+    glm::vec3 position = glm::vec3(0);
     Particle* base_particle;
     clock_t time_spawned;
 
