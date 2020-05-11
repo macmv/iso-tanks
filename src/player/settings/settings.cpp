@@ -20,14 +20,12 @@ Settings::Settings() {
 }
 
 void Settings::load_defaults() {
-  keys.clear();
+  clean();
   keys.insert({"forward", new KeyOption(sf::Keyboard::Key::W)});
   keys.insert({"backward", new KeyOption(sf::Keyboard::Key::S)});
   keys.insert({"left", new KeyOption(sf::Keyboard::Key::A)});
   keys.insert({"right", new KeyOption(sf::Keyboard::Key::D)});
-  buttons.clear();
   buttons.insert({"fire", new ButtonOption(sf::Mouse::Button::Left)});
-  ranges.clear();
 }
 
 void Settings::load() {
@@ -43,6 +41,21 @@ void Settings::setup_controller(Controller* controller) {
   controller->add("backward", keys.at("backward"));
   controller->add("left", keys.at("left"));
   controller->add("right", keys.at("right"));
+}
+
+void Settings::clean() {
+  for (pair<string, KeyOption*> option : keys) {
+    delete option.second;
+  }
+  keys.clear();
+  for (pair<string, ButtonOption*> option : buttons) {
+    delete option.second;
+  }
+  buttons.clear();
+  for (pair<string, RangeOption*> option : ranges) {
+    delete option.second;
+  }
+  ranges.clear();
 }
 
 void Settings::read_settings(filesystem::path filename) {

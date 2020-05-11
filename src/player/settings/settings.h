@@ -18,6 +18,7 @@ class Settings {
     void load_defaults();
     void load();
     void save();
+    void clean();
     void setup_controller(Controller* controller);
     void add_range(std::string name, RangeOption* option);
     void add_key(std::string name, KeyOption* option);
