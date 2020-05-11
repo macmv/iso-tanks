@@ -7,6 +7,7 @@
 #include "world/world.h"
 #include "network/client.h"
 #include "ui/hud.h"
+#include "player/settings/settings.h"
 
 using namespace std;
 
@@ -21,12 +22,16 @@ int main() {
   scene_manager->add("assets/missile.glb");
   scene_manager->load();
 
+  Settings* settings = new Settings();
+  Controller* controller = new Controller();
+  settings->setup_controller(controller);
+
   Terrain* terrain = new Terrain(100);
   terrain->create_model();
   World* world = new World(terrain, true, scene_manager, render->particle_manager);
   render->world = world;
 
-  world->create_this_player(render->camera);
+  world->create_this_player(controller, render->camera);
 
   Client* client = new Client(world);
 

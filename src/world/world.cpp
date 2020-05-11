@@ -3,6 +3,7 @@
 #include "player/player.h"
 #include "player/projectile/missile.h"
 #include "network/proto_util.h"
+#include "player/settings/controller.h"
 #include <bullet/btBulletDynamicsCommon.h>
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
@@ -91,7 +92,7 @@ void World::draw_debug() {
 void World::clean() {
 }
 
-void World::create_this_player(Camera* camera) {
+void World::create_this_player(Controller* controller, Camera* camera) {
   btRigidBody* body = add_body(glm::translate(glm::mat4(1), glm::vec3(0, -970, 0)), "player", 1);
   body->setFriction(.5);
   body->setSpinningFriction(.3);

@@ -38,6 +38,13 @@ void Settings::save() {
   write_settings(FileUtils::get_game_dir() / "settings.cfg");
 }
 
+void Settings::setup_controller(Controller* controller) {
+  controller->add("forward", keys.at("forward"));
+  controller->add("backward", keys.at("backward"));
+  controller->add("left", keys.at("left"));
+  controller->add("right", keys.at("right"));
+}
+
 void Settings::read_settings(filesystem::path filename) {
   if (filesystem::exists(filename)) {
     SettingsProto proto;
@@ -78,13 +85,6 @@ void Settings::write_settings(filesystem::path filename) {
   ofstream file(filename);
   proto.SerializeToOstream(&file);
   file.close();
-}
-
-void Settings::setup_controller(Controller* controller) {
-  controller->add("forward", keys.at("forward"));
-  controller->add("backward", keys.at("backward"));
-  controller->add("right", keys.at("right"));
-  controller->add("left", keys.at("left"));
 }
 
 void Settings::add_range(std::string name, RangeOption* option) {

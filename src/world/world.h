@@ -6,6 +6,7 @@
 #include "player/player.h"
 #include "player/event/shoot_event.h"
 #include "player/projectile/projectile.h"
+#include "player/settings/controller.h"
 #include "opengl/camera.h"
 #include "debug.h"
 #include "models/scene_manager.h"
@@ -40,7 +41,7 @@ class World {
     World(Terrain* terrain, bool needs_debug);
     World(Terrain* terrain, bool needs_debug, SceneManager* scene_manager, ParticleManager* particle_manager);
     ~World();
-    void create_this_player(Camera* camera);
+    void create_this_player(Controller* controller, Camera* camera);
     uint add_player();
     void add_player(uint id);
     bool has_player(uint id);
