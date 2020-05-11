@@ -41,6 +41,7 @@ void Settings::setup_controller(Controller* controller) {
   controller->add("backward", keys.at("backward"));
   controller->add("left", keys.at("left"));
   controller->add("right", keys.at("right"));
+  controller->add("fire", buttons.at("fire"));
 }
 
 void Settings::clean() {

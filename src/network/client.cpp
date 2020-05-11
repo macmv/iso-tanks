@@ -25,9 +25,7 @@ Client::Client(World* world) {
 }
 
 void Client::update_events(ControlledPlayer* player, bool didFire) {
-  if (didFire) {
-    events->shoot(player);
-  }
+  player->update_events(events);
 }
 
 void Client::send_update(std::shared_ptr<grpc::ClientReaderWriter<PlayerUpdate, PlayerUpdateResponse>> stream) {

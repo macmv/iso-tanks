@@ -71,3 +71,9 @@ void ControlledPlayer::update(float mouse_x_delta) {
   }
 }
 
+void ControlledPlayer::update_events(EventList* events) {
+  if (controller->is_action_pressed("fire")) {
+    events->shoot(transform * glm::rotate(glm::mat4(1), turret_angle, glm::vec3(0, 1, 0)));
+  }
+}
+

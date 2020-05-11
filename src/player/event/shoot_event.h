@@ -3,7 +3,6 @@
 
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
-#include "player/controlled_player.h"
 #include "src/proto/multiplayer.grpc.pb.h"
 
 class ShootEvent {
@@ -11,7 +10,7 @@ class ShootEvent {
     glm::mat4 transform;
 
   public:
-    ShootEvent(ControlledPlayer* player);
+    ShootEvent(glm::mat4 transform);
     ShootEvent(PlayerShootEvent proto);
     void to_proto(PlayerShootEvent* proto);
 };

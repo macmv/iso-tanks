@@ -19,8 +19,8 @@ void EventList::to_proto(PlayerEvents* proto) {
   }
 }
 
-void EventList::shoot(ControlledPlayer* player) {
+void EventList::shoot(glm::mat4 transform) {
   delete shoot_event;
-  shoot_event = new ShootEvent(player);
+  shoot_event = new ShootEvent(transform);
 }
 
