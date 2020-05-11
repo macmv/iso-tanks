@@ -97,7 +97,7 @@ void World::create_this_player(Controller* controller, Camera* camera) {
   body->setFriction(.5);
   body->setSpinningFriction(.3);
 
-  this_player = new ControlledPlayer(body, scene_manager, camera);
+  this_player = new ControlledPlayer(body, controller, scene_manager, camera);
 }
 
 uint World::add_player() {

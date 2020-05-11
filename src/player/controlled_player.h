@@ -4,13 +4,15 @@
 #include "player.h"
 #include "opengl/camera.h"
 #include "models/scene_manager.h"
+#include "settings/controller.h"
 
 class ControlledPlayer final : public Player {
   private:
     glm::mat4 turret_transform;
+    Controller* controller;
 
   public:
-    ControlledPlayer(btRigidBody* body, SceneManager* scene_manager, Camera* camera);
+    ControlledPlayer(btRigidBody* body, Controller* controller, SceneManager* scene_manager, Camera* camera);
     void update(float mouse_x_delta);
 };
 

@@ -10,7 +10,8 @@
 
 using namespace std;
 
-ControlledPlayer::ControlledPlayer(btRigidBody* body, SceneManager* scene_manager, Camera* camera) : Player(body, scene_manager) {
+ControlledPlayer::ControlledPlayer(btRigidBody* body, Controller* controller, SceneManager* scene_manager, Camera* camera) : Player(body, scene_manager) {
+  this->controller = controller;
   for (ModelInstance* model : *scene->models) {
     if (model->model->name.compare("Turret") == 0) {
       turret_transform = model->transform;
@@ -41,23 +42,17 @@ void ControlledPlayer::update(float mouse_x_delta) {
     torque_speed = 0;
   }
 
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+  if (controller->is_action_pressed("forward")) {
     force += forward * speed;
   }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+  if (controller->is_action_pressed("left")) {
     torque_amount += torque_speed;
   }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+  if (controller->is_action_pressed("backward")) {
     force += -forward * speed;
   }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+  if (controller->is_action_pressed("right")) {
     torque_amount -= torque_speed;
-  }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-    force += glm::vec3(0, speed, 0);
-  }
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-    force += glm::vec3(0, -speed, 0);
   }
 
   body->activate();

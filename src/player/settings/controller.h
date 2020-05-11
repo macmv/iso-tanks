@@ -14,8 +14,9 @@ class Controller {
   public:
     void add(std::string name, KeyOption* option);
     void add(std::string name, ButtonOption* option);
-    KeyAction* get_key_action(std::string name);
-    MouseButtonAction* get_mouse_button_action(std::string name);
+    bool is_action_pressed(std::string name);
+  private:
+    bool has_action(std::string name);
 };
 
 #endif
