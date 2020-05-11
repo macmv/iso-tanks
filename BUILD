@@ -57,16 +57,6 @@ cmake_external(
                       "libBullet3Common.so.2.89"],
 )
 
-cmake_external(
-  name = "jsoncpp",
-  lib_source = "@jsoncpp//:all",
-  cmake_options = ["-DBUILD_SHARED_LIBS=ON",
-                   "-DBUILD_STATIC_LIBS=OFF",
-                   "-DINSTALL_LIBS=ON"],
-  make_commands = ["make -j $(command nproc 2>/dev/null || echo 12)", "make install"],
-  shared_libraries = ["libjsoncpp.so.23"],
-)
-
 filegroup(
   name = "shaders",
   srcs = glob(["src/shader/**/*.glsl"]),
@@ -97,7 +87,6 @@ cc_library(
   deps = [":proto_cc_grpc",
           ":sfml",
           ":bullet",
-          ":jsoncpp",
           "@grpc//:grpc++",
           "@com_google_protobuf//:protobuf"],
 )
@@ -140,7 +129,6 @@ cc_library(
   deps = [":proto_cc_grpc",
           ":sfml",
           ":bullet",
-          ":jsoncpp",
           "@grpc//:grpc++",
           "@com_google_protobuf//:protobuf"],
 )
@@ -183,7 +171,6 @@ cc_library(
   deps = [":proto_cc_grpc",
           ":sfml",
           ":bullet",
-          ":jsoncpp",
           "@grpc//:grpc++",
           "@com_google_protobuf//:protobuf"],
 )
