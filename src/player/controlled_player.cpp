@@ -17,18 +17,18 @@ ControlledPlayer::ControlledPlayer(btRigidBody* body, Controller* controller, Sc
       turret_transform = model->transform;
     }
   }
-  camera->set_player_transform(transform);
 }
 
 void ControlledPlayer::update(float mouse_x_delta) {
   btTransform body_transform;
   body->getMotionState()->getWorldTransform(body_transform);
-  body_transform.getOpenGLMatrix(glm::value_ptr(*transform));
+  body_transform.getOpenGLMatrix(glm::value_ptr(transform));
+  scene->transform = transform;
 
   float torque_amount = 0;
   glm::vec3 force = glm::vec3(0, 0, 0);
-  glm::vec3 up = glm::normalize(glm::vec3((*transform)[3]) * -1.f);
-  glm::vec3 forward = glm::vec3(*transform * glm::vec4(0, 0, 1, 0));
+  glm::vec3 up = glm::normalize(glm::vec3(transform[3]) * -1.f);
+  glm::vec3 forward = glm::vec3(transform * glm::vec4(0, 0, 1, 0));
   // glm::vec3 left = cross(up, forward);
 
   glm::vec3 vel = glm::vec3(body->getLinearVelocity().x(), body->getLinearVelocity().y(), body->getLinearVelocity().z());

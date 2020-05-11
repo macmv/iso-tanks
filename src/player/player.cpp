@@ -14,9 +14,9 @@ Player::Player(btRigidBody* body, SceneManager* scene_manager) {
   this->body = body;
   if (scene_manager != NULL) {
     scene = scene_manager->new_instance("assets/player.glb");
-    transform = &scene->transform;
+    transform = scene->transform;
   } else {
-    transform = new glm::mat4(1);
+    transform = glm::mat4(1);
   }
   turret_angle = 0;
   health = 100;
@@ -25,11 +25,11 @@ Player::Player(btRigidBody* body, SceneManager* scene_manager) {
 void Player::update() {
   btTransform body_transform;
   body->getMotionState()->getWorldTransform(body_transform);
-  body_transform.getOpenGLMatrix(glm::value_ptr(*transform));
+  body_transform.getOpenGLMatrix(glm::value_ptr(transform));
 }
 
 glm::mat4 Player::get_transform() {
-  return *transform;
+  return transform;
 }
 
 void Player::set_transform(glm::mat4 trans) {

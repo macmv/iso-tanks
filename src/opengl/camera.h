@@ -17,7 +17,7 @@ class Camera {
     glm::vec3 dir;
     sf::Vector2i old_pos;
     glm::vec2 mouse_delta = glm::vec2();
-    glm::mat4* player_transform;
+    glm::mat4 player_transform;
 
   public:
     Camera();

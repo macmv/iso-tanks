@@ -23,11 +23,9 @@ Camera::Camera() {
   dir = glm::vec3(0, 0, 1);
 }
 
-void Camera::set_player_transform(glm::mat4* transform) {
-  player_transform = transform;
-}
-
 void Camera::update(Display* display, Player* player) {
+  player_transform = player->get_transform();
+
   glm::vec3 up = glm::vec3(0, 1, 0);
   // glm::vec3 forward = glm::vec3(0, 0, 1);
   glm::vec3 pos = glm::vec3(0, 3, 0);
@@ -54,7 +52,7 @@ void Camera::update(Display* display, Player* player) {
   view = glm::lookAt(
     pos,                    // pos
     pos + dir,              // target
-    up) * glm::inverse(*player_transform); // up
+    up) * glm::inverse(player_transform); // up
 }
 
 void Camera::load_mat(Shader* shader) {
