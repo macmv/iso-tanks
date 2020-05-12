@@ -10,9 +10,9 @@
 #include "opengl/camera.h"
 #include "debug.h"
 #include "models/scene_manager.h"
-#include <bullet/btBulletDynamicsCommon.h>
 #include <time.h>
 #include <unordered_map>
+#include <reactphysics3d.h>
 
 class ControlledPlayer;
 class Projectile;
@@ -20,22 +20,17 @@ class ParticleManager;
 
 class World {
   private:
-    btDefaultCollisionConfiguration*         collision_configuration;
-    btCollisionDispatcher*                   dispatcher;
-    btBroadphaseInterface*                   overlapping_pair_cache;
-    btSequentialImpulseConstraintSolver*     solver;
-    btDiscreteDynamicsWorld*                 dynamics_world;
-    std::unordered_map<std::string, btCollisionShape*>*   collision_shapes = new std::unordered_map<std::string, btCollisionShape*>();
-    DebugDraw*                                            debug_draw;
-    clock_t                                               prev_update;
+    rp3d::DynamicsWorld world = rp3d::DynamicsWorld(rp3d::Vector3(0, 10, 0), rp3d::WorldSettings());
+    std::unordered_map<std::string, rp3d::CollisionShape*> collision_shapes = std::unordered_map<std::string, rp3d::CollisionShape*>();
+    clock_t                                prev_update;
+    std::vector<ModelInstance*>*           models = new std::vector<ModelInstance*>();
+    SceneManager*                          scene_manager = NULL;
+    ParticleManager*                       particle_manager = NULL;
+    std::mutex                             world_mutex;
   public:
-    std::unordered_map<uint, Player*>*       players = new std::unordered_map<uint, Player*>();
-    std::unordered_map<uint, Projectile*>*   projectiles = new std::unordered_map<uint, Projectile*>();
-    ControlledPlayer*                        this_player = NULL;
-    std::vector<ModelInstance*>*             models = new std::vector<ModelInstance*>();
-    SceneManager*                            scene_manager = NULL;
-    ParticleManager*                         particle_manager = NULL;
-    std::mutex                               world_mutex;
+    ControlledPlayer*                      this_player = NULL;
+    std::unordered_map<uint, Projectile*>* projectiles = new std::unordered_map<uint, Projectile*>();
+    std::unordered_map<uint, Player*>*     players = new std::unordered_map<uint, Player*>();
 
   public:
     World(Terrain* terrain, bool needs_debug);
@@ -58,7 +53,7 @@ class World {
     void clean();
     ControlledPlayer* get_this_player();
   private:
-    btRigidBody* add_body(glm::mat4 transform, string shape_name, float mass);
+    rp3d::RigidBody* add_body(glm::mat4 transform, vector<pair<string, rp3d::Transform>> shapes, float mass);
 };
 
 #endif

@@ -4,7 +4,7 @@ using namespace std;
 
 Missile::Missile(glm::mat4 transform,
     glm::vec3 velocity,
-    btRigidBody* body,
+    rp3d::RigidBody* body,
     SceneManager* scene_manager,
     ParticleManager* particle_manager) : Projectile(transform,
       velocity,
@@ -16,7 +16,7 @@ Missile::Missile(glm::mat4 transform,
   this->particle_manager = particle_manager;
 }
 
-Missile::Missile(glm::mat4 transform, glm::vec3 velocity, btRigidBody* body) : Projectile(transform, velocity, body) {
+Missile::Missile(glm::mat4 transform, glm::vec3 velocity, rp3d::RigidBody* body) : Projectile(transform, velocity, body) {
   particle_manager = NULL;
 }
 

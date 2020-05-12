@@ -6,6 +6,7 @@
 #include "models/scene_manager.h"
 #include "settings/controller.h"
 #include "event_list.h"
+#include <reactphysics3d.h>
 
 class ControlledPlayer final : public Player {
   private:
@@ -13,7 +14,7 @@ class ControlledPlayer final : public Player {
     Controller* controller;
 
   public:
-    ControlledPlayer(btRigidBody* body, Controller* controller, SceneManager* scene_manager, Camera* camera);
+    ControlledPlayer(rp3d::RigidBody* body, Controller* controller, SceneManager* scene_manager, Camera* camera);
     void update(float mouse_x_delta);
     void update_events(EventList* events);
 };

@@ -4,13 +4,12 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 #include <glm/gtx/string_cast.hpp>
-#include <bullet/btBulletDynamicsCommon.h>
 #include <SFML/Window.hpp>
 #include <iostream>
 
 using namespace std;
 
-Player::Player(btRigidBody* body, SceneManager* scene_manager) {
+Player::Player(rp3d::RigidBody* body, SceneManager* scene_manager) {
   this->body = body;
   if (scene_manager != NULL) {
     scene = scene_manager->new_instance("assets/player.glb");
@@ -23,8 +22,7 @@ Player::Player(btRigidBody* body, SceneManager* scene_manager) {
 }
 
 void Player::update() {
-  btTransform body_transform;
-  body->getMotionState()->getWorldTransform(body_transform);
+  rp3d::Transform body_transform = body->getTransform();
   body_transform.getOpenGLMatrix(glm::value_ptr(transform));
 }
 
@@ -33,14 +31,15 @@ glm::mat4 Player::get_transform() {
 }
 
 void Player::set_transform(glm::mat4 trans) {
-  btTransform body_transform = btTransform(btMatrix3x3(trans[0][0], trans[1][0], trans[2][0],
-                                                       trans[0][1], trans[1][1], trans[2][1],
-                                                       trans[0][2], trans[1][2], trans[2][2]),
-                                           btVector3(trans[3][0], trans[3][1], trans[3][2]));
-  body->activate();
-  body->setWorldTransform(body_transform);
+  rp3d::Transform body_transform = rp3d::Transform(rp3d::Vector3(trans[3][0], trans[3][1], trans[3][2]),
+                                                   rp3d::Matrix3x3(trans[0][1], trans[1][1], trans[2][1],
+                                                                   trans[0][2], trans[1][2], trans[2][2],
+                                                                   trans[0][3], trans[1][3], trans[2][3]));
+  body->setIsActive(true);
+  body->setTransform(body_transform);
 }
 
 void Player::set_gravity(glm::vec3 gravity) {
-  body->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
+  // body->setGravity(rp3d::Vector3(gravity.x, gravity.y, gravity.z));
+  body->enableGravity(true);
 }

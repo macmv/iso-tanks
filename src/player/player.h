@@ -1,12 +1,12 @@
 #ifndef _PLAYER_H
 #define _PLAYER_H
 
-#include <bullet/btBulletDynamicsCommon.h>
 #include "models/scene_manager.h"
+#include <reactphysics3d.h>
 
 class Player {
   protected:
-    btRigidBody* body;
+    rp3d::RigidBody* body;
     int health;
     glm::mat4 transform;
   public:
@@ -14,7 +14,7 @@ class Player {
     Scene* scene;
 
   public:
-    Player(btRigidBody* body, SceneManager* scene_manager);
+    Player(rp3d::RigidBody* body, SceneManager* scene_manager);
     void update();
     glm::mat4 get_transform();
     void set_transform(glm::mat4 transform);

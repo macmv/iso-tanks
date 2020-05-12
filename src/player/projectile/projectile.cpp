@@ -7,7 +7,7 @@ using namespace std;
 
 Projectile::Projectile(glm::mat4 transform,
     glm::vec3 velocity,
-    btRigidBody* body,
+    rp3d::RigidBody* body,
     SceneManager* scene_manager,
     string scene_name) : Projectile(transform,
       velocity,
@@ -16,29 +16,29 @@ Projectile::Projectile(glm::mat4 transform,
   update();
 }
 
-Projectile::Projectile(glm::mat4 transform, glm::vec3 velocity, btRigidBody* body) {
-  btTransform body_transform = btTransform(btMatrix3x3(transform[0][0], transform[1][0], transform[2][0],
-                                                       transform[0][1], transform[1][1], transform[2][1],
-                                                       transform[0][2], transform[1][2], transform[2][2]),
-                                             btVector3(transform[3][0], transform[3][1], transform[3][2]));
-  body->setWorldTransform(body_transform);
-  body->setLinearVelocity(btVector3(velocity.x, velocity.y, velocity.z));
+Projectile::Projectile(glm::mat4 transform, glm::vec3 velocity, rp3d::RigidBody* body) {
+  rp3d::Transform body_transform = rp3d::Transform(rp3d::Vector3(transform[3][0], transform[3][1], transform[3][2]),
+                                                   rp3d::Matrix3x3(transform[0][1], transform[1][1], transform[2][1],
+                                                                   transform[0][2], transform[1][2], transform[2][2],
+                                                                   transform[0][3], transform[1][3], transform[2][3]));
+  body->setTransform(body_transform);
+  body->setLinearVelocity(rp3d::Vector3(velocity.x, velocity.y, velocity.z));
   this->body = body;
   update();
 }
 
 void Projectile::update() {
-  btTransform body_transform = body->getWorldTransform();
+  rp3d::Transform body_transform = body->getTransform();
   body_transform.getOpenGLMatrix(glm::value_ptr(transform));
 
   if (scene != NULL) {
     scene->transform = transform;
   }
 
-  btVector3 body_velocity = body->getLinearVelocity();
-  velocity.x = body_velocity.x();
-  velocity.y = body_velocity.y();
-  velocity.z = body_velocity.z();
+  rp3d::Vector3 body_velocity = body->getLinearVelocity();
+  velocity.x = body_velocity.x;
+  velocity.y = body_velocity.y;
+  velocity.z = body_velocity.z;
 }
 
 float Projectile::get_speed() {
@@ -58,5 +58,5 @@ glm::vec3 Projectile::get_velocity() {
 }
 
 void Projectile::set_gravity(glm::vec3 gravity) {
-  body->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
+  // body->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
 }

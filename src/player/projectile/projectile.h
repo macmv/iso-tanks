@@ -5,6 +5,7 @@
 #include "models/scene_manager.h"
 #include "src/proto/multiplayer.grpc.pb.h"
 #include "opengl/render.h"
+#include <reactphysics3d.h>
 
 class ParticleCloud;
 class Render;
@@ -16,11 +17,11 @@ class Projectile {
   private:
     Scene* scene = NULL;
     glm::vec3 velocity;
-    btRigidBody* body;
+    rp3d::RigidBody* body;
 
   public:
-    Projectile(glm::mat4 transform, glm::vec3 velocity, btRigidBody* body, SceneManager* scene_manager, std::string scene_name);
-    Projectile(glm::mat4 transform, glm::vec3 velocity, btRigidBody* body);
+    Projectile(glm::mat4 transform, glm::vec3 velocity, rp3d::RigidBody* body, SceneManager* scene_manager, std::string scene_name);
+    Projectile(glm::mat4 transform, glm::vec3 velocity, rp3d::RigidBody* body);
     virtual void update();
     float get_speed();
     Scene* get_scene();

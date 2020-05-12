@@ -32,22 +32,22 @@ http_archive(
     build_file_content = all_content,
     strip_prefix = "SFML-2.5.1",
     urls = ["https://github.com/SFML/SFML/archive/2.5.1.tar.gz"],
-    sha256 = "438c91a917cc8aa19e82c6f59f8714da353c488584a007d401efac8368e1c785"
+    sha256 = "438c91a917cc8aa19e82c6f59f8714da353c488584a007d401efac8368e1c785",
     )
 
 http_archive(
-    name = "bullet",
+    name = "reactphysics3d",
     build_file_content = all_content,
-    strip_prefix = "bullet3-2.89",
-    urls = ["https://github.com/bulletphysics/bullet3/archive/2.89.tar.gz"],
-    sha256 = "621b36e91c0371933f3c2156db22c083383164881d2a6b84636759dc4cbb0bb8",
+    strip_prefix = "reactphysics3d-0.7.1",
+    urls = ["https://github.com/DanielChappuis/reactphysics3d/archive/v0.7.1.zip"],
+    sha256 = "4e74a13d7f9861fd87abe2a7585e8ad04f66afc2e274fd28e735551df8d7f535",
     )
 
 http_archive(
     name = "grpc",
     strip_prefix = "grpc-1.28.1",
     urls = ["https://github.com/grpc/grpc/archive/v1.28.1.tar.gz"],
-    sha256 = "4cbce7f708917b6e58b631c24c59fe720acc8fef5f959df9a58cdf9558d0a79b"
+    sha256 = "4cbce7f708917b6e58b631c24c59fe720acc8fef5f959df9a58cdf9558d0a79b",
     )
 
 load("@grpc//bazel:grpc_deps.bzl", "grpc_deps")

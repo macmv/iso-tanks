@@ -4,7 +4,6 @@
 #include "player/projectile/missile.h"
 #include "network/proto_util.h"
 #include "player/settings/controller.h"
-#include <bullet/btBulletDynamicsCommon.h>
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <iostream>
@@ -13,60 +12,52 @@
 #include <time.h>
 #include <unordered_map>
 #include <chrono>
+#include "reactphysics3d.h"
 
 using namespace std;
 
 World::World(Terrain* terrain, bool needs_debug) {
-  // init
 
-  collision_configuration = new btDefaultCollisionConfiguration();
-  dispatcher              = new btCollisionDispatcher(collision_configuration);
-  overlapping_pair_cache  = new btDbvtBroadphase();
-  solver                  = new btSequentialImpulseConstraintSolver();
+  // const ;
+  // world = rp3d::DynamicsWorld(rp3d::Vector3(0, 0, 0), settings);
 
-  dynamics_world = new btDiscreteDynamicsWorld(dispatcher, overlapping_pair_cache, solver, collision_configuration);
+  rp3d::TriangleVertexArray* vertexArray = new rp3d::TriangleVertexArray(
+      terrain->vertices->size(),
+      terrain->vertices->data(), sizeof(glm::vec3),
+      terrain->indices->size() / 3,
+      terrain->indices->data(), 3 * sizeof(uint),
+      rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
+      rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE);
 
-  btTriangleMesh* mesh = new btTriangleMesh();
-  for (ulong i = 0; i < terrain->indices->size() / 3; i++) {
-    glm::vec3 a = terrain->vertices->at(terrain->indices->at(i * 3 + 0));
-    glm::vec3 b = terrain->vertices->at(terrain->indices->at(i * 3 + 1));
-    glm::vec3 c = terrain->vertices->at(terrain->indices->at(i * 3 + 2));
-    mesh->addTriangle(btVector3(a.x, a.y, a.z), btVector3(b.x, b.y, b.z), btVector3(c.x, c.y, c.z));
-  }
 
-  btCollisionShape* ground_shape = new btBvhTriangleMeshShape(mesh, true, true);
-  collision_shapes->insert({ "ground", ground_shape });
+  // Create the polyhedron mesh
+  rp3d::TriangleMesh mesh;
 
-  btTransform t;
+  mesh.addSubpart(vertexArray);
 
-  //btCollisionShape* shape = new btSphereShape(btScalar(1.));
-  btCollisionShape* cube = new btBoxShape(btVector3(1, .1, 1));
-  btCollisionShape* cylinder = new btCylinderShapeX(btVector3(1.5, 1, 1));
-  btCompoundShape* shape = new btCompoundShape();
-  t.setIdentity();
-  t.setOrigin(btVector3(0, -.9, 0));
-  shape->addChildShape(t, cube);
-  t.setIdentity();
-  t.setOrigin(btVector3(0, 0, -1));
-  shape->addChildShape(t, cylinder);
-  t.setIdentity();
-  t.setOrigin(btVector3(0, 0, 1));
-  shape->addChildShape(t, cylinder);
-  collision_shapes->insert({ "player", shape });
+  // Create the convex mesh collision shape
+  rp3d::CollisionShape* shape = new rp3d::ConcaveMeshShape(&mesh);
+  collision_shapes.insert({ "ground", shape });
 
-  cylinder = new btCylinderShape(btVector3(1, 1, 1));
-  t.setIdentity();
-  t.setOrigin(btVector3(0, 0, 0));
-  collision_shapes->insert({ "missile", cylinder });
+  shape = new rp3d::BoxShape(rp3d::Vector3(1, .1, 1));
+  collision_shapes.insert({ "player_box", shape });
 
-  btRigidBody* body = add_body(glm::mat4(1), "ground", 0);
-  body->setFriction(.8);
-  body->setRollingFriction(.8);
+  shape = new rp3d::CapsuleShape(1, 1.5);
+  collision_shapes.insert({ "player_capsule", shape });
+
+  shape = new rp3d::CapsuleShape(1, 1);
+  collision_shapes.insert({ "missile", shape });
+
+  vector<pair<string, rp3d::Transform>> shapes;
+  shapes.push_back(make_pair("ground", rp3d::Transform::identity()));
+  add_body(glm::translate(glm::mat4(1), glm::vec3(0, 0, 0)), shapes, 1);
+  // body->setFriction(.8);
+  // body->setRollingFriction(.8);
 
   if (needs_debug) {
-    debug_draw = new DebugDraw();
-    debug_draw->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
-    dynamics_world->setDebugDrawer(debug_draw);
+  //   debug_draw = new DebugDraw();
+  //   debug_draw->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
+  //   dynamics_world->setDebugDrawer(debug_draw);
   }
 
   prev_update =
@@ -78,24 +69,40 @@ World::World(Terrain* terrain, bool needs_debug) {
   srand(time(0));
 }
 
+World::~World() {
+  // for (int i = dynamics_world->getNumCollisionObjects() - 1; i >= 0; i--) {
+  //   rp3d::CollisionShape* obj = dynamics_world->getCollisionObjectArray()[i];
+  //   rp3d::RigidBody* body = btRigidBody::upcast(obj);
+  //   if (body && body->getMotionState()) {
+  //     delete body->getMotionState();
+  //   }
+  //   dynamics_world->removeCollisionObject(obj);
+  //   delete obj;
+  // }
+
+  for (pair<string, rp3d::CollisionShape*> items : collision_shapes) {
+    rp3d::CollisionShape* shape = items.second;
+    delete shape;
+  }
+  collision_shapes.clear();
+}
+
 World::World(Terrain* terrain, bool needs_debug, SceneManager* scene_manager, ParticleManager* particle_manager) : World(terrain, needs_debug) {
   this->scene_manager = scene_manager;
   this->particle_manager = particle_manager;
 }
 
 void World::draw_debug() {
-  debug_draw->start();
-  dynamics_world->debugDrawWorld();
-  debug_draw->end();
 }
 
 void World::clean() {
 }
 
 void World::create_this_player(Controller* controller, Camera* camera) {
-  btRigidBody* body = add_body(glm::translate(glm::mat4(1), glm::vec3(0, -970, 0)), "player", 1);
-  body->setFriction(.5);
-  body->setSpinningFriction(.3);
+  vector<pair<string, rp3d::Transform>> shapes;
+  shapes.push_back(make_pair("player_capsule", rp3d::Transform::identity()));
+  shapes.push_back(make_pair("player_capsule", rp3d::Transform::identity()));
+  rp3d::RigidBody* body = add_body(glm::translate(glm::mat4(1), glm::vec3(0, -1050, 0)), shapes, 1);
 
   this_player = new ControlledPlayer(body, controller, scene_manager, camera);
 }
@@ -107,9 +114,10 @@ uint World::add_player() {
 }
 
 void World::add_player(uint id) {
-  btRigidBody* body = add_body(glm::mat4(1), "player", 1);
-  body->setFriction(.5);
-  body->setSpinningFriction(.3);
+  vector<pair<string, rp3d::Transform>> shapes;
+  shapes.push_back(make_pair("player_capsule", rp3d::Transform::identity()));
+  shapes.push_back(make_pair("player_capsule", rp3d::Transform::identity()));
+  rp3d::RigidBody* body = add_body(glm::mat4(1), shapes, 1);
 
   Player* player = new Player(body, scene_manager);
   players->insert({id, player});
@@ -132,30 +140,6 @@ bool World::move_player(uint id, glm::mat4 transform) {
   Player* p = players->at(id);
   p->set_transform(transform);
   return true;
-}
-
-World::~World() {
-  for (int i = dynamics_world->getNumCollisionObjects() - 1; i >= 0; i--) {
-    btCollisionObject* obj = dynamics_world->getCollisionObjectArray()[i];
-    btRigidBody* body = btRigidBody::upcast(obj);
-    if (body && body->getMotionState()) {
-      delete body->getMotionState();
-    }
-    dynamics_world->removeCollisionObject(obj);
-    delete obj;
-  }
-
-  for (pair<string, btCollisionShape*> items : *collision_shapes) {
-    btCollisionShape* shape = items.second;
-    delete shape;
-  }
-  collision_shapes->clear();
-
-  delete dynamics_world;
-  delete solver;
-  delete overlapping_pair_cache;
-  delete dispatcher;
-  delete collision_configuration;
 }
 
 void World::update_controls(float mouse_x_delta) {
@@ -190,7 +174,7 @@ void World::update() {
   ulong update_time =
     std::chrono::system_clock::now().time_since_epoch() /
     std::chrono::milliseconds(1);
-  dynamics_world->stepSimulation((double) (update_time - prev_update) / 1000, 10);
+  world.update((double) (update_time - prev_update) / 1000);
   prev_update = update_time;
 
   world_mutex.unlock();
@@ -226,7 +210,9 @@ void World::add_projectile(ProjectileProto proto) {
     exit(1);
   }
 
-  btRigidBody* body = add_body(glm::mat4(1), "missile", .1f);
+  vector<pair<string, rp3d::Transform>> shapes;
+  shapes.push_back(make_pair("missile", rp3d::Transform::identity()));
+  rp3d::RigidBody* body = add_body(glm::mat4(1), shapes, .1f);
 
   glm::mat4 transform = ProtoUtil::to_glm(proto.transform());
   glm::vec3 vel = ProtoUtil::to_glm(proto.velocity());
@@ -242,7 +228,9 @@ void World::add_projectile(uint player_id, ProjectileProto proto) {
     exit(1);
   }
 
-  btRigidBody* body = add_body(glm::mat4(1), "missile", .1f);
+  vector<pair<string, rp3d::Transform>> shapes;
+  shapes.push_back(make_pair("missile", rp3d::Transform::identity()));
+  rp3d::RigidBody* body = add_body(glm::mat4(1), shapes, .1f);
 
   glm::mat4 transform = ProtoUtil::to_glm(proto.transform());
   // rotate upward vector to face the corrrect direction
@@ -260,24 +248,20 @@ bool World::has_projectile(uint id) {
   return projectiles->find(id) != projectiles->end();
 }
 
-btRigidBody* World::add_body(glm::mat4 trans, string shape_name, float mass) {
-  btCollisionShape* shape = collision_shapes->at(shape_name);
-
-  btTransform start_transform = btTransform(btMatrix3x3(trans[0][0], trans[1][0], trans[2][0],
-                                                        trans[0][1], trans[1][1], trans[2][1],
-                                                        trans[0][2], trans[1][2], trans[2][2]),
-                                            btVector3(trans[3][0], trans[3][1], trans[3][2]));
-
-  btVector3 local_inertia(0, 0, 0);
-  shape->calculateLocalInertia(mass, local_inertia);
-
-  btDefaultMotionState* motion_state = new btDefaultMotionState(start_transform);
-  btRigidBody::btRigidBodyConstructionInfo info(mass, motion_state, shape, local_inertia);
-  btRigidBody* body = new btRigidBody(info);
+rp3d::RigidBody* World::add_body(glm::mat4 trans, vector<pair<string, rp3d::Transform>> shapes, float mass) {
+  rp3d::Transform start_transform = rp3d::Transform(rp3d::Vector3(trans[3][0], trans[3][1], trans[3][2]),
+                                                    rp3d::Matrix3x3(trans[0][1], trans[1][1], trans[2][1],
+                                                                    trans[0][2], trans[1][2], trans[2][2],
+                                                                    trans[0][3], trans[1][3], trans[2][3]));
 
   // makes sure no one is editing the world while we add a body
   world_mutex.lock();
-  dynamics_world->addRigidBody(body);
+
+  rp3d::RigidBody* body = world.createRigidBody(start_transform);
+  for (pair<string, rp3d::Transform> shape : shapes) {
+    body->addCollisionShape(collision_shapes.at(shape.first), shape.second, 1);
+  }
+
   world_mutex.unlock();
 
   return body;
