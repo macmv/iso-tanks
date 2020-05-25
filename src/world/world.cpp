@@ -37,13 +37,9 @@ World::World(Terrain* terrain, bool needs_debug) {
 
   cout << "Triangles: " << world_shape->getNbTriangles(0) << endl;
 
-  world_mutex.lock();
-
-  rp3d::RigidBody* body = world.createRigidBody(rp3d::Transform::identity());
+  rp3d::RigidBody* body = add_body(glm::mat4(1));
   body->addCollisionShape(world_shape, rp3d::Transform::identity(), 0);
   body->setType(rp3d::BodyType::STATIC);
-
-  world_mutex.unlock();
 
   if (needs_debug) {
   //   debug_draw = new DebugDraw();
@@ -89,29 +85,23 @@ void World::clean() {
 }
 
 void World::create_this_player(Controller* controller, Camera* camera) {
-  world_mutex.lock();
-
-  rp3d::RigidBody* body = world.createRigidBody(rp3d::Transform(rp3d::Vector3(0, -970, 0), rp3d::Quaternion::identity()));
+  rp3d::RigidBody* body = add_body(glm::translate(glm::mat4(1), glm::vec3(0, -970, 0)));
   body->addCollisionShape(player_box_shape, rp3d::Transform::identity(), 1);
-
-  world_mutex.unlock();
 
   this_player = new ControlledPlayer(body, controller, scene_manager, camera);
 }
 
+// server function
 uint World::add_player() {
   uint id = (uint) rand();
   add_player(id);
   return id;
 }
 
+// client and server function
 void World::add_player(uint id) {
-  world_mutex.lock();
-
-  rp3d::RigidBody* body = world.createRigidBody(rp3d::Transform::identity());
+  rp3d::RigidBody* body = add_body(glm::mat4(1));
   body->addCollisionShape(player_box_shape, rp3d::Transform::identity(), 1);
-
-  world_mutex.unlock();
 
   Player* player = new Player(body, scene_manager);
   players->insert({id, player});
@@ -204,15 +194,11 @@ void World::add_projectile(ProjectileProto proto) {
     exit(1);
   }
 
-  world_mutex.lock();
-
-  rp3d::RigidBody* body = world.createRigidBody(rp3d::Transform::identity());
-  body->addCollisionShape(missile_shape, rp3d::Transform::identity(), 1);
-
-  world_mutex.unlock();
-
   glm::mat4 transform = ProtoUtil::to_glm(proto.transform());
   glm::vec3 vel = ProtoUtil::to_glm(proto.velocity());
+
+  rp3d::RigidBody* body = add_body(transform);
+  body->addCollisionShape(missile_shape, rp3d::Transform::identity(), 1);
 
   projectiles->insert({ proto.id(), new Missile(transform, vel, body, scene_manager, particle_manager) });
 }
@@ -225,20 +211,16 @@ void World::add_projectile(uint player_id, ProjectileProto proto) {
     exit(1);
   }
 
-  world_mutex.lock();
-
-  rp3d::RigidBody* body = world.createRigidBody(rp3d::Transform::identity());
-  body->addCollisionShape(missile_shape, rp3d::Transform::identity(), 1);
-
-  world_mutex.unlock();
-
   glm::mat4 transform = ProtoUtil::to_glm(proto.transform());
   // rotate upward vector to face the corrrect direction
   glm::vec3 vel = glm::vec3(transform * glm::vec4(0, 0, 1, 0));
   // make the projectile spawn in front of the player, not inside
   transform[3] = transform[3] + glm::vec4(vel * 1.5f, 0);
   // gotta go fast
-  vel = vel * 20.f;
+  vel = vel * 200.f;
+
+  rp3d::RigidBody* body = add_body(transform);
+  body->addCollisionShape(missile_shape, rp3d::Transform::identity(), 1);
 
   uint id = (uint) rand();
   projectiles->insert({ id, new Missile(transform, vel, body) });
@@ -248,9 +230,15 @@ bool World::has_projectile(uint id) {
   return projectiles->find(id) != projectiles->end();
 }
 
-rp3d::Transform World::to_rp3d(glm::mat4 trans) {
-  return rp3d::Transform(rp3d::Vector3(trans[3][0], trans[3][1], trans[3][2]),
-                         rp3d::Matrix3x3(trans[0][1], trans[1][1], trans[2][1],
-                                         trans[0][2], trans[1][2], trans[2][2],
-                                         trans[0][3], trans[1][3], trans[2][3]));
+rp3d::RigidBody* World::add_body(glm::mat4 trans) {
+  world_mutex.lock();
+
+  rp3d::RigidBody* body = world.createRigidBody(rp3d::Transform(rp3d::Vector3(trans[3][0], trans[3][1], trans[3][2]),
+                                                                rp3d::Matrix3x3(trans[0][0], trans[1][0], trans[2][0],
+                                                                                trans[0][1], trans[1][1], trans[2][1],
+                                                                                trans[0][2], trans[1][2], trans[2][2])));
+
+  world_mutex.unlock();
+
+  return body;
 }

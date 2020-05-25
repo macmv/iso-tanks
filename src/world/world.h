@@ -55,7 +55,8 @@ class World {
     void draw_debug();
     void clean();
     ControlledPlayer* get_this_player();
-    static rp3d::Transform to_rp3d(glm::mat4 transform);
+  private:
+    rp3d::RigidBody* add_body(glm::mat4 transform);
 };
 
 #endif

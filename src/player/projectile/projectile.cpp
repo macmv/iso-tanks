@@ -21,8 +21,8 @@ Projectile::Projectile(glm::mat4 transform, glm::vec3 velocity, rp3d::RigidBody*
                                                    rp3d::Matrix3x3(transform[0][1], transform[1][1], transform[2][1],
                                                                    transform[0][2], transform[1][2], transform[2][2],
                                                                    transform[0][3], transform[1][3], transform[2][3]));
-  body->setTransform(body_transform);
-  body->setLinearVelocity(rp3d::Vector3(velocity.x, velocity.y, velocity.z));
+  //body->setTransform(body_transform);
+  //body->setLinearVelocity(rp3d::Vector3(velocity.x, velocity.y, velocity.z));
   this->body = body;
   update();
 }
