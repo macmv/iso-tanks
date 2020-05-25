@@ -20,7 +20,7 @@ class ParticleManager;
 
 class World {
   private:
-    rp3d::DynamicsWorld world = rp3d::DynamicsWorld(rp3d::Vector3(0, 10, 0), rp3d::WorldSettings());
+    rp3d::DynamicsWorld world = rp3d::DynamicsWorld(rp3d::Vector3(0, -10, 0), rp3d::WorldSettings());
     std::unordered_map<std::string, rp3d::CollisionShape*> collision_shapes = std::unordered_map<std::string, rp3d::CollisionShape*>();
     clock_t                                prev_update;
     std::vector<ModelInstance*>*           models = new std::vector<ModelInstance*>();

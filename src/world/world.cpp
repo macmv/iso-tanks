@@ -29,17 +29,15 @@ World::World(Terrain* terrain, bool needs_debug) {
       rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
       rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE);
 
+  rp3d::TriangleMesh* mesh = new rp3d::TriangleMesh();
 
-  // Create the polyhedron mesh
-  rp3d::TriangleMesh mesh;
+  mesh->addSubpart(vertexArray);
 
-  mesh.addSubpart(vertexArray);
-
-  // Create the convex mesh collision shape
-  rp3d::CollisionShape* shape = new rp3d::ConcaveMeshShape(&mesh);
+  rp3d::CollisionShape* shape = new rp3d::ConcaveMeshShape(mesh);
+  cout << "Triangles: " << ((rp3d::ConcaveMeshShape*)shape)->getNbTriangles(0) << endl;
   collision_shapes.insert({ "ground", shape });
 
-  shape = new rp3d::BoxShape(rp3d::Vector3(1, .1, 1));
+  shape = new rp3d::BoxShape(rp3d::Vector3(1, 1, 1));
   collision_shapes.insert({ "player_box", shape });
 
   shape = new rp3d::CapsuleShape(1, 1.5);
@@ -50,7 +48,7 @@ World::World(Terrain* terrain, bool needs_debug) {
 
   vector<pair<string, rp3d::Transform>> shapes;
   shapes.push_back(make_pair("ground", rp3d::Transform::identity()));
-  add_body(glm::translate(glm::mat4(1), glm::vec3(0, 0, 0)), shapes, 1);
+  add_body(glm::translate(glm::mat4(1), glm::vec3(0, 0, 0)), shapes, 0);
   // body->setFriction(.8);
   // body->setRollingFriction(.8);
 
@@ -100,9 +98,8 @@ void World::clean() {
 
 void World::create_this_player(Controller* controller, Camera* camera) {
   vector<pair<string, rp3d::Transform>> shapes;
-  shapes.push_back(make_pair("player_capsule", rp3d::Transform::identity()));
-  shapes.push_back(make_pair("player_capsule", rp3d::Transform::identity()));
-  rp3d::RigidBody* body = add_body(glm::translate(glm::mat4(1), glm::vec3(0, -1050, 0)), shapes, 1);
+  shapes.push_back(make_pair("player_box", rp3d::Transform::identity()));
+  rp3d::RigidBody* body = add_body(glm::translate(glm::mat4(1), glm::vec3(0, 1050, 0)), shapes, 1);
 
   this_player = new ControlledPlayer(body, controller, scene_manager, camera);
 }
@@ -238,7 +235,7 @@ void World::add_projectile(uint player_id, ProjectileProto proto) {
   // make the projectile spawn in front of the player, not inside
   transform[3] = transform[3] + glm::vec4(vel * 1.5f, 0);
   // gotta go fast
-  vel = vel * 200.f;
+  vel = vel * 20.f;
 
   uint id = (uint) rand();
   projectiles->insert({ id, new Missile(transform, vel, body) });
@@ -259,7 +256,10 @@ rp3d::RigidBody* World::add_body(glm::mat4 trans, vector<pair<string, rp3d::Tran
 
   rp3d::RigidBody* body = world.createRigidBody(start_transform);
   for (pair<string, rp3d::Transform> shape : shapes) {
-    body->addCollisionShape(collision_shapes.at(shape.first), shape.second, 1);
+    body->addCollisionShape(collision_shapes.at(shape.first), shape.second, mass);
+  }
+  if (mass == 0) {
+    body->setType(rp3d::BodyType::STATIC);
   }
 
   world_mutex.unlock();
