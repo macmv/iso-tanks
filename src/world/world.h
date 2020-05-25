@@ -20,8 +20,11 @@ class ParticleManager;
 
 class World {
   private:
-    rp3d::DynamicsWorld world = rp3d::DynamicsWorld(rp3d::Vector3(0, -10, 0), rp3d::WorldSettings());
-    std::unordered_map<std::string, rp3d::CollisionShape*> collision_shapes = std::unordered_map<std::string, rp3d::CollisionShape*>();
+    rp3d::DynamicsWorld                    world = rp3d::DynamicsWorld(rp3d::Vector3(0, -10, 0), rp3d::WorldSettings());
+    rp3d::ConcaveMeshShape*                world_shape = NULL;
+    rp3d::BoxShape*                        player_box_shape = NULL;
+    rp3d::CapsuleShape*                    player_capsule_shape = NULL;
+    rp3d::CapsuleShape*                    missile_shape = NULL;
     clock_t                                prev_update;
     std::vector<ModelInstance*>*           models = new std::vector<ModelInstance*>();
     SceneManager*                          scene_manager = NULL;
@@ -52,8 +55,7 @@ class World {
     void draw_debug();
     void clean();
     ControlledPlayer* get_this_player();
-  private:
-    rp3d::RigidBody* add_body(glm::mat4 transform, vector<pair<string, rp3d::Transform>> shapes, float mass);
+    static rp3d::Transform to_rp3d(glm::mat4 transform);
 };
 
 #endif

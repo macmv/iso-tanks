@@ -18,9 +18,6 @@ using namespace std;
 
 World::World(Terrain* terrain, bool needs_debug) {
 
-  // const ;
-  // world = rp3d::DynamicsWorld(rp3d::Vector3(0, 0, 0), settings);
-
   rp3d::TriangleVertexArray* vertexArray = new rp3d::TriangleVertexArray(
       terrain->vertices->size(),
       terrain->vertices->data(), sizeof(glm::vec3),
@@ -33,24 +30,20 @@ World::World(Terrain* terrain, bool needs_debug) {
 
   mesh->addSubpart(vertexArray);
 
-  rp3d::CollisionShape* shape = new rp3d::ConcaveMeshShape(mesh);
-  cout << "Triangles: " << ((rp3d::ConcaveMeshShape*)shape)->getNbTriangles(0) << endl;
-  collision_shapes.insert({ "ground", shape });
+  world_shape = new rp3d::ConcaveMeshShape(mesh);
+  player_box_shape = new rp3d::BoxShape(rp3d::Vector3(1, 1, 1));
+  player_capsule_shape = new rp3d::CapsuleShape(1, 1.5);
+  missile_shape = new rp3d::CapsuleShape(1, 1);
 
-  shape = new rp3d::BoxShape(rp3d::Vector3(1, 1, 1));
-  collision_shapes.insert({ "player_box", shape });
+  cout << "Triangles: " << world_shape->getNbTriangles(0) << endl;
 
-  shape = new rp3d::CapsuleShape(1, 1.5);
-  collision_shapes.insert({ "player_capsule", shape });
+  world_mutex.lock();
 
-  shape = new rp3d::CapsuleShape(1, 1);
-  collision_shapes.insert({ "missile", shape });
+  rp3d::RigidBody* body = world.createRigidBody(rp3d::Transform::identity());
+  body->addCollisionShape(world_shape, rp3d::Transform::identity(), 0);
+  body->setType(rp3d::BodyType::STATIC);
 
-  vector<pair<string, rp3d::Transform>> shapes;
-  shapes.push_back(make_pair("ground", rp3d::Transform::identity()));
-  add_body(glm::translate(glm::mat4(1), glm::vec3(0, 0, 0)), shapes, 0);
-  // body->setFriction(.8);
-  // body->setRollingFriction(.8);
+  world_mutex.unlock();
 
   if (needs_debug) {
   //   debug_draw = new DebugDraw();
@@ -78,11 +71,10 @@ World::~World() {
   //   delete obj;
   // }
 
-  for (pair<string, rp3d::CollisionShape*> items : collision_shapes) {
-    rp3d::CollisionShape* shape = items.second;
-    delete shape;
-  }
-  collision_shapes.clear();
+  delete world_shape;
+  delete player_box_shape;
+  delete player_capsule_shape;
+  delete missile_shape;
 }
 
 World::World(Terrain* terrain, bool needs_debug, SceneManager* scene_manager, ParticleManager* particle_manager) : World(terrain, needs_debug) {
@@ -97,9 +89,12 @@ void World::clean() {
 }
 
 void World::create_this_player(Controller* controller, Camera* camera) {
-  vector<pair<string, rp3d::Transform>> shapes;
-  shapes.push_back(make_pair("player_box", rp3d::Transform::identity()));
-  rp3d::RigidBody* body = add_body(glm::translate(glm::mat4(1), glm::vec3(0, 1050, 0)), shapes, 1);
+  world_mutex.lock();
+
+  rp3d::RigidBody* body = world.createRigidBody(rp3d::Transform(rp3d::Vector3(0, -970, 0), rp3d::Quaternion::identity()));
+  body->addCollisionShape(player_box_shape, rp3d::Transform::identity(), 1);
+
+  world_mutex.unlock();
 
   this_player = new ControlledPlayer(body, controller, scene_manager, camera);
 }
@@ -111,10 +106,12 @@ uint World::add_player() {
 }
 
 void World::add_player(uint id) {
-  vector<pair<string, rp3d::Transform>> shapes;
-  shapes.push_back(make_pair("player_capsule", rp3d::Transform::identity()));
-  shapes.push_back(make_pair("player_capsule", rp3d::Transform::identity()));
-  rp3d::RigidBody* body = add_body(glm::mat4(1), shapes, 1);
+  world_mutex.lock();
+
+  rp3d::RigidBody* body = world.createRigidBody(rp3d::Transform::identity());
+  body->addCollisionShape(player_box_shape, rp3d::Transform::identity(), 1);
+
+  world_mutex.unlock();
 
   Player* player = new Player(body, scene_manager);
   players->insert({id, player});
@@ -207,9 +204,12 @@ void World::add_projectile(ProjectileProto proto) {
     exit(1);
   }
 
-  vector<pair<string, rp3d::Transform>> shapes;
-  shapes.push_back(make_pair("missile", rp3d::Transform::identity()));
-  rp3d::RigidBody* body = add_body(glm::mat4(1), shapes, .1f);
+  world_mutex.lock();
+
+  rp3d::RigidBody* body = world.createRigidBody(rp3d::Transform::identity());
+  body->addCollisionShape(missile_shape, rp3d::Transform::identity(), 1);
+
+  world_mutex.unlock();
 
   glm::mat4 transform = ProtoUtil::to_glm(proto.transform());
   glm::vec3 vel = ProtoUtil::to_glm(proto.velocity());
@@ -225,9 +225,12 @@ void World::add_projectile(uint player_id, ProjectileProto proto) {
     exit(1);
   }
 
-  vector<pair<string, rp3d::Transform>> shapes;
-  shapes.push_back(make_pair("missile", rp3d::Transform::identity()));
-  rp3d::RigidBody* body = add_body(glm::mat4(1), shapes, .1f);
+  world_mutex.lock();
+
+  rp3d::RigidBody* body = world.createRigidBody(rp3d::Transform::identity());
+  body->addCollisionShape(missile_shape, rp3d::Transform::identity(), 1);
+
+  world_mutex.unlock();
 
   glm::mat4 transform = ProtoUtil::to_glm(proto.transform());
   // rotate upward vector to face the corrrect direction
@@ -245,24 +248,9 @@ bool World::has_projectile(uint id) {
   return projectiles->find(id) != projectiles->end();
 }
 
-rp3d::RigidBody* World::add_body(glm::mat4 trans, vector<pair<string, rp3d::Transform>> shapes, float mass) {
-  rp3d::Transform start_transform = rp3d::Transform(rp3d::Vector3(trans[3][0], trans[3][1], trans[3][2]),
-                                                    rp3d::Matrix3x3(trans[0][1], trans[1][1], trans[2][1],
-                                                                    trans[0][2], trans[1][2], trans[2][2],
-                                                                    trans[0][3], trans[1][3], trans[2][3]));
-
-  // makes sure no one is editing the world while we add a body
-  world_mutex.lock();
-
-  rp3d::RigidBody* body = world.createRigidBody(start_transform);
-  for (pair<string, rp3d::Transform> shape : shapes) {
-    body->addCollisionShape(collision_shapes.at(shape.first), shape.second, mass);
-  }
-  if (mass == 0) {
-    body->setType(rp3d::BodyType::STATIC);
-  }
-
-  world_mutex.unlock();
-
-  return body;
+rp3d::Transform World::to_rp3d(glm::mat4 trans) {
+  return rp3d::Transform(rp3d::Vector3(trans[3][0], trans[3][1], trans[3][2]),
+                         rp3d::Matrix3x3(trans[0][1], trans[1][1], trans[2][1],
+                                         trans[0][2], trans[1][2], trans[2][2],
+                                         trans[0][3], trans[1][3], trans[2][3]));
 }
