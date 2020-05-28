@@ -35,12 +35,25 @@ http_archive(
     sha256 = "438c91a917cc8aa19e82c6f59f8714da353c488584a007d401efac8368e1c785",
     )
 
-http_archive(
+# http_archive(
+#     name = "reactphysics3d",
+#     build_file_content = all_content,
+#     strip_prefix = "reactphysics3d-0.7.1",
+#     urls = ["https://github.com/DanielChappuis/reactphysics3d/archive/v0.7.1.zip"],
+#     sha256 = "4e74a13d7f9861fd87abe2a7585e8ad04f66afc2e274fd28e735551df8d7f535",
+#     )
+
+# new_git_repository(
+#     name = "reactphysics3d",
+#     build_file_content = all_content,
+#     commit = "43510811895b4ee3d50841a3d44fb0cee775139e",
+#     remote = "https://github.com/DanielChappuis/reactphysics3d.git",
+#     )
+
+new_local_repository(
     name = "reactphysics3d",
     build_file_content = all_content,
-    strip_prefix = "reactphysics3d-0.7.1",
-    urls = ["https://github.com/DanielChappuis/reactphysics3d/archive/v0.7.1.zip"],
-    sha256 = "4e74a13d7f9861fd87abe2a7585e8ad04f66afc2e274fd28e735551df8d7f535",
+    path = "libs/reactphysics3d/"
     )
 
 http_archive(

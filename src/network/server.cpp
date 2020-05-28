@@ -34,6 +34,7 @@ void Server::start() {
 
   unique_ptr<grpc::Server> server = builder.BuildAndStart();
   cout << "Listening on " << server_address << endl;
+
   server->Wait();
 
   cout << "Server stopped" << endl;
