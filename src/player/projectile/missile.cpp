@@ -2,13 +2,9 @@
 
 using namespace std;
 
-Missile::Missile(glm::mat4 transform,
-    glm::vec3 velocity,
-    rp3d::RigidBody* body,
+Missile::Missile(rp3d::RigidBody* body,
     SceneManager* scene_manager,
-    ParticleManager* particle_manager) : Projectile(transform,
-      velocity,
-      body,
+    ParticleManager* particle_manager) : Projectile(body,
       scene_manager,
       "assets/missile.glb") {
   ParticleCloud* cloud = new ParticleCloud(1, 3, 1, .5, new Particle(.5, .5, new Material(glm::vec3(1, 1, 0))), particle_manager->get_shader("src/shader/circle_particle"));
@@ -16,7 +12,7 @@ Missile::Missile(glm::mat4 transform,
   this->particle_manager = particle_manager;
 }
 
-Missile::Missile(glm::mat4 transform, glm::vec3 velocity, rp3d::RigidBody* body) : Projectile(transform, velocity, body) {
+Missile::Missile(rp3d::RigidBody* body) : Projectile(body) {
   particle_manager = NULL;
 }
 

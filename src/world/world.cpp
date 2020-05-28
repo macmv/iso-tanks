@@ -137,23 +137,23 @@ void World::update_controls(float mouse_x_delta) {
 
 void World::update() {
 
-  // cout << "----------------------------------------------" << endl;
-  // for (int j = dynamics_world->getNumCollisionObjects() - 1; j >= 0; j--) {
-  //   btCollisionObject* obj = dynamics_world->getCollisionObjectArray()[j];
-  //   btRigidBody* body = btRigidBody::upcast(obj);
-  //   btTransform trans;
-  //   if (body && body->getMotionState()) {
-  //     body->getMotionState()->getWorldTransform(trans);
-  //   } else {
-  //     trans = obj->getWorldTransform();
-  //   }
-  //   printf("Object: %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
-  // }
-  // cout << "There are " << dynamics_world->getNumCollisionObjects() << " objects in the world" << endl;
-  // cout << "----------------------------------------------" << endl;
-
   // makes sure no one touches the world while stepping the simulation
   world_mutex.lock();
+
+  cout << "----------------------------------------------" << endl;
+  rp3d::RigidBody* body;
+  for (size_t i = 0; i < bodies.size(); i++) {
+    body = bodies.at(i);
+    rp3d::Transform trans = body->getTransform();
+    rp3d::Vector3 pos = trans.getPosition();
+    rp3d::Vector3 lin_vel = body->getLinearVelocity();
+    rp3d::Vector3 ang_vel = body->getAngularVelocity();
+    cout << "Object " << i << " pos = (" << pos.x << ", " << pos.y << ", " << pos.z
+      << "), linear vel = (" << lin_vel.x << ", " << lin_vel.y << ", " << lin_vel.z
+      << "), angular vel = (" << ang_vel.x << ", " << ang_vel.y << ", " << ang_vel.z << ")" << endl;
+  }
+  cout << "There are " << bodies.size() << " objects in the world" << endl;
+  cout << "----------------------------------------------" << endl;
 
   ulong update_time =
     std::chrono::system_clock::now().time_since_epoch() /
@@ -200,7 +200,7 @@ void World::add_projectile(ProjectileProto proto) {
   rp3d::RigidBody* body = add_body(transform);
   body->addCollisionShape(missile_shape, rp3d::Transform::identity(), 1);
 
-  projectiles->insert({ proto.id(), new Missile(transform, vel, body, scene_manager, particle_manager) });
+  projectiles->insert({ proto.id(), new Missile(body, scene_manager, particle_manager) });
 }
 
 // server function
@@ -215,7 +215,7 @@ void World::add_projectile(uint player_id, ProjectileProto proto) {
   // rotate upward vector to face the corrrect direction
   glm::vec3 vel = glm::vec3(transform * glm::vec4(0, 0, 1, 0));
   // make the projectile spawn in front of the player, not inside
-  transform[3] = transform[3] + glm::vec4(vel * 1.5f, 0);
+  transform[3] = transform[3] + glm::vec4(vel * 5.5f, 0);
   // gotta go fast
   vel = vel * 200.f;
 
@@ -223,7 +223,7 @@ void World::add_projectile(uint player_id, ProjectileProto proto) {
   body->addCollisionShape(missile_shape, rp3d::Transform::identity(), 1);
 
   uint id = (uint) rand();
-  projectiles->insert({ id, new Missile(transform, vel, body) });
+  projectiles->insert({ id, new Missile(body) });
 }
 
 bool World::has_projectile(uint id) {
@@ -233,10 +233,18 @@ bool World::has_projectile(uint id) {
 rp3d::RigidBody* World::add_body(glm::mat4 trans) {
   world_mutex.lock();
 
-  rp3d::RigidBody* body = world.createRigidBody(rp3d::Transform(rp3d::Vector3(trans[3][0], trans[3][1], trans[3][2]),
-                                                                rp3d::Matrix3x3(trans[0][0], trans[1][0], trans[2][0],
-                                                                                trans[0][1], trans[1][1], trans[2][1],
-                                                                                trans[0][2], trans[1][2], trans[2][2])));
+  rp3d::Transform transform = rp3d::Transform(rp3d::Vector3(trans[3][0], trans[3][1], trans[3][2]),
+                                              rp3d::Matrix3x3(trans[0][0], trans[0][1], trans[0][2],
+                                                              trans[1][0], trans[1][1], trans[1][2],
+                                                              trans[2][0], trans[2][1], trans[2][2]));
+
+  rp3d::Quaternion q = t.getOrientation();
+  q.normalize();
+  t.setOrientation(transform);
+
+  rp3d::RigidBody* body = world.createRigidBody(transform);
+
+  bodies.push_back(body);
 
   world_mutex.unlock();
 

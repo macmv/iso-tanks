@@ -10,8 +10,8 @@ class Missile : public Projectile {
     ParticleManager* particle_manager;
 
   public:
-    Missile(glm::mat4 transform, glm::vec3 velocity, rp3d::RigidBody* body, SceneManager* scene_manager, ParticleManager* particle_manager);
-    Missile(glm::mat4 transform, glm::vec3 velocity, rp3d::RigidBody* body);
+    Missile(rp3d::RigidBody* body, SceneManager* scene_manager, ParticleManager* particle_manager);
+    Missile(rp3d::RigidBody* body);
     void update() override;
 };
 

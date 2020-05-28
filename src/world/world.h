@@ -25,6 +25,7 @@ class World {
     rp3d::BoxShape*                        player_box_shape = NULL;
     rp3d::CapsuleShape*                    player_capsule_shape = NULL;
     rp3d::CapsuleShape*                    missile_shape = NULL;
+    std::vector<rp3d::RigidBody*>          bodies;
     clock_t                                prev_update;
     std::vector<ModelInstance*>*           models = new std::vector<ModelInstance*>();
     SceneManager*                          scene_manager = NULL;

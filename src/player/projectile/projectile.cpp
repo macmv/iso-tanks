@@ -5,24 +5,14 @@
 
 using namespace std;
 
-Projectile::Projectile(glm::mat4 transform,
-    glm::vec3 velocity,
-    rp3d::RigidBody* body,
+Projectile::Projectile(rp3d::RigidBody* body,
     SceneManager* scene_manager,
-    string scene_name) : Projectile(transform,
-      velocity,
-      body) {
+    string scene_name) : Projectile(body) {
   scene = scene_manager->new_instance(scene_name);
   update();
 }
 
-Projectile::Projectile(glm::mat4 transform, glm::vec3 velocity, rp3d::RigidBody* body) {
-  rp3d::Transform body_transform = rp3d::Transform(rp3d::Vector3(transform[3][0], transform[3][1], transform[3][2]),
-                                                   rp3d::Matrix3x3(transform[0][1], transform[1][1], transform[2][1],
-                                                                   transform[0][2], transform[1][2], transform[2][2],
-                                                                   transform[0][3], transform[1][3], transform[2][3]));
-  //body->setTransform(body_transform);
-  //body->setLinearVelocity(rp3d::Vector3(velocity.x, velocity.y, velocity.z));
+Projectile::Projectile(rp3d::RigidBody* body) {
   this->body = body;
   update();
 }

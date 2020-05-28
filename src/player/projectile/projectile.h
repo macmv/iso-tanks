@@ -20,8 +20,8 @@ class Projectile {
     rp3d::RigidBody* body;
 
   public:
-    Projectile(glm::mat4 transform, glm::vec3 velocity, rp3d::RigidBody* body, SceneManager* scene_manager, std::string scene_name);
-    Projectile(glm::mat4 transform, glm::vec3 velocity, rp3d::RigidBody* body);
+    Projectile(rp3d::RigidBody* body, SceneManager* scene_manager, std::string scene_name);
+    Projectile(rp3d::RigidBody* body);
     virtual void update();
     float get_speed();
     Scene* get_scene();
