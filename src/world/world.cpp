@@ -238,9 +238,9 @@ rp3d::RigidBody* World::add_body(glm::mat4 trans) {
                                                               trans[1][0], trans[1][1], trans[1][2],
                                                               trans[2][0], trans[2][1], trans[2][2]));
 
-  rp3d::Quaternion q = t.getOrientation();
+  rp3d::Quaternion q = transform.getOrientation();
   q.normalize();
-  t.setOrientation(transform);
+  transform.setOrientation(q);
 
   rp3d::RigidBody* body = world.createRigidBody(transform);
 
