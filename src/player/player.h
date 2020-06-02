@@ -2,7 +2,7 @@
 #define _PLAYER_H
 
 #include "models/scene_manager.h"
-#include <reactphysics3d.h>
+#include <reactphysics3d/reactphysics3d.h>
 
 class Player {
   protected:

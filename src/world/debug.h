@@ -4,25 +4,16 @@
 #include <GL/glew.h>
 #include <vector>
 #include <glm/glm.hpp>
+#include <reactphysics3d/reactphysics3d.h>
 
-//class DebugDraw : public btIDebugDraw {
-//  private:
-//    GLuint vbo, vao;
-//    int mode;
-//    std::vector<glm::vec3>* line_data;
-//
-//  public:
-//    DebugDraw();
-//    void start();
-//    void end();
-//    void drawLine(const btVector3& from, const btVector3& to, const btVector3& color);
-//    void drawContactPoint(const btVector3& PointOnB, const btVector3& normalOnB, btScalar distance, int lifeTime, const btVector3& color);
-//    void reportErrorWarning(const char* warningString);
-//    void draw3dText(const btVector3& location, const char* textString);
-//    void setDebugMode(int debugMode);
-//    int getDebugMode() const;
-//  private:
-//    void render_lines();
-//};
+class DebugRender {
+  private:
+    GLuint vbo, vao;
+    rp3d::DebugRenderer& render;
+
+  public:
+    DebugRender(rp3d::DebugRenderer& render);
+    void update();
+};
 
 #endif

@@ -6,7 +6,7 @@
 #include "models/scene_manager.h"
 #include "settings/controller.h"
 #include "event_list.h"
-#include <reactphysics3d.h>
+#include <reactphysics3d/reactphysics3d.h>
 
 class ControlledPlayer final : public Player {
   private:

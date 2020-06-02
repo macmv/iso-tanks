@@ -17,6 +17,7 @@ ControlledPlayer::ControlledPlayer(rp3d::RigidBody* body, Controller* controller
       turret_transform = model->transform;
     }
   }
+  // body->setAngularDamping(100);
 }
 
 void ControlledPlayer::update(float mouse_x_delta) {
@@ -24,41 +25,36 @@ void ControlledPlayer::update(float mouse_x_delta) {
   body_transform.getOpenGLMatrix(glm::value_ptr(transform));
   scene->transform = transform;
 
-  float torque_amount = 0;
-  glm::vec3 force = glm::vec3(0, 0, 0);
   glm::vec3 up = glm::normalize(glm::vec3(transform[3]) * -1.f);
-  glm::vec3 forward = glm::vec3(transform * glm::vec4(0, 0, 1, 0));
+  glm::vec3 forward(transform * glm::vec4(0, 0, 1, 0));
   // glm::vec3 left = cross(up, forward);
 
   glm::vec3 vel = glm::vec3(body->getLinearVelocity().x, body->getLinearVelocity().y, body->getLinearVelocity().z);
   glm::vec3 ang_vel = glm::vec3(body->getAngularVelocity().x, body->getAngularVelocity().y, body->getAngularVelocity().z);
-  float speed = .9f - glm::length(vel) / 10;
-  if (speed < 0) {
-    speed = 0;
-  }
-  float torque_speed = (0.1f - glm::length(ang_vel * up) / 10) * 6;
-  if (torque_speed < 0) {
-    torque_speed = 0;
-  }
+  float amount = 10;
+  float torque_amount = 10;
+
+  glm::vec3 force(0);
+  float torque_force = 0;
 
   if (controller->is_action_pressed("forward")) {
-    force += forward * speed;
+    force += forward * amount;
   }
   if (controller->is_action_pressed("left")) {
-    torque_amount += torque_speed;
+    torque_force += torque_amount;
   }
   if (controller->is_action_pressed("backward")) {
-    force += -forward * speed;
+    force += -forward * amount;
   }
   if (controller->is_action_pressed("right")) {
-    torque_amount -= torque_speed;
+    torque_force -= torque_amount;
   }
 
   body->setIsActive(true);
   body->applyForceToCenterOfMass(rp3d::Vector3(force.x, force.y, force.z));
 
-  glm::vec3 torqueForce = up * torque_amount;
-  body->applyTorque(rp3d::Vector3(torqueForce.x, torqueForce.y, torqueForce.z));
+  glm::vec3 torque_vec = up * torque_force;
+  body->applyTorque(rp3d::Vector3(torque_vec.x, torque_vec.y, torque_vec.z));
 
   float turret_delta = mouse_x_delta;
   turret_angle += turret_delta;

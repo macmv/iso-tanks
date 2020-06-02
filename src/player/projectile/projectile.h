@@ -5,7 +5,7 @@
 #include "models/scene_manager.h"
 #include "src/proto/multiplayer.grpc.pb.h"
 #include "opengl/render.h"
-#include <reactphysics3d.h>
+#include <reactphysics3d/reactphysics3d.h>
 
 class ParticleCloud;
 class Render;

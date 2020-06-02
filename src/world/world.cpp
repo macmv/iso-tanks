@@ -12,46 +12,39 @@
 #include <time.h>
 #include <unordered_map>
 #include <chrono>
-#include "reactphysics3d.h"
+#include <reactphysics3d/reactphysics3d.h>
 
 using namespace std;
 
 World::World(Terrain* terrain, bool needs_debug) {
 
   rp3d::TriangleVertexArray* vertexArray = new rp3d::TriangleVertexArray(
-      terrain->vertices->size(),
-      terrain->vertices->data(), sizeof(glm::vec3),
-      terrain->indices->size() / 3,
-      terrain->indices->data(), 3 * sizeof(uint),
+      terrain->vertices->size(), terrain->vertices->data(), sizeof(glm::vec3),
+      terrain->indices->size() / 3, terrain->indices->data(), 3 * sizeof(uint),
       rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
       rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE);
 
-  rp3d::TriangleMesh* mesh = new rp3d::TriangleMesh();
+  rp3d::TriangleMesh* mesh = physics.createTriangleMesh();
 
   mesh->addSubpart(vertexArray);
 
-  world_shape = new rp3d::ConcaveMeshShape(mesh);
-  player_box_shape = new rp3d::BoxShape(rp3d::Vector3(1, 1, 1));
-  player_capsule_shape = new rp3d::CapsuleShape(1, 1.5);
-  missile_shape = new rp3d::CapsuleShape(1, 1);
-
-  cout << "Triangles: " << world_shape->getNbTriangles(0) << endl;
+  world_shape = physics.createConcaveMeshShape(mesh);
+  // world_shape = physics.createBoxShape(rp3d::Vector3(100, 100, 100));
+  player_box_shape = physics.createBoxShape(rp3d::Vector3(1, 1, 1));
+  player_capsule_shape = physics.createCapsuleShape(1, 1.5);
+  missile_shape = physics.createCapsuleShape(1, 1);
 
   rp3d::RigidBody* body = add_body(glm::mat4(1));
-  body->addCollisionShape(world_shape, rp3d::Transform::identity(), 0);
+  // body->addCollider(world_shape, rp3d::Transform::identity());
   body->setType(rp3d::BodyType::STATIC);
 
   if (needs_debug) {
-  //   debug_draw = new DebugDraw();
-  //   debug_draw->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
-  //   dynamics_world->setDebugDrawer(debug_draw);
+    world->setIsDebugRenderingEnabled(true);
+    rp3d::DebugRenderer& render = world->getDebugRenderer();
+    debug_render = new DebugRender(render);
   }
 
-  prev_update =
-    std::chrono::system_clock::now().time_since_epoch() /
-    std::chrono::milliseconds(1);
-
-  this_player = NULL;
+  prev_update = chrono::high_resolution_clock::now();
 
   srand(time(0));
 }
@@ -66,11 +59,6 @@ World::~World() {
   //   dynamics_world->removeCollisionObject(obj);
   //   delete obj;
   // }
-
-  delete world_shape;
-  delete player_box_shape;
-  delete player_capsule_shape;
-  delete missile_shape;
 }
 
 World::World(Terrain* terrain, bool needs_debug, SceneManager* scene_manager, ParticleManager* particle_manager) : World(terrain, needs_debug) {
@@ -79,14 +67,13 @@ World::World(Terrain* terrain, bool needs_debug, SceneManager* scene_manager, Pa
 }
 
 void World::draw_debug() {
-}
-
-void World::clean() {
+  debug_render->update();
 }
 
 void World::create_this_player(Controller* controller, Camera* camera) {
-  rp3d::RigidBody* body = add_body(glm::translate(glm::mat4(1), glm::vec3(0, -970, 0)));
-  body->addCollisionShape(player_box_shape, rp3d::Transform::identity(), 1);
+  rp3d::RigidBody* body = add_body(glm::translate(glm::mat4(1), glm::vec3(0, -90, 0)));
+  body->addCollider(player_box_shape, rp3d::Transform::identity());
+  body->updateMassPropertiesFromColliders();
 
   this_player = new ControlledPlayer(body, controller, scene_manager, camera);
 }
@@ -100,8 +87,9 @@ uint World::add_player() {
 
 // client and server function
 void World::add_player(uint id) {
-  rp3d::RigidBody* body = add_body(glm::mat4(1));
-  body->addCollisionShape(player_box_shape, rp3d::Transform::identity(), 1);
+  rp3d::RigidBody* body = add_body(glm::translate(glm::mat4(1), glm::vec3(0, -970, 0)));
+  body->addCollider(player_box_shape, rp3d::Transform::identity());
+  body->updateMassPropertiesFromColliders();
 
   Player* player = new Player(body, scene_manager);
   players->insert({id, player});
@@ -146,19 +134,20 @@ void World::update() {
     body = bodies.at(i);
     rp3d::Transform trans = body->getTransform();
     rp3d::Vector3 pos = trans.getPosition();
+    rp3d::Quaternion q = trans.getOrientation();
     rp3d::Vector3 lin_vel = body->getLinearVelocity();
     rp3d::Vector3 ang_vel = body->getAngularVelocity();
     cout << "Object " << i << " pos = (" << pos.x << ", " << pos.y << ", " << pos.z
+      << "), orientation = (" << q.x << ", " << q.y << ", " << q.z << ", " << q.w
       << "), linear vel = (" << lin_vel.x << ", " << lin_vel.y << ", " << lin_vel.z
       << "), angular vel = (" << ang_vel.x << ", " << ang_vel.y << ", " << ang_vel.z << ")" << endl;
   }
   cout << "There are " << bodies.size() << " objects in the world" << endl;
   cout << "----------------------------------------------" << endl;
 
-  ulong update_time =
-    std::chrono::system_clock::now().time_since_epoch() /
-    std::chrono::milliseconds(1);
-  world.update((double) (update_time - prev_update) / 1000);
+  chrono::high_resolution_clock::time_point update_time = chrono::high_resolution_clock::now();
+  world->update((double) (update_time - prev_update).count() / 1000000000);
+  cout << "Updating by " << (double) (update_time - prev_update).count() / 1000000000 << " seconds" << endl;
   prev_update = update_time;
 
   world_mutex.unlock();
@@ -198,7 +187,8 @@ void World::add_projectile(ProjectileProto proto) {
   glm::vec3 vel = ProtoUtil::to_glm(proto.velocity());
 
   rp3d::RigidBody* body = add_body(transform);
-  body->addCollisionShape(missile_shape, rp3d::Transform::identity(), 1);
+  body->addCollider(missile_shape, rp3d::Transform::identity());
+  body->updateMassPropertiesFromColliders();
 
   projectiles->insert({ proto.id(), new Missile(body, scene_manager, particle_manager) });
 }
@@ -220,7 +210,8 @@ void World::add_projectile(uint player_id, ProjectileProto proto) {
   vel = vel * 200.f;
 
   rp3d::RigidBody* body = add_body(transform);
-  body->addCollisionShape(missile_shape, rp3d::Transform::identity(), 1);
+  body->addCollider(missile_shape, rp3d::Transform::identity());
+  body->updateMassPropertiesFromColliders();
 
   uint id = (uint) rand();
   projectiles->insert({ id, new Missile(body) });
@@ -242,7 +233,7 @@ rp3d::RigidBody* World::add_body(glm::mat4 trans) {
   q.normalize();
   transform.setOrientation(q);
 
-  rp3d::RigidBody* body = world.createRigidBody(transform);
+  rp3d::RigidBody* body = world->createRigidBody(transform);
 
   bodies.push_back(body);
 

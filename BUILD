@@ -87,7 +87,7 @@ genrule(
 
 cc_library(
   name = "test_lib",
-  srcs = glob(["src/**/*.cpp",
+  srcs = glob(["src/test.cpp",
                "libs/tinygltf/**/*.h",
                "libs/tinygltf/**/*.hpp"],
               exclude = ["src/server.cpp", "src/client.cpp"]),

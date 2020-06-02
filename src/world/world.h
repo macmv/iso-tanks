@@ -12,7 +12,7 @@
 #include "models/scene_manager.h"
 #include <time.h>
 #include <unordered_map>
-#include <reactphysics3d.h>
+#include <reactphysics3d/reactphysics3d.h>
 
 class ControlledPlayer;
 class Projectile;
@@ -20,17 +20,19 @@ class ParticleManager;
 
 class World {
   private:
-    rp3d::DynamicsWorld                    world = rp3d::DynamicsWorld(rp3d::Vector3(0, -10, 0), rp3d::WorldSettings());
+    rp3d::PhysicsCommon                    physics;
+    rp3d::PhysicsWorld*                    world = physics.createPhysicsWorld();
     rp3d::ConcaveMeshShape*                world_shape = NULL;
     rp3d::BoxShape*                        player_box_shape = NULL;
     rp3d::CapsuleShape*                    player_capsule_shape = NULL;
     rp3d::CapsuleShape*                    missile_shape = NULL;
     std::vector<rp3d::RigidBody*>          bodies;
-    clock_t                                prev_update;
+    chrono::high_resolution_clock::time_point prev_update;
     std::vector<ModelInstance*>*           models = new std::vector<ModelInstance*>();
     SceneManager*                          scene_manager = NULL;
     ParticleManager*                       particle_manager = NULL;
     std::mutex                             world_mutex;
+    DebugRender*                           debug_render = NULL;
   public:
     ControlledPlayer*                      this_player = NULL;
     std::unordered_map<uint, Projectile*>* projectiles = new std::unordered_map<uint, Projectile*>();
@@ -54,7 +56,6 @@ class World {
     void update_controls(float mouse_x_delta);
     void update();
     void draw_debug();
-    void clean();
     ControlledPlayer* get_this_player();
   private:
     rp3d::RigidBody* add_body(glm::mat4 transform);
