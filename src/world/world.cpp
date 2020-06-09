@@ -20,8 +20,10 @@ World::World(Terrain* terrain, bool needs_debug) {
 
   rp3d::TriangleVertexArray* vertexArray = new rp3d::TriangleVertexArray(
       terrain->vertices->size(), terrain->vertices->data(), sizeof(glm::vec3),
+                                 terrain->normals->data(), sizeof(glm::vec3),
       terrain->indices->size() / 3, terrain->indices->data(), 3 * sizeof(uint),
       rp3d::TriangleVertexArray::VertexDataType::VERTEX_FLOAT_TYPE,
+      rp3d::TriangleVertexArray::NormalDataType::NORMAL_FLOAT_TYPE,
       rp3d::TriangleVertexArray::IndexDataType::INDEX_INTEGER_TYPE);
 
   rp3d::TriangleMesh* mesh = physics.createTriangleMesh();
@@ -35,7 +37,7 @@ World::World(Terrain* terrain, bool needs_debug) {
   missile_shape = physics.createCapsuleShape(1, 1);
 
   rp3d::RigidBody* body = add_body(glm::mat4(1));
-  // body->addCollider(world_shape, rp3d::Transform::identity());
+  body->addCollider(world_shape, rp3d::Transform::identity());
   body->setType(rp3d::BodyType::STATIC);
 
   if (needs_debug) {
@@ -71,8 +73,8 @@ void World::draw_debug() {
 }
 
 void World::create_this_player(Controller* controller, Camera* camera) {
-  rp3d::RigidBody* body = add_body(glm::translate(glm::mat4(1), glm::vec3(0, -90, 0)));
-  body->addCollider(player_box_shape, rp3d::Transform::identity());
+  rp3d::RigidBody* body = add_body(glm::translate(glm::mat4(1), glm::vec3(0, -980, 0)));
+  // body->addCollider(player_box_shape, rp3d::Transform::identity());
   body->updateMassPropertiesFromColliders();
 
   this_player = new ControlledPlayer(body, controller, scene_manager, camera);

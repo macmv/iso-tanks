@@ -28,7 +28,7 @@ int main() {
 
   Terrain* terrain = new Terrain(100);
   terrain->create_model();
-  World* world = new World(terrain, false, scene_manager, render->particle_manager);
+  World* world = new World(terrain, true, scene_manager, render->particle_manager);
   render->world = world;
 
   world->create_this_player(controller, render->camera);
@@ -43,27 +43,27 @@ int main() {
 
     render->start(world->get_this_player());
 
-    render->use("flat");
-    render->render(terrain->instance);
-    render->end();
-
-    render->use("simple");
-    Player* player;
-    for (pair<uint, Player*> item : *world->players) {
-      player = item.second;
-      render->render(player->scene);
-    }
-    Projectile* projectile;
-    for (pair<uint, Projectile*> item : *world->projectiles) {
-      projectile = item.second;
-      render->render(projectile->get_scene());
-    }
-    render->render(world->get_this_player()->scene);
-    render->end();
-
-    // render->use("line");
-    // world->draw_debug();
+    // render->use("flat");
+    // render->render(terrain->instance);
     // render->end();
+
+    // render->use("simple");
+    // Player* player;
+    // for (pair<uint, Player*> item : *world->players) {
+    //   player = item.second;
+    //   render->render(player->scene);
+    // }
+    // Projectile* projectile;
+    // for (pair<uint, Projectile*> item : *world->projectiles) {
+    //   projectile = item.second;
+    //   render->render(projectile->get_scene());
+    // }
+    // render->render(world->get_this_player()->scene);
+    // render->end();
+
+    render->use("line");
+    world->draw_debug();
+    render->end();
 
     render->finish();
   }

@@ -20,13 +20,13 @@ class Terrain {
     void create_model();
   private:
     void gen_triangle(
-      std::vector<uint>* indices,
-      std::vector<glm::vec3>* vertices,
-      std::vector<glm::vec2>* uvs,
-      std::vector<glm::vec3>* normals,
-      glm::vec3 a,
-      glm::vec3 b,
-      glm::vec3 c);
+        std::vector<uint>* indices,
+        std::vector<glm::vec3>* vertices,
+        std::vector<glm::vec2>* uvs,
+        std::vector<glm::vec3>* normals,
+        glm::vec3 a,
+        glm::vec3 b,
+        glm::vec3 c);
 };
 
 float layered_noise(glm::vec3 pos, int layers, float roughness, float persistence);
