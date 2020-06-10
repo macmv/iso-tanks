@@ -23,6 +23,8 @@ DebugRender::DebugRender(rp3d::DebugRenderer& renderer) : render(renderer) {
 }
 
 void DebugRender::update() {
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
   const uint len_triangles = render.getNbTriangles();
   const rp3d::DebugRenderer::DebugTriangle* triangles = render.getTrianglesArray();
 
@@ -54,5 +56,7 @@ void DebugRender::update() {
   glDrawArrays(GL_LINES, 0, len_lines * 2);
   glDisableVertexAttribArray(0);
   glBindVertexArray(0);
+
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
