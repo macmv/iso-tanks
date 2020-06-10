@@ -31,6 +31,8 @@ int main() {
   World* world = new World(terrain, true, scene_manager, render->particle_manager);
   render->world = world;
 
+  world->update();
+
   world->create_this_player(controller, render->camera);
 
   Client* client = new Client(world);

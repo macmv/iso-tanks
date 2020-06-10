@@ -73,8 +73,8 @@ void World::draw_debug() {
 }
 
 void World::create_this_player(Controller* controller, Camera* camera) {
-  rp3d::RigidBody* body = add_body(glm::translate(glm::mat4(1), glm::vec3(0, -980, 0)));
-  // body->addCollider(player_box_shape, rp3d::Transform::identity());
+  rp3d::RigidBody* body = add_body(glm::translate(glm::mat4(1), glm::vec3(0, -970, 0)));
+  body->addCollider(player_box_shape, rp3d::Transform::identity());
   body->updateMassPropertiesFromColliders();
 
   this_player = new ControlledPlayer(body, controller, scene_manager, camera);
