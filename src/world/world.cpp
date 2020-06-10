@@ -138,10 +138,12 @@ void World::update() {
     rp3d::Quaternion q = trans.getOrientation();
     rp3d::Vector3 lin_vel = body->getLinearVelocity();
     rp3d::Vector3 ang_vel = body->getAngularVelocity();
-    cout << "Object " << i << " pos = (" << pos.x << ", " << pos.y << ", " << pos.z
-      << "), orientation = (" << q.x << ", " << q.y << ", " << q.z << ", " << q.w
-      << "), linear vel = (" << lin_vel.x << ", " << lin_vel.y << ", " << lin_vel.z
-      << "), angular vel = (" << ang_vel.x << ", " << ang_vel.y << ", " << ang_vel.z << ")" << endl;
+    cout << "Object " << i << endl
+      << "-- pos = (" << pos.x << ", " << pos.y << ", " << pos.z << ")," << endl
+      << "-- orientation = (" << q.x << ", " << q.y << ", " << q.z << ", " << q.w << ")," << endl
+      << "-- linear vel = (" << lin_vel.x << ", " << lin_vel.y << ", " << lin_vel.z << ")," << endl
+      << "-- angular vel = (" << ang_vel.x << ", " << ang_vel.y << ", " << ang_vel.z<< ")," << endl
+      << "-- sleeping = " << (body->isSleeping() ? "true" : "false") << endl;
   }
   cout << "There are " << bodies.size() << " objects in the world" << endl;
   cout << "----------------------------------------------" << endl;
