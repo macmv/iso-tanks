@@ -31,7 +31,6 @@ World::World(Terrain* terrain, bool needs_debug) {
   mesh->addSubpart(vertexArray);
 
   world_shape = physics.createConcaveMeshShape(mesh);
-  // world_shape = physics.createBoxShape(rp3d::Vector3(100, 100, 100));
   player_box_shape = physics.createBoxShape(rp3d::Vector3(1, 1, 1));
   player_capsule_shape = physics.createCapsuleShape(1, 1.5);
   missile_shape = physics.createCapsuleShape(1, 1);
