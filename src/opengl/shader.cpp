@@ -41,6 +41,23 @@ Shader::Shader(string filename, bool has_geometry) {
 
   glLinkProgram(program_id);
 
+  GLint did_shader_link;
+  glGetProgramiv(program_id, GL_LINK_STATUS, &did_shader_link);
+  if (did_shader_link != GL_TRUE) {
+    GLint max_length = 0;
+    glGetShaderiv(program_id, GL_INFO_LOG_LENGTH, &max_length);
+
+    std::vector<GLchar> error_log(max_length);
+    glGetShaderInfoLog(program_id, max_length, &max_length, &error_log[0]);
+
+    cerr << "Failed to link shader " << filename << endl;
+    cerr << "Shader id: " << program_id << endl;
+    cout << "Error:" << endl;
+    cout << error_log.data();
+    cerr << "Program exiting" << endl;
+    exit(1);
+  }
+
   projection_id = glGetUniformLocation(program_id, "projection");
   view_id       = glGetUniformLocation(program_id, "view");
   model_id      = glGetUniformLocation(program_id, "model");

@@ -33,11 +33,17 @@ void DebugRender::update() {
 
   glBindVertexArray(vao);
   glEnableVertexAttribArray(0);
-  glEnableVertexAttribArray(1);
   glDrawArrays(GL_TRIANGLES, 0, len_triangles * 3);
   glDisableVertexAttribArray(0);
-  glDisableVertexAttribArray(1);
   glBindVertexArray(0);
+
+  GLenum err = glGetError();
+  if (err != GL_NO_ERROR) {
+    cout << "Line shader failed!" << endl;
+    cout << "Buffer id: " << vbo << endl;
+    cout << "Error code: " << err << endl;
+    exit(1);
+  }
 
   const uint len_lines = render.getNbLines();
   const rp3d::DebugRenderer::DebugLine* lines = render.getLinesArray();

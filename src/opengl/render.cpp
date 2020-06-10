@@ -50,6 +50,14 @@ void Render::start(ControlledPlayer* player) {
 void Render::use(string shader) {
   current_shader = shaders->at(shader);
   glUseProgram(current_shader->program_id);
+  GLenum err = glGetError();
+  if (err != 0) {
+    cerr << "Failed to use shader " << shader << endl;
+    cerr << "Shader id: " << current_shader->program_id << endl;
+    cerr << "Opengl error code: " << err << endl;
+    cerr << "Program exiting" << endl;
+    exit(1);
+  }
   camera->load_mat(current_shader);
 }
 
