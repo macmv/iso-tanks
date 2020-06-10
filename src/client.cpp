@@ -43,23 +43,23 @@ int main() {
 
     render->start(world->get_this_player());
 
-    // render->use("flat");
-    // render->render(terrain->instance);
-    // render->end();
+    render->use("flat");
+    render->render(terrain->instance);
+    render->end();
 
-    // render->use("simple");
-    // Player* player;
-    // for (pair<uint, Player*> item : *world->players) {
-    //   player = item.second;
-    //   render->render(player->scene);
-    // }
-    // Projectile* projectile;
-    // for (pair<uint, Projectile*> item : *world->projectiles) {
-    //   projectile = item.second;
-    //   render->render(projectile->get_scene());
-    // }
-    // render->render(world->get_this_player()->scene);
-    // render->end();
+    render->use("simple");
+    Player* player;
+    for (pair<uint, Player*> item : *world->players) {
+      player = item.second;
+      render->render(player->scene);
+    }
+    Projectile* projectile;
+    for (pair<uint, Projectile*> item : *world->projectiles) {
+      projectile = item.second;
+      render->render(projectile->get_scene());
+    }
+    render->render(world->get_this_player()->scene);
+    render->end();
 
     render->use("line");
     world->draw_debug();
