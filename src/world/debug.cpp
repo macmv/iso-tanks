@@ -19,8 +19,6 @@ DebugRender::DebugRender(rp3d::DebugRenderer& renderer) : render(renderer) {
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(rp3d::Vector3) + sizeof(int), 0);
-  glEnableVertexAttribArray(1);
-  glVertexAttribIPointer(1, 1, GL_UNSIGNED_INT, sizeof(rp3d::Vector3) + sizeof(int), (const void*) sizeof(rp3d::Vector3));
   glBindVertexArray(0);
 }
 
@@ -53,10 +51,8 @@ void DebugRender::update() {
 
   glBindVertexArray(vao);
   glEnableVertexAttribArray(0);
-  glEnableVertexAttribArray(1);
   glDrawArrays(GL_LINES, 0, len_lines * 2);
   glDisableVertexAttribArray(0);
-  glDisableVertexAttribArray(1);
   glBindVertexArray(0);
 }
 
