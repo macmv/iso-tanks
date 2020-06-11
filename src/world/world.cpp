@@ -157,15 +157,15 @@ void World::update() {
   accumulator += (update_time - prev_update).count();
   prev_update = update_time;
   cout << "Updating by " << (double) accumulator / 1000000000 << " seconds, or " << accumulator / PHYSICS_STEP << " times" << endl;
-  if (accumulator > PHYSICS_STEP * 10) {
-    cout << "Framerate is low, skipping physics steps" << endl;
-    while (accumulator > PHYSICS_STEP * 3) {
-      world->update((double) (PHYSICS_STEP * 3) / 1000000000);
-      accumulator -= PHYSICS_STEP * 3;
-    }
-  } else {
-    while (accumulator > PHYSICS_STEP) {
-      world->update((double) PHYSICS_STEP / 1000000000);
+  while (accumulator > PHYSICS_STEP) {
+    auto start = chrono::high_resolution_clock::now();
+    world->update((double) PHYSICS_STEP / 1000000000);
+    auto stop = chrono::high_resolution_clock::now();
+    auto duration = stop - start;
+    if (duration.count() > PHYSICS_STEP && accumulator > PHYSICS_STEP * 2) {
+      cout << "One physics step took too long, skipping physics step" << endl;
+      accumulator -= PHYSICS_STEP * 2;
+    } else {
       accumulator -= PHYSICS_STEP;
     }
   }
