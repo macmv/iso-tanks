@@ -10,7 +10,8 @@
 
 class ControlledPlayer final : public Player {
   private:
-    glm::mat4 turret_transform;
+    glm::mat4 turret_start_transform;
+    ModelInstance* turret_model = NULL;
     Controller* controller;
 
   public:

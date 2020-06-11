@@ -14,7 +14,9 @@ ControlledPlayer::ControlledPlayer(rp3d::RigidBody* body, Controller* controller
   this->controller = controller;
   for (ModelInstance* model : *scene->models) {
     if (model->model->name.compare("Turret") == 0) {
-      turret_transform = model->transform;
+      turret_start_transform = model->transform;
+      turret_model = model;
+      break;
     }
   }
   // body->setAngularDamping(100);
@@ -59,11 +61,7 @@ void ControlledPlayer::update(float mouse_x_delta) {
   float turret_delta = mouse_x_delta;
   turret_angle += turret_delta;
 
-  for (ModelInstance* model : *scene->models) {
-    if (model->model->name.compare("Turret") == 0) {
-      model->transform = glm::rotate(glm::mat4(1), turret_angle, glm::vec3(0, 1, 0)) * turret_transform;
-    }
-  }
+  turret_model->transform = glm::rotate(glm::mat4(1), turret_angle, glm::vec3(0, 1, 0)) * turret_start_transform;
 }
 
 void ControlledPlayer::update_events(EventList* events) {
