@@ -28,10 +28,10 @@ int main() {
 
   Terrain* terrain = new Terrain(100);
   terrain->create_model();
-  World* world = new World(terrain, true, scene_manager, render->particle_manager);
+  World* world = new World(terrain, false, scene_manager, render->particle_manager);
   render->world = world;
 
-  world->update();
+  world->force_physics_update();
 
   world->create_this_player(controller, render->camera);
 
@@ -63,9 +63,9 @@ int main() {
     render->render(world->get_this_player()->scene);
     render->end();
 
-    render->use("line");
-    world->draw_debug();
-    render->end();
+    // render->use("line");
+    // world->draw_debug();
+    // render->end();
 
     render->finish();
   }

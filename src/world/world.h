@@ -20,6 +20,7 @@ class ParticleManager;
 
 class World {
   private:
+    const uint                             PHYSICS_STEP = 20000000;
     rp3d::PhysicsCommon                    physics;
     rp3d::PhysicsWorld*                    world = physics.createPhysicsWorld();
     rp3d::ConcaveMeshShape*                world_shape = NULL;
@@ -27,6 +28,7 @@ class World {
     rp3d::CapsuleShape*                    player_capsule_shape = NULL;
     rp3d::CapsuleShape*                    missile_shape = NULL;
     std::vector<rp3d::RigidBody*>          bodies;
+    uint                                   accumulator = 0;
     chrono::high_resolution_clock::time_point prev_update;
     std::vector<ModelInstance*>*           models = new std::vector<ModelInstance*>();
     SceneManager*                          scene_manager = NULL;
@@ -54,6 +56,7 @@ class World {
     void add_projectile(uint player_id, ProjectileProto proto);
     bool has_projectile(uint id);
     void update_controls(float mouse_x_delta);
+    void force_physics_update();
     void update();
     void draw_debug();
     ControlledPlayer* get_this_player();

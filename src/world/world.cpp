@@ -124,6 +124,11 @@ void World::update_controls(float mouse_x_delta) {
   this_player->update(mouse_x_delta);
 }
 
+void World::force_physics_update() {
+  cout << "Forcing physics update!" << endl;
+  world->update((double) PHYSICS_STEP / 1000000000);
+}
+
 void World::update() {
 
   // makes sure no one touches the world while stepping the simulation
@@ -149,9 +154,21 @@ void World::update() {
   cout << "----------------------------------------------" << endl;
 
   chrono::high_resolution_clock::time_point update_time = chrono::high_resolution_clock::now();
-  world->update((double) (update_time - prev_update).count() / 1000000000);
-  cout << "Updating by " << (double) (update_time - prev_update).count() / 1000000000 << " seconds" << endl;
+  accumulator += (update_time - prev_update).count();
   prev_update = update_time;
+  cout << "Updating by " << (double) accumulator / 1000000000 << " seconds, or " << accumulator / PHYSICS_STEP << " times" << endl;
+  if (accumulator > PHYSICS_STEP * 10) {
+    cout << "Framerate is low, skipping physics steps" << endl;
+    while (accumulator > PHYSICS_STEP * 3) {
+      world->update((double) (PHYSICS_STEP * 3) / 1000000000);
+      accumulator -= PHYSICS_STEP * 3;
+    }
+  } else {
+    while (accumulator > PHYSICS_STEP) {
+      world->update((double) PHYSICS_STEP / 1000000000);
+      accumulator -= PHYSICS_STEP;
+    }
+  }
 
   world_mutex.unlock();
 
