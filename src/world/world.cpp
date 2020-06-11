@@ -245,9 +245,9 @@ rp3d::RigidBody* World::add_body(glm::mat4 trans) {
   world_mutex.lock();
 
   rp3d::Transform transform = rp3d::Transform(rp3d::Vector3(trans[3][0], trans[3][1], trans[3][2]),
-                                              rp3d::Matrix3x3(trans[0][0], trans[0][1], trans[0][2],
-                                                              trans[1][0], trans[1][1], trans[1][2],
-                                                              trans[2][0], trans[2][1], trans[2][2]));
+                                              rp3d::Matrix3x3(trans[0][0], trans[1][0], trans[2][0],
+                                                              trans[0][1], trans[1][1], trans[2][1],
+                                                              trans[0][2], trans[1][2], trans[2][2]));
 
   rp3d::Quaternion q = transform.getOrientation();
   q.normalize();

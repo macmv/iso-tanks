@@ -6,6 +6,7 @@
 #include <glm/gtx/string_cast.hpp>
 #include <SFML/Window.hpp>
 #include <iostream>
+#include <glm/gtx/norm.hpp>
 
 using namespace std;
 
@@ -31,10 +32,17 @@ glm::mat4 Player::get_transform() {
 }
 
 void Player::set_transform(glm::mat4 trans) {
+  if (glm::abs(glm::length2(trans[0] - transform[0])) < glm::epsilon<float>() * 2 &&
+      glm::abs(glm::length2(trans[1] - transform[1])) < glm::epsilon<float>() * 2 &&
+      glm::abs(glm::length2(trans[2] - transform[2])) < glm::epsilon<float>() * 2 &&
+      glm::abs(glm::length2(trans[3] - transform[3])) < glm::epsilon<float>() * 2) {
+    return;
+  }
+
   rp3d::Transform body_transform = rp3d::Transform(rp3d::Vector3(trans[3][0], trans[3][1], trans[3][2]),
-                                                   rp3d::Matrix3x3(trans[0][0], trans[0][1], trans[0][2],
-                                                                   trans[1][0], trans[1][1], trans[1][2],
-                                                                   trans[2][0], trans[2][1], trans[2][2]));
+                                                   rp3d::Matrix3x3(trans[0][0], trans[1][0], trans[2][0],
+                                                                   trans[0][1], trans[1][1], trans[2][1],
+                                                                   trans[0][2], trans[1][2], trans[2][2]));
 
   rp3d::Quaternion q = body_transform.getOrientation();
   q.normalize();
