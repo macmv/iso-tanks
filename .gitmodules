@@ -1,3 +1,6 @@
 [submodule "libs/tinygltf"]
 	path = libs/tinygltf
 	url = https://github.com/syoyo/tinygltf.git
+[submodule "libs/reactphysics3d"]
+	path = libs/reactphysics3d
+	url = https://github.com/DanielChappuis/reactphysics3d.git
