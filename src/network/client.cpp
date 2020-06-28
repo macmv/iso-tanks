@@ -11,7 +11,7 @@
 
 using namespace std;
 
-Client::Client(World* world) {
+Client::Client(ClientWorld* world) {
   this->player = world->this_player;
   this->world = world;
   stub = Multiplayer::NewStub(

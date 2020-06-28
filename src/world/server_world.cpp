@@ -1,4 +1,4 @@
-#include "world.h"
+#include "server_world.h"
 #include "opengl/camera.h"
 #include "player/player.h"
 #include "player/projectile/missile.h"
@@ -16,7 +16,7 @@
 
 using namespace std;
 
-World::World(Terrain* terrain, bool needs_debug) {
+ServerWorld::ServerWorld(Terrain* terrain) {
 
   rp3d::TriangleVertexArray* vertexArray = new rp3d::TriangleVertexArray(
       terrain->vertices->size(), terrain->vertices->data(), sizeof(glm::vec3),
@@ -39,18 +39,16 @@ World::World(Terrain* terrain, bool needs_debug) {
   body->addCollider(world_shape, rp3d::Transform::identity());
   body->setType(rp3d::BodyType::STATIC);
 
-  if (needs_debug) {
-    world->setIsDebugRenderingEnabled(true);
-    rp3d::DebugRenderer& render = world->getDebugRenderer();
-    debug_render = new DebugRender(render);
-  }
+  //  world->setIsDebugRenderingEnabled(true);
+  //  rp3d::DebugRenderer& render = world->getDebugRenderer();
+  //  debug_render = new DebugRender(render);
 
   prev_update = chrono::high_resolution_clock::now();
 
   srand(time(0));
 }
 
-World::~World() {
+ServerWorld::~ServerWorld() {
   // for (int i = dynamics_world->getNumCollisionObjects() - 1; i >= 0; i--) {
   //   rp3d::CollisionShape* obj = dynamics_world->getCollisionObjectArray()[i];
   //   rp3d::RigidBody* body = btRigidBody::upcast(obj);
@@ -62,74 +60,38 @@ World::~World() {
   // }
 }
 
-World::World(Terrain* terrain, bool needs_debug, SceneManager* scene_manager, ParticleManager* particle_manager) : World(terrain, needs_debug) {
-  this->scene_manager = scene_manager;
-  this->particle_manager = particle_manager;
-}
-
-void World::draw_debug() {
-  debug_render->update();
-}
-
-void World::create_this_player(Controller* controller, Camera* camera) {
-  rp3d::RigidBody* body = add_body(glm::translate(glm::mat4(1), glm::vec3(0, -970, 0)));
-  body->addCollider(player_box_shape, rp3d::Transform::identity());
-  body->updateMassPropertiesFromColliders();
-
-  this_player = new ControlledPlayer(body, controller, scene_manager, camera);
-}
-
-// server function
-uint World::add_player() {
+uint ServerWorld::add_player() {
   uint id = (uint) rand();
-  add_player(id);
-  return id;
-}
-
-// client and server function
-void World::add_player(uint id) {
   rp3d::RigidBody* body = add_body(glm::translate(glm::mat4(1), glm::vec3(0, -970, 0)));
   body->addCollider(player_box_shape, rp3d::Transform::identity());
   body->updateMassPropertiesFromColliders();
 
   Player* player = new Player(body, scene_manager);
-  players->insert({id, player});
+  players.insert({id, player});
+  return id;
 }
 
-bool World::has_player(uint id) {
-  return players->find(id) != players->end();
+bool ServerWorld::has_player(uint id) {
+  return players.find(id) != players.end();
 }
 
-ControlledPlayer* World::get_this_player() {
-  return this_player;
+Player ServerWorld::get_player(uint id) {
+  assert(has_player(id));
+  return *players.at(id);
 }
 
-bool World::move_this_player(glm::mat4 transform) {
-  this_player->set_transform(transform);
-  return true;
-}
-
-bool World::move_player(uint id, glm::mat4 transform) {
-  Player* p = players->at(id);
+bool ServerWorld::move_player(uint id, glm::mat4 transform) {
+  Player* p = players.at(id);
   p->set_transform(transform);
   return true;
 }
 
-void World::update_controls(float mouse_x_delta) {
-  glm::vec3 pos = glm::vec3(this_player->get_transform()[3]);
-  pos = glm::normalize(pos) * 20.f;
-  if (!isnan(pos.x) && !isnan(pos.y) && !isnan(pos.z)) {
-    this_player->set_gravity(pos);
-  }
-  this_player->update(mouse_x_delta);
-}
-
-void World::force_physics_update() {
+void ServerWorld::force_physics_update() {
   cout << "Forcing physics update!" << endl;
   world->update((double) PHYSICS_STEP / 1000000000);
 }
 
-void World::update() {
+void ServerWorld::update() {
 
   // makes sure no one touches the world while stepping the simulation
   world_mutex.lock();
@@ -158,22 +120,14 @@ void World::update() {
   prev_update = update_time;
   cout << "Updating by " << (double) accumulator / 1000000000 << " seconds, or " << accumulator / PHYSICS_STEP << " times" << endl;
   while (accumulator > PHYSICS_STEP) {
-    auto start = chrono::high_resolution_clock::now();
-    world->update((double) PHYSICS_STEP / 1000000000);
-    auto stop = chrono::high_resolution_clock::now();
-    auto duration = stop - start;
-    if (duration.count() > PHYSICS_STEP && accumulator > PHYSICS_STEP * 2) {
-      cout << "One physics step took too long, skipping physics step" << endl;
-      accumulator -= PHYSICS_STEP * 2;
-    } else {
-      accumulator -= PHYSICS_STEP;
-    }
+    // world->update((double) PHYSICS_STEP / 1000000000);
+    accumulator -= PHYSICS_STEP;
   }
 
   world_mutex.unlock();
 
   Player* player;
-  for (pair<int, Player*> item : *players) {
+  for (pair<int, Player*> item : players) {
     player = item.second;
     glm::vec3 pos = glm::vec3(player->get_transform()[3]);
     pos = glm::normalize(pos) * 20.f;
@@ -184,7 +138,7 @@ void World::update() {
   }
 
   Projectile* projectile;
-  for (pair<int, Projectile*> item : *projectiles) {
+  for (pair<int, Projectile*> item : projectiles) {
     projectile = item.second;
     glm::vec3 pos = glm::vec3(projectile->get_transform()[3]);
     pos = glm::normalize(pos) * 20.f;
@@ -195,26 +149,7 @@ void World::update() {
   }
 }
 
-// client function
-void World::add_projectile(ProjectileProto proto) {
-  if (scene_manager == NULL) {
-    cerr << "Cannot add_projectile without player_id on server!" << endl;
-    cerr << "Force exiting server" << endl;
-    exit(1);
-  }
-
-  glm::mat4 transform = ProtoUtil::to_glm(proto.transform());
-  glm::vec3 vel = ProtoUtil::to_glm(proto.velocity());
-
-  rp3d::RigidBody* body = add_body(transform);
-  body->addCollider(missile_shape, rp3d::Transform::identity());
-  body->updateMassPropertiesFromColliders();
-
-  projectiles->insert({ proto.id(), new Missile(body, scene_manager, particle_manager) });
-}
-
-// server function
-void World::add_projectile(uint player_id, ProjectileProto proto) {
+void ServerWorld::add_projectile(uint player_id, ProjectileProto proto) {
   if (scene_manager != NULL) {
     cerr << "Cannot add_projectile with player_id on client!" << endl;
     cerr << "Force exiting client" << endl;
@@ -234,14 +169,14 @@ void World::add_projectile(uint player_id, ProjectileProto proto) {
   body->updateMassPropertiesFromColliders();
 
   uint id = (uint) rand();
-  projectiles->insert({ id, new Missile(body) });
+  projectiles.insert({ id, new Missile(body) });
 }
 
-bool World::has_projectile(uint id) {
-  return projectiles->find(id) != projectiles->end();
+bool ServerWorld::has_projectile(uint id) {
+  return projectiles.find(id) != projectiles.end();
 }
 
-rp3d::RigidBody* World::add_body(glm::mat4 trans) {
+rp3d::RigidBody* ServerWorld::add_body(glm::mat4 trans) {
   world_mutex.lock();
 
   rp3d::Transform transform = rp3d::Transform(rp3d::Vector3(trans[3][0], trans[3][1], trans[3][2]),

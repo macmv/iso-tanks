@@ -7,7 +7,7 @@
 #include <grpc/grpc.h>
 #include <grpcpp/server_builder.h>
 #include <thread>
-#include "world/world.h"
+#include "world/server_world.h"
 
 class World;
 
@@ -15,16 +15,20 @@ class Server {
   private:
     int port;
     std::thread world_thread;
-    World* world;
+    ServerWorld* world;
+    std::unordered_map<uint, grpc::ServerReaderWriter<PlayerUpdateResponse, PlayerUpdate>*> connections;
+    std::unordered_map<uint, const PlayerUpdate&> cached_events;
 
   public:
     Server(int port);
     void start();
-    void update();
-    void update_player_events(const PlayerProto& player, const PlayerEvents& events);
-    bool move_player(const PlayerProto& player);
-    uint new_player(const NewPlayerRequest* req);
-    void create_res(uint id, bool needs_position_set, PlayerUpdateResponse* res);
+    void update_player(const PlayerUpdate& update);
+    void tick();
+    uint add_player(const NewPlayerRequest* request);
+    void add_connection(uint id, grpc::ServerReaderWriter<PlayerUpdateResponse, PlayerUpdate>* stream);
+    void remove_connection(uint id);
+    bool has_connection(uint id);
+    bool has_player(uint id);
   private:
     static void start_update_loop(Server* server);
 };

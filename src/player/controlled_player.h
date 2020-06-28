@@ -16,7 +16,7 @@ class ControlledPlayer final : public Player {
 
   public:
     ControlledPlayer(rp3d::RigidBody* body, Controller* controller, SceneManager* scene_manager, Camera* camera);
-    void update(float mouse_x_delta);
+    void update();
     void update_events(EventList* events);
 };
 

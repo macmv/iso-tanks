@@ -22,7 +22,7 @@ ControlledPlayer::ControlledPlayer(rp3d::RigidBody* body, Controller* controller
   // body->setAngularDamping(100);
 }
 
-void ControlledPlayer::update(float mouse_x_delta) {
+void ControlledPlayer::update() {
   rp3d::Transform body_transform = body->getTransform();
   body_transform.getOpenGLMatrix(glm::value_ptr(transform));
   scene->transform = transform;
@@ -33,7 +33,7 @@ void ControlledPlayer::update(float mouse_x_delta) {
 
   glm::vec3 vel = glm::vec3(body->getLinearVelocity().x, body->getLinearVelocity().y, body->getLinearVelocity().z);
   glm::vec3 ang_vel = glm::vec3(body->getAngularVelocity().x, body->getAngularVelocity().y, body->getAngularVelocity().z);
-  float amount = 10;
+  float amount = 100;
   float torque_amount = 10;
 
   glm::vec3 force(0);
@@ -58,7 +58,7 @@ void ControlledPlayer::update(float mouse_x_delta) {
   glm::vec3 torque_vec = up * torque_force;
   body->applyTorque(rp3d::Vector3(torque_vec.x, torque_vec.y, torque_vec.z));
 
-  float turret_delta = mouse_x_delta;
+  float turret_delta = 0; // mouse x delta
   turret_angle += turret_delta;
 
   turret_model->transform = glm::rotate(glm::mat4(1), turret_angle, glm::vec3(0, 1, 0)) * turret_start_transform;

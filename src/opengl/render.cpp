@@ -2,7 +2,6 @@
 #include <cstdlib>
 #include <GL/glew.h>
 #include <stdio.h>
-#include "world/world.h"
 #include "display.h"
 #include "loader.h"
 #include <iostream>

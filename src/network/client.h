@@ -2,7 +2,7 @@
 #define _CLIENT_H
 
 #include "multiplayer_impl.h"
-#include "world/world.h"
+#include "world/client_world.h"
 #include "player/controlled_player.h"
 #include "player/event_list.h"
 #include <thread>
@@ -16,13 +16,13 @@ class Client {
     std::unique_ptr<Multiplayer::Stub> stub;
     std::thread client_thread;
     uint id;
-    World* world;
+    ClientWorld* world;
     PlayerUpdateResponse* recent_response;
     EventList* events;
     std::mutex recent_response_mutex;
 
   public:
-    Client(World* world);
+    Client(ClientWorld* world);
     void update_events(ControlledPlayer* player, bool didFire);
     void process_response();
   private:

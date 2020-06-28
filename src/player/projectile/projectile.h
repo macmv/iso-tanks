@@ -1,7 +1,6 @@
 #ifndef _PROJECTILE_H
 #define _PROJECTILE_H
 
-#include "world/world.h"
 #include "models/scene_manager.h"
 #include "src/proto/multiplayer.grpc.pb.h"
 #include "opengl/render.h"

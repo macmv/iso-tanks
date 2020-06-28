@@ -4,7 +4,7 @@
 #include "opengl/loader.h"
 #include "opengl/shader.h"
 #include "world/terrain/terrain.h"
-#include "world/world.h"
+#include "world/client_world.h"
 #include "network/client.h"
 #include "ui/hud.h"
 #include "player/settings/settings.h"
@@ -28,7 +28,7 @@ int main() {
 
   Terrain* terrain = new Terrain(100);
   terrain->create_model();
-  World* world = new World(terrain, false, scene_manager, render->particle_manager);
+  ClientWorld* world = new ClientWorld(terrain, false, scene_manager, render->particle_manager);
   render->world = world;
 
   world->force_physics_update();
@@ -37,9 +37,12 @@ int main() {
 
   Client* client = new Client(world);
 
+  // world_thread = thread(World::start_update_loop, this);
+  // world_thread.detach();
+
   while (true) {
     client->process_response();
-    world->update_controls(render->camera->get_mouse_delta().x);
+    world->update_controls();
     world->update();
     client->update_events(world->get_this_player(), render->camera->get_mouse_pressed());
 

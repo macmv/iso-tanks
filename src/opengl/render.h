@@ -3,7 +3,7 @@
 
 #include <GL/glew.h>
 #include <SDL2/SDL.h>
-#include "world/world.h"
+#include "world/client_world.h"
 #include "display.h"
 #include "camera.h"
 #include "shader.h"
@@ -17,12 +17,12 @@
 
 class UIRender;
 class Hud;
-class World;
+class ClientWorld;
 class ParticleManager;
 
 class Render {
   public:
-    World* world;
+    ClientWorld* world;
     std::unordered_map<std::string, Shader*>* shaders;
     Shader* current_shader;
     Camera* camera;
