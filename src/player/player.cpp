@@ -53,6 +53,5 @@ void Player::set_transform(glm::mat4 trans) {
 }
 
 void Player::set_gravity(glm::vec3 gravity) {
-  // body->setGravity(rp3d::Vector3(gravity.x, gravity.y, gravity.z));
   body->enableGravity(true);
 }
