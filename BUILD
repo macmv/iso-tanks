@@ -109,6 +109,7 @@ cc_binary(
           ":sfml",
           ":reactphysics3d"],
   linkopts = ["-lstdc++fs",
+              "-lgtest",
               "-lGLEW",
               "-lGL",
               "-lpthread"],
