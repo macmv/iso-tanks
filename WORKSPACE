@@ -58,9 +58,9 @@ new_local_repository(
 
 http_archive(
     name = "grpc",
-    strip_prefix = "grpc-1.28.1",
-    urls = ["https://github.com/grpc/grpc/archive/v1.28.1.tar.gz"],
-    sha256 = "4cbce7f708917b6e58b631c24c59fe720acc8fef5f959df9a58cdf9558d0a79b",
+    strip_prefix = "grpc-1.29.1",
+    urls = ["https://github.com/grpc/grpc/archive/v1.29.1.tar.gz"],
+    sha256 = "0343e6dbde66e9a31c691f2f61e98d79f3584e03a11511fad3f10e3667832a45"
     )
 
 load("@grpc//bazel:grpc_deps.bzl", "grpc_deps")
